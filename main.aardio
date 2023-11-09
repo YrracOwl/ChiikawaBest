@@ -1,8 +1,8 @@
 import win.ui;
 /*DSG{{*/
-mainForm = win.form(text="atoms";right=527;bottom=497)
+mainForm = win.form(text="atoms";right=555;bottom=497)
 mainForm.add(
-html_watcher={cls="custom";text="自定义控件";left=16;top=40;right=520;bottom=464;db=1;dl=1;dr=1;dt=1;z=5};
+html_watcher={cls="custom";text="自定义控件";left=16;top=40;right=540;bottom=464;db=1;dl=1;dr=1;dt=1;z=5};
 task_show={cls="plus";text="-- 待显示 --";left=264;top=472;right=435;bottom=496;dl=1;dt=1;z=4};
 关闭闹钟={cls="button";text="关闭闹钟";left=176;top=472;right=248;bottom=496;dl=1;dt=1;z=3};
 刷新页面={cls="button";text="刷新页面";left=96;top=8;right=168;bottom=32;dl=1;dt=1;z=7};
@@ -10,7 +10,7 @@ task_show={cls="plus";text="-- 待显示 --";left=264;top=472;right=435;bottom=4
 清理历史={cls="button";text="清理历史";left=176;top=8;right=248;bottom=32;dl=1;dt=1;z=8};
 返回上页={cls="button";text="返回上页";left=16;top=8;right=88;bottom=32;dl=1;dt=1;z=6};
 进程检测={cls="button";text="进程检测";left=16;top=472;right=88;bottom=496;dl=1;dt=1;z=1};
-配置选择={cls="combobox";left=256;top=8;right=504;bottom=32;dl=1;dr=1;dt=1;edge=1;items={};mode="dropdown";z=9}
+配置选择={cls="combobox";left=274;top=8;right=522;bottom=32;dl=1;dr=1;dt=1;edge=1;items={};mode="dropdown";z=9}
 )
 /*}}*/
 
@@ -85,15 +85,20 @@ cfg.saveAll()
 //////////////////////////////////////////////////////////////////////
 //界面线程变量
 //////////////////////////////////////////////////////////////////////
+
 //web.form导入
+/*
 import web.form;
 var wb = web.form(mainForm.html_watcher); 
 wb.noScriptErr = true;
+*/
 
-//var url_loading = httpServer.getUrl("\res\loading.html"); 
+//web.view导入
+import web.view;
+var wb = web.view(mainForm.html_watcher); 
+
 var url_loading = wsock.tcp.simpleHttpServer.getUrl("\res\loading.html"); 
 
-//wb.go("\res\loading.html")
 //复用代码，已经加入到"mainForm.配置选择.onOk()"中了
 //因此需要在onOk()函数之后再调用
 /*
@@ -154,15 +159,22 @@ mainForm.关闭闹钟.oncommand = function(id,event){
 
 mainForm.返回上页.oncommand = function(id,event){
 	if(wb.location != init_thrdTable.g_wb_location){
-		wb.goBack()
+		//wb.goBack()
+		wb.doScript("window.history.back();");
 	}
 }
 
 mainForm.刷新页面.oncommand = function(id,event){
 	var url_crwaler = wsock.tcp.simpleHttpServer.getUrl(init_thrdTable.path_html_crawler); 
 	wb.go(url_crwaler);
-	//wb.wait(url_crwaler);
-	//wb.waitEle("body");
+	//console.log(url_crwaler)
+	if(url_crwaler != url_loading){
+		init_thrdTable.g_wb_location = wb.location;
+		mainForm.返回上页.disabled = false;
+		mainForm.刷新页面.disabled = false;
+		mainForm.清理历史.disabled = false;
+	}
+/*
 	wb.DocumentComplete = function(pDisp,url) {
 		if( pDisp == wb.application ){
 			if(url != url_loading){
@@ -173,11 +185,13 @@ mainForm.刷新页面.oncommand = function(id,event){
 			}
 		}
 	}
+*/
 }
 
 mainForm.清理历史.oncommand = function(id,event){
 	var url_crwaler = wsock.tcp.simpleHttpServer.getUrl(init_thrdTable.path_html_crawler); 
-	inet.clearVisited(init_thrdTable.host_html_crawler)
+	//inet.clearVisited(init_thrdTable.host_html_crawler)
+	wb.doScript("window.history.replaceState()")
 	mainForm.配置选择.onOk();
 }
 
