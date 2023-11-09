@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project ver="10" name="atoms" libEmbed="true" icon="..." ui="win" output="atoms.exe" CompanyName="单位名称" FileDescription="atoms" LegalCopyright="Copyright (C) 作者 2023" ProductName="atoms" InternalName="atoms" FileVersion="0.0.0.1" ProductVersion="0.0.0.1" publishDir="/dist/" dstrip="false" local="false" ignored="false">
+	<file name="main.aardio" path="main.aardio" comment="main.aardio"/>
+	<folder name="资源文件" path="res" embed="true" local="false" ignored="false">
+		<file name="loading.gif" path="res\loading.gif" comment="res\loading.gif"/>
+		<file name="loading.html" path="res\loading.html" comment="res\loading.html"/>
+	</folder>
+	<folder name="窗体文件" path="dlg" comment="目录" embed="true" local="false" ignored="false">
+		<file name="timeline.aardio" path="dlg\timeline.aardio" comment="dlg\timeline.aardio"/>
+		<file name="timeline_add_alarm.aardio" path="dlg\timeline_add_alarm.aardio" comment="dlg\timeline_add_alarm.aardio"/>
+		<file name="timeline_add_note.aardio" path="dlg\timeline_add_note.aardio" comment="dlg\timeline_add_note.aardio"/>
+		<file name="timeline_make.aardio" path="dlg\timeline_make.aardio" comment="dlg\timeline_make.aardio"/>
+	</folder>
+	<folder name="html_crawler" path="html_crawler" comment="html_crawler" local="false" embed="false" ignored="false">
+		<file name="halo.carrywho.com.html" path="html_crawler\halo.carrywho.com.html" comment="html_crawler\halo.carrywho.com.html"/>
+		<file name="rt2innocence.net.html" path="html_crawler\rt2innocence.net.html" comment="html_crawler\rt2innocence.net.html"/>
+		<file name="yuhang.ch.html" path="html_crawler\yuhang.ch.html" comment="html_crawler\yuhang.ch.html"/>
+	</folder>
+</project>

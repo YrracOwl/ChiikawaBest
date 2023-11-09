@@ -1,0 +1,26 @@
+import win.ui;
+/*DSG{{*/
+var winform = win.form(text="Timeline";right=1279;bottom=719)
+winform.add(
+创建时间线={cls="button";text="创建时间线";left=9;top=12;right=113;bottom=40;dl=1;dt=1;z=2};
+新增事项={cls="button";text="新增事项";left=129;top=12;right=233;bottom=40;dl=1;dt=1;z=3};
+时间线={cls="custom";text="自定义控件";left=9;top=44;right=1269;bottom=713;db=1;dl=1;dr=1;dt=1;z=1};
+添加闹钟={cls="button";text="添加闹钟";left=249;top=12;right=353;bottom=40;dl=1;dt=1;z=4}
+)
+/*}}*/
+
+winform.创建时间线.oncommand = function(id,event){
+	winform.loadForm("\dlg\timeline_make.aardio")
+}
+
+winform.新增事项.oncommand = function(id,event){
+	winform.loadForm("\dlg\timeline_add_note.aardio")
+}
+
+winform.添加闹钟.oncommand = function(id,event){
+	winform.loadForm("\dlg\timeline_add_alarm.aardio")
+}
+
+winform.show();
+win.loopMessage();
+return winform;

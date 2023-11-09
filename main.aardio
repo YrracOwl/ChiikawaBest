@@ -1,0 +1,220 @@
+import win.ui;
+/*DSG{{*/
+mainForm = win.form(text="atoms";right=527;bottom=497)
+mainForm.add(
+html_watcher={cls="custom";text="自定义控件";left=16;top=40;right=520;bottom=464;db=1;dl=1;dr=1;dt=1;z=5};
+task_show={cls="plus";text="-- 待显示 --";left=264;top=472;right=435;bottom=496;dl=1;dt=1;z=4};
+关闭闹钟={cls="button";text="关闭闹钟";left=176;top=472;right=248;bottom=496;dl=1;dt=1;z=3};
+刷新页面={cls="button";text="刷新页面";left=96;top=8;right=168;bottom=32;dl=1;dt=1;z=7};
+启动闹钟={cls="button";text="启动闹钟";left=96;top=472;right=168;bottom=496;dl=1;dt=1;z=2};
+清理历史={cls="button";text="清理历史";left=176;top=8;right=248;bottom=32;dl=1;dt=1;z=8};
+返回上页={cls="button";text="返回上页";left=16;top=8;right=88;bottom=32;dl=1;dt=1;z=6};
+进程检测={cls="button";text="进程检测";left=16;top=472;right=88;bottom=496;dl=1;dt=1;z=1};
+配置选择={cls="combobox";left=256;top=8;right=504;bottom=32;dl=1;dr=1;dt=1;edge=1;items={};mode="dropdown";z=9}
+)
+/*}}*/
+
+//////////////////////////////////////////////////////////////////////
+//Libray导入
+//////////////////////////////////////////////////////////////////////
+//自定义库
+import quarks;
+//配置设置
+import fsys.config;
+var cfgPath = io.appData("/appvar/app.config");
+var cfg = fsys.config(cfgPath);
+//控制台
+import console;
+//为了访问本地文件而采用异步http服务器
+//异步可能会阻塞进程，所以采用了多线程http服务器
+import wsock.tcp.simpleHttpServer;
+namespace wsock.tcp.simpleHttpServer{
+	//startIp = "0.0.0.0"; //不限制本机 IP
+    //startPort = 8615; //不指定端口时会自动分配空闲端口
+    threadGlobal = { mainForm = ..mainForm }; //指定 HTTP 服务线程的默认全局变量,注意定义线程函数的作用域同名变量不能是局部变量
+}
+
+//导入fsys.file以获取文件的更新时间
+import fsys.file;
+
+//////////////////////////////////////////////////////////////////////
+//配置生成
+//////////////////////////////////////////////////////////////////////
+cfg.html_crawler.page1 = {
+url = "https://yuhang.ch/"; 
+query_table = {parent="main";tagName="li";}; 
+file_path = "\html_crawler\yuhang.ch.html";
+}
+
+cfg.html_crawler.page2 = {
+	url = "http://rt2innocence.net/archives/"; 
+	query_table = {parent="content";tagName="table";}; 
+	file_path = "\html_crawler\rt2innocence.net.html";
+}
+
+/*
+cfg.html_crawler.page3 = {
+	url = "https://jx3.xoyo.com/allnews/"; 
+	query_table = {className="article_list";}; 
+}
+cfg.html_crawler.page4 = {
+	url = "https://jx3.xoyo.com/announce/"; 
+	query_table = {className="article_list";}; 
+}
+*/
+
+cfg.html_crawler.page6 = {
+	url = "https://halo.carrywho.com/"; 
+	query_table = {className="column column-main";}; 
+	file_path = "\html_crawler\halo.carrywho.com.html";
+}
+
+/*
+cfg.html_crawler.page3 = null;
+cfg.html_crawler.page4 = null;
+cfg.html_crawler.page6 = null;
+*/
+
+cfg.events_reminder.page1 = {
+	name = "第一个闹钟";
+	second = 1;
+}
+
+cfg.saveAll()
+
+//////////////////////////////////////////////////////////////////////
+//界面线程变量
+//////////////////////////////////////////////////////////////////////
+//web.form导入
+import web.form;
+var wb = web.form(mainForm.html_watcher); 
+wb.noScriptErr = true;
+
+//var url_loading = httpServer.getUrl("\res\loading.html"); 
+var url_loading = wsock.tcp.simpleHttpServer.getUrl("\res\loading.html"); 
+
+//wb.go("\res\loading.html")
+//复用代码，已经加入到"mainForm.配置选择.onOk()"中了
+//因此需要在onOk()函数之后再调用
+/*
+wb.go(url_loading);
+mainForm.返回上页.disabled = true;
+mainForm.刷新页面.disabled = true;
+mainForm.清理历史.disabled = true;
+*/
+
+//计划任务导入
+import win.taskScheduler;
+var taskScheduler = win.taskScheduler( mainForm );
+//生成list内容
+var list_items,list_cfg = quarks.parse_cfg(cfg);
+//console.dump(list_items)
+mainForm.配置选择.items = list_items;
+
+//////////////////////////////////////////////////////////////////////
+//函数调用
+//////////////////////////////////////////////////////////////////////
+//线程共享表
+import thread.table;
+var init_thrdTable = thread.table("init_shareVars",true/*清空*/ )
+
+var task  = taskScheduler.create("间隔一秒执行",function(){
+    mainForm.task_show.text = time(__,"%Y/%m/%d %H:%M:%S");
+    //win.setTop(mainForm.hwnd)
+    quarks.bring_to_me(mainForm)
+} )
+
+//设定计划任务执行时间方案
+task.interval = {  
+   second = 1;
+}
+
+//////////////////////////////////////////////////////////////////////
+//界面配置-放最后
+//////////////////////////////////////////////////////////////////////
+//窗口动效
+import win.animate;
+//win.animate.fade( mainForm ).show();
+
+mainForm.进程检测.oncommand = function(id,event){
+	mainForm.进程检测.disabledText = {"✶";"✸";"✹";"✺";"✹";"✷"};	
+	var temp = quarks.process_detector("notepad.exe");
+	mainForm.进程检测.disabledText = null;
+	//quarks.display_log(temp);
+	mainForm.task_show.text = "process id: " + tostring(temp);
+}
+
+mainForm.启动闹钟.oncommand = function(id,event){
+	taskScheduler.start();
+}
+
+mainForm.关闭闹钟.oncommand = function(id,event){
+	taskScheduler.stop();
+}
+
+mainForm.返回上页.oncommand = function(id,event){
+	if(wb.location != init_thrdTable.g_wb_location){
+		wb.goBack()
+	}
+}
+
+mainForm.刷新页面.oncommand = function(id,event){
+	var url_crwaler = wsock.tcp.simpleHttpServer.getUrl(init_thrdTable.path_html_crawler); 
+	wb.go(url_crwaler);
+	//wb.wait(url_crwaler);
+	//wb.waitEle("body");
+	wb.DocumentComplete = function(pDisp,url) {
+		if( pDisp == wb.application ){
+			if(url != url_loading){
+				init_thrdTable.g_wb_location = wb.location;
+				mainForm.返回上页.disabled = false;
+				mainForm.刷新页面.disabled = false;
+				mainForm.清理历史.disabled = false;
+			}
+		}
+	}
+}
+
+mainForm.清理历史.oncommand = function(id,event){
+	var url_crwaler = wsock.tcp.simpleHttpServer.getUrl(init_thrdTable.path_html_crawler); 
+	inet.clearVisited(init_thrdTable.host_html_crawler)
+	mainForm.配置选择.onOk();
+}
+
+mainForm.配置选择.onOk = function(){ 
+	mainForm.html_watcher.setFocus();
+	wb.go(url_loading);
+	mainForm.返回上页.disabled = true;
+	mainForm.刷新页面.disabled = true;
+	mainForm.清理历史.disabled = true;
+	
+	var cfg_chosen = list_cfg[mainForm.配置选择.selText];
+	thread.invoke( 
+		function(mainForm,init_thrdTable,cfg_chosen){
+			import quarks;
+			var data_html_crawler,path_html_crawler,host_html_crawler = quarks.html_crawler(cfg_chosen);
+			init_thrdTable.path_html_crawler = path_html_crawler;
+			init_thrdTable.host_html_crawler = host_html_crawler;
+			init_thrdTable.flag_html_crawler = true;
+		},mainForm,init_thrdTable,cfg_chosen
+	)
+	
+	thread.invoke( 
+		function(mainForm,init_thrdTable){
+			while(1){
+				if(init_thrdTable.flag_html_crawler){
+					mainForm.刷新页面.oncommand()
+					init_thrdTable.flag_html_crawler = null;
+					break;
+				}
+			}
+		},mainForm,init_thrdTable
+	)
+}
+
+//配置选择的设置
+mainForm.配置选择.selIndex = 1;
+mainForm.配置选择.onOk();
+
+mainForm.show();
+return win.loopMessage();

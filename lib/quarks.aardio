@@ -1,0 +1,119 @@
+﻿namespace quarks{
+	
+	//导入的库
+	import process;
+	import inet.http;
+	import inet.url;
+	import web.mshtml;
+	import string;
+	import table;
+	import fsys.file;
+	import win;
+	
+	var html_head = /**
+	<!doctype html>
+	<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<style type="text/css">
+		html,body{height:100%; display:table; margin:0 auto;} 
+		</style>
+		<script type="text/javascript"></script>
+	</head>
+	<body>
+	<h3>抓取的数据如下：</h3><hr>
+		**/; 
+	var html_tail = /**
+	</body>
+	</html>
+	**/;
+	
+	//函数1：进程检测，返回进程id
+	process_detector = function(process_name){
+		var prcs_id  = process.findId(process_name);
+		return prcs_id; 
+	}
+	
+	//函数2：网页爬取，并返回提取出的元素节点组成的html
+	// query_table里可以使用{parent=id;tagName="a";className="class";}这种方式来确定属性
+	html_crawler = function(cfg_table){
+		var url = cfg_table.url;
+		var query_table = cfg_table.query_table;  
+		var http = inet.http(); 
+		var html_data,err,errCode = http.get(url);
+		var turl = inet.url.split(url);
+		http.close();
+		if(html_data){
+			var htmlDoc = web.mshtml();
+			htmlDoc.html = html_data;
+			var contents_needed = htmlDoc.queryEles(query_table);
+			
+			var contents_read = ""; 
+			for i,ele in contents_needed {
+				if(ele.getElementsByTagName("a") ){
+					var collection_len = table.len(ele.getElementsByTagName("a") ); 
+					for(j=0;collection_len-1;1){
+						var href_slice = inet.url.split(ele.getElementsByTagName("a")[j].href);
+						var href_modified = ""; 
+						if(href_slice){
+							if(href_slice.host){
+								href_modified = string.concat(href_slice.scheme,"://",href_slice.host,href_slice.path);
+							}
+							else {
+								href_modified = string.concat("http://",turl.host,href_slice.path);
+							}
+							ele.getElementsByTagName("a")[j].href = href_modified;
+							ele.getElementsByTagName("a")[j].target = "_self";
+						}
+					}
+				}
+				contents_read = string.concat(contents_read,ele.outerHTML)
+			}
+			contents_read = string.concat(html_head,contents_read,html_tail);
+			string.save(string.concat("/html_crawler/",turl.host,".html"), contents_read);
+
+			return contents_read,string.concat("/html_crawler/",turl.host,".html"),turl.host; 
+		}
+		else {
+			return false; 
+		}
+		
+	}
+	
+	//显示log和变量
+	display_log = function(temp){
+		if(temp){
+			..console.log(temp)
+		}
+		else {
+			..console.log(false)
+		}
+	}
+	
+	//打开笔记，打开备忘录
+	
+	//通过计划任务设定闹钟，闹钟的提醒方式为浮动在顶层的一个半透明遮罩,返回开始提醒的标识
+	
+	//将窗口带到前台
+	bring_to_me = function(winform){
+		win.setForeground(winform.hwnd)
+	}
+
+	//解析cfg文件
+	parse_cfg = function(cfg){
+		var list_items = {}; 
+		var list_cfg = {};
+		for(name,value in cfg.html_crawler){
+			for(k,v in value){
+				if(k == "url"){
+					list_cfg[name + "." +v] = value;
+					table.push(list_items,name + "." +v);
+					break;
+				}
+			}
+		}
+		return list_items,list_cfg; 
+	}
+	
+}
