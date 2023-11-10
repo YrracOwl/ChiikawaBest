@@ -1,0 +1,38 @@
+import win.ui;
+/*DSG{{*/
+var winform = win.form(text="编写网址爬取的参数";right=663;bottom=151)
+winform.add(
+richedit={cls="richedit";text="//需要按照表的格式进行编写
+//给出[url]，[query_table]和[file_path]
+//此处右键可以直接添加模板
+";left=8;top=8;right=656;bottom=144;ah=1;autohscroll=1;aw=1;edge=1;hscroll=1;multiline=1;vscroll=1;z=1}
+)
+/*}}*/
+
+winform.richedit.text = "";
+if(..cfg.html_crawler){
+	winform.richedit.dump(..cfg.html_crawler)
+}
+else {
+	winform.richedit.text = "//删除此行后编写变量";
+}
+
+var template_str = /***
+pagex={url = ""; query_table = {className="";}; file_path = "";};
+***/; 
+
+winform.richedit.enablePopMenu({
+    
+	{ /*---分隔线---*/ };
+	
+	{ "添加模板";
+		function(id){
+			
+			winform.richedit.appendText(template_str);
+		} ; 
+	};
+})
+
+winform.show();
+win.loopMessage();
+return winform;

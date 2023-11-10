@@ -10,6 +10,8 @@
 		<file name="timeline_add_alarm.aardio" path="dlg\timeline_add_alarm.aardio" comment="dlg\timeline_add_alarm.aardio"/>
 		<file name="timeline_add_note.aardio" path="dlg\timeline_add_note.aardio" comment="dlg\timeline_add_note.aardio"/>
 		<file name="timeline_make.aardio" path="dlg\timeline_make.aardio" comment="dlg\timeline_make.aardio"/>
+		<file name="proxy_setting.aardio" path="dlg\proxy_setting.aardio" comment="dlg\proxy_setting.aardio"/>
+		<file name="html_crawler_setting.aardio" path="dlg\html_crawler_setting.aardio" comment="dlg\html_crawler_setting.aardio"/>
 	</folder>
 	<folder name="html_crawler" path="html_crawler" comment="html_crawler" local="false" embed="false" ignored="false">
 		<file name="halo.carrywho.com.html" path="html_crawler\halo.carrywho.com.html" comment="html_crawler\halo.carrywho.com.html"/>
