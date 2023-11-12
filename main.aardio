@@ -3,17 +3,16 @@ import win.ui;
 mainForm = win.form(text="atoms";right=599;bottom=695)
 mainForm.add(
 html_watcher={cls="custom";text="自定义控件";left=16;top=40;right=584;bottom=656;db=1;dl=1;dr=1;dt=1;z=5};
-task_show={cls="plus";text="-- 待显示 --";left=376;top=664;right=544;bottom=688;db=1;dl=1;z=4};
+task_show={cls="plus";text="-- 待显示 --";left=416;top=664;right=584;bottom=688;db=1;dl=1;z=4};
 关闭闹钟={cls="button";text="关闭闹钟";left=168;top=664;right=240;bottom=688;db=1;dl=1;z=3};
 刷新页面={cls="button";text="刷新页面";left=88;top=8;right=160;bottom=32;dl=1;dt=1;z=7};
 启动闹钟={cls="button";text="启动闹钟";left=88;top=664;right=160;bottom=688;db=1;dl=1;z=2};
 时间线={cls="button";text="时间线";left=248;top=664;right=320;bottom=688;db=1;dl=1;z=10};
 清理历史={cls="button";text="清理历史";left=168;top=8;right=240;bottom=32;dl=1;dt=1;z=8};
-设置={cls="button";text="设置";left=248;top=8;right=288;bottom=32;dl=1;dt=1;z=11};
+设置={cls="button";text="设置";left=512;top=8;right=552;bottom=32;dl=1;dt=1;z=11};
 返回上页={cls="button";text="返回上页";left=8;top=8;right=80;bottom=32;dl=1;dt=1;z=6};
 进程检测={cls="button";text="进程检测";left=8;top=664;right=80;bottom=688;db=1;dl=1;z=1};
-配置={cls="button";text="配置";left=296;top=8;right=336;bottom=32;dl=1;dt=1;z=12};
-配置选择={cls="combobox";left=344;top=8;right=592;bottom=32;dl=1;dt=1;edge=1;items={};mode="dropdown";z=9}
+配置选择={cls="combobox";left=256;top=8;right=504;bottom=32;dl=1;dt=1;edge=1;items={};mode="dropdown";z=9}
 )
 /*}}*/
 
@@ -45,47 +44,13 @@ import fsys.file;
 //////////////////////////////////////////////////////////////////////
 //配置生成
 //////////////////////////////////////////////////////////////////////
-cfg.html_crawler.page1 = {
-url = "https://yuhang.ch/"; 
-query_table = {parent="main";tagName="li";}; 
-file_path = "\html_crawler\yuhang.ch.html";
-}
-
-cfg.html_crawler.page2 = {
-	url = "http://rt2innocence.net/archives/"; 
-	query_table = {parent="content";tagName="table";}; 
-	file_path = "\html_crawler\rt2innocence.net.html";
-}
 
 /*
-cfg.html_crawler.page3 = {
-	url = "https://jx3.xoyo.com/allnews/"; 
-	query_table = {className="article_list";}; 
-}
-cfg.html_crawler.page4 = {
-	url = "https://jx3.xoyo.com/announce/"; 
-	query_table = {className="article_list";}; 
-}
+配置生成方法：
+01. 由winform.bindconfig此函数dump配置到richedit
+02. 通过此richedit修改后的字符串，保存到cfg.html_crawler.richedit
+03. 调用eval(cfg.html_crawler.richedit)函数生成新的表，送入配置轮询中
 */
-
-cfg.html_crawler.page6 = {
-	url = "https://halo.carrywho.com/"; 
-	query_table = {className="column column-main";}; 
-	file_path = "\html_crawler\halo.carrywho.com.html";
-}
-
-/*
-cfg.html_crawler.page3 = null;
-cfg.html_crawler.page4 = null;
-cfg.html_crawler.page6 = null;
-*/
-
-cfg.events_reminder.page1 = {
-	name = "第一个闹钟";
-	second = 1;
-}
-
-cfg.saveAll()
 
 //////////////////////////////////////////////////////////////////////
 //界面线程变量
@@ -133,7 +98,12 @@ mainForm.清理历史.disabled = true;
 import win.taskScheduler;
 var taskScheduler = win.taskScheduler( mainForm );
 //生成list内容
-var list_items,list_cfg = quarks.parse_cfg(cfg);
+/*
+console.dump(cfg)
+console.dump(cfg.html_crawler)	
+console.dump(cfg.html_crawler.richedit)
+*/
+var list_items,list_cfg = quarks.parse_cfg(cfg.html_crawler.richedit);
 //console.dump(list_items)
 mainForm.配置选择.items = list_items;
 
@@ -250,17 +220,14 @@ mainForm.配置选择.onOk = function(){
 //配置选择的设置
 
 mainForm.设置.oncommand = function(id,event){
-	var frmChild = mainForm.loadForm("\dlg\proxy_setting.aardio");
+	var frmChild = mainForm.loadForm("\dlg\settings.aardio");
 	frmChild.show();
 }
 
-mainForm.配置.oncommand = function(id,event){
-	var frmChild = mainForm.loadForm("\dlg\html_crawler_setting.aardio");
-	frmChild.show();
+if(mainForm.配置选择.count > 0){
+	mainForm.配置选择.selIndex = 1;
+	mainForm.配置选择.onOk();
 }
-
-mainForm.配置选择.selIndex = 1;
-mainForm.配置选择.onOk();
 
 mainForm.show();
 return win.loopMessage();

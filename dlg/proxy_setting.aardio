@@ -2,17 +2,17 @@ import win.ui;
 /*DSG{{*/
 var winform = win.form(text="代理设置";right=239;bottom=207)
 winform.add(
-static={cls="static";text="代理地址：";left=40;top=56;right=96;bottom=80;center=1;transparent=1;z=4};
-static2={cls="static";text="代理端口：";left=40;top=88;right=96;bottom=112;center=1;notify=1;transparent=1;z=6};
-static5={cls="static";text="代理地址：";left=40;top=144;right=96;bottom=168;center=1;transparent=1;z=9};
-static6={cls="static";text="代理端口：";left=40;top=176;right=96;bottom=200;center=1;notify=1;transparent=1;z=11};
-不使用代理={cls="checkbox";text="不使用代理";left=8;top=8;right=120;bottom=32;checked=1;z=1};
-["使用http代理"]={cls="checkbox";text="使用http代理";left=8;top=32;right=120;bottom=56;z=2};
-["使用socks5代理"]={cls="checkbox";text="使用socks5代理";left=8;top=120;right=120;bottom=144;z=7};
-地址文本={cls="edit";text="127.0.0.1";left=104;top=56;right=224;bottom=80;align="right";edge=1;z=3};
-地址文本s={cls="edit";text="127.0.0.1";left=104;top=144;right=224;bottom=168;align="right";edge=1;z=8};
-端口文本={cls="edit";text="20200";left=104;top=88;right=224;bottom=112;align="right";edge=1;z=5};
-端口文本s={cls="edit";text="20199";left=104;top=176;right=224;bottom=200;align="right";edge=1;z=10}
+static={cls="static";text="代理地址：";left=40;top=56;right=96;bottom=80;center=1;dl=1;dt=1;transparent=1;z=4};
+static2={cls="static";text="代理端口：";left=40;top=88;right=96;bottom=112;center=1;dl=1;dt=1;notify=1;transparent=1;z=6};
+static5={cls="static";text="代理地址：";left=40;top=144;right=96;bottom=168;center=1;dl=1;dt=1;transparent=1;z=9};
+static6={cls="static";text="代理端口：";left=40;top=176;right=96;bottom=200;center=1;dl=1;dt=1;notify=1;transparent=1;z=11};
+不使用代理={cls="checkbox";text="不使用代理";left=8;top=8;right=120;bottom=32;checked=1;dl=1;dt=1;z=1};
+["使用http代理"]={cls="checkbox";text="使用http代理";left=8;top=32;right=120;bottom=56;dl=1;dt=1;z=2};
+["使用socks5代理"]={cls="checkbox";text="使用socks5代理";left=8;top=120;right=120;bottom=144;dl=1;dt=1;z=7};
+地址文本={cls="edit";text="127.0.0.1";left=104;top=56;right=224;bottom=80;align="right";dl=1;dt=1;edge=1;z=3};
+地址文本s={cls="edit";text="127.0.0.1";left=104;top=144;right=224;bottom=168;align="right";dl=1;dt=1;edge=1;z=8};
+端口文本={cls="edit";text="20200";left=104;top=88;right=224;bottom=112;align="right";dl=1;dt=1;edge=1;z=5};
+端口文本s={cls="edit";text="20199";left=104;top=176;right=224;bottom=200;align="right";dl=1;dt=1;edge=1;z=10}
 )
 /*}}*/
 

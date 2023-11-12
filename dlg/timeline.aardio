@@ -1,13 +1,55 @@
+import fonts.materialDesignIcons;
+
+import fonts.materialDesignIcons;
+
+import fonts.materialDesignIcons;
+
 import win.ui;
 /*DSG{{*/
-var winform = win.form(text="Timeline";right=1279;bottom=719)
+var winform = win.form(text="Timeline";right=647;bottom=719)
 winform.add(
-创建时间线={cls="button";text="创建时间线";left=9;top=12;right=113;bottom=40;dl=1;dt=1;z=2};
-新增事项={cls="button";text="新增事项";left=129;top=12;right=233;bottom=40;dl=1;dt=1;z=3};
-时间线={cls="custom";text="自定义控件";left=9;top=44;right=1269;bottom=713;db=1;dl=1;dr=1;dt=1;z=1};
-添加闹钟={cls="button";text="添加闹钟";left=249;top=12;right=353;bottom=40;dl=1;dt=1;z=4}
+创建时间线={cls="plus";text="创建时间线";left=8;top=8;right=128;bottom=30;align="left";bgcolor=-5197169;dl=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-16;name='Material Design Icons');padding={left=6}};iconText='\uF3EB';notify=1;textPadding={left=26};z=2};
+新增事项={cls="plus";text="新增事项";left=136;top=8;right=246;bottom=30;align="left";bgcolor=-5197169;dl=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-16;name='Material Design Icons');padding={left=6}};iconText='\uF418';textPadding={left=26};z=3};
+时间线={cls="custom";text="自定义控件";left=8;top=48;right=640;bottom=717;db=1;dl=1;dr=1;dt=1;z=1};
+添加提醒={cls="plus";text="添加提醒";left=256;top=8;right=366;bottom=30;align="left";bgcolor=-5197169;dl=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-16;name='Material Design Icons');padding={left=6}};iconText='\uF520';notify=1;textPadding={left=26};z=4}
 )
 /*}}*/
+
+winform.创建时间线.skin({
+	background={
+		default=0x668FB2B0;
+		disabled=0xFFCCCCCC;
+		hover=0xFF928BB3
+	};
+	color={
+		default=0xFF000000;
+		disabled=0xFF6D6D6D
+	}
+})
+
+winform.添加提醒.skin({
+	background={
+		default=0x668FB2B0;
+		disabled=0xFFCCCCCC;
+		hover=0xFF928BB3
+	};
+	color={
+		default=0xFF000000;
+		disabled=0xFF6D6D6D
+	}
+})
+
+winform.新增事项.skin({
+	background={
+		default=0x668FB2B0;
+		disabled=0xFFCCCCCC;
+		hover=0xFF928BB3
+	};
+	color={
+		default=0xFF000000;
+		disabled=0xFF6D6D6D
+	}
+})
 
 winform.创建时间线.oncommand = function(id,event){
 	winform.loadForm("\dlg\timeline_make.aardio")
@@ -17,9 +59,21 @@ winform.新增事项.oncommand = function(id,event){
 	winform.loadForm("\dlg\timeline_add_note.aardio")
 }
 
-winform.添加闹钟.oncommand = function(id,event){
+winform.添加提醒.oncommand = function(id,event){
 	winform.loadForm("\dlg\timeline_add_alarm.aardio")
 }
+
+/*
+import web.view;
+var wb_tl = web.view(winform.时间线); 
+
+wb_tl.go("\res\template_timeline_1.aardio")
+*/
+
+winform.时间线.loadForm("\res\template_timeline_1.aardio")
+
+load
+//loadcodex("\res\template_timeline_1.aardio");
 
 winform.show();
 win.loopMessage();

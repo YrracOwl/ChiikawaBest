@@ -102,9 +102,11 @@
 
 	//解析cfg文件
 	parse_cfg = function(cfg){
+		var table_revive = eval(cfg); 
 		var list_items = {}; 
 		var list_cfg = {};
-		for(name,value in cfg.html_crawler){
+		
+		for(name,value in table_revive){
 			for(k,v in value){
 				if(k == "url"){
 					list_cfg[name + "." +v] = value;
