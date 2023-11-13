@@ -37,10 +37,10 @@
 	
 	//函数2：网页爬取，并返回提取出的元素节点组成的html
 	// query_table里可以使用{parent=id;tagName="a";className="class";}这种方式来确定属性
-	html_crawler = function(cfg_table){
+	html_crawler = function(cfg_table,inet_launch_params){
 		var url = cfg_table.url;
 		var query_table = cfg_table.query_table;  
-		var http = inet.http(); 
+		var http = inet.http(,inet_launch_params,,); 
 		var html_data,err,errCode = http.get(url);
 		var turl = inet.url.split(url);
 		http.close();

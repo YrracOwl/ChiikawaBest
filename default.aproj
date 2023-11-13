@@ -14,6 +14,7 @@
 		<file name="proxy_setting.aardio" path="dlg\proxy_setting.aardio" comment="dlg\proxy_setting.aardio"/>
 		<file name="html_crawler_setting.aardio" path="dlg\html_crawler_setting.aardio" comment="dlg\html_crawler_setting.aardio"/>
 		<file name="settings.aardio" path="dlg\settings.aardio" comment="dlg\settings.aardio"/>
+		<file name="apps_setting.aardio" path="dlg\apps_setting.aardio" comment="dlg\apps_setting.aardio"/>
 	</folder>
 	<folder name="html_crawler" path="html_crawler" comment="html_crawler" local="false" embed="false" ignored="false">
 		<file name="halo.carrywho.com.html" path="html_crawler\halo.carrywho.com.html" comment="html_crawler\halo.carrywho.com.html"/>

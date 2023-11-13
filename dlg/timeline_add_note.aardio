@@ -1,7 +1,9 @@
 import fonts.fontAwesome;
+
+import fonts.fontAwesome;
 import win.ui;
 /*DSG{{*/
-var winform = win.form(text="新增事项";right=591;bottom=423;border="thin")
+var winform = win.form(text="新增子事项";right=591;bottom=423;border="thin")
 winform.add(
 datetimepick={cls="datetimepick";left=56;top=8;right=248;bottom=32;dl=1;dt=1;edge=1;font=LOGFONT(h=-13);z=1};
 内容={cls="static";text="内容：";left=8;top=72;right=48;bottom=96;center=1;dl=1;dt=1;transparent=1;z=4};
@@ -11,9 +13,23 @@ datetimepick={cls="datetimepick";left=56;top=8;right=248;bottom=32;dl=1;dt=1;edg
 时间plus={cls="plus";left=256;top=8;right=346;bottom=32;autohscroll=false;autovscroll=false;border={color=-6908266;width=1};dl=1;dt=1;editable="edit";font=LOGFONT(h=-16);notify=1;textPadding={bottom=1};z=8};
 标题={cls="static";text="标题：";left=8;top=40;right=48;bottom=64;center=1;dl=1;dt=1;transparent=1;z=3};
 标题plus={cls="plus";left=56;top=40;right=344;bottom=66;border={bottom=1;color=-6908266};dl=1;dt=1;editable=1;font=LOGFONT(h=-13);forecolor=16777215;notify=1;textPadding={top=6;bottom=2};z=5};
-添加plus={cls="plus";text="添加";left=496;top=64;right=584;bottom=88;align="left";bgcolor=-5197169;dr=1;dt=1;font=LOGFONT(h=-13);iconStyle={align="left";font=LOGFONT(h=-13;name='FontAwesome');padding={left=20}};iconText='\uF0EA';textPadding={left=39};z=7}
+添加plus={cls="plus";text="添加";left=496;top=64;right=576;bottom=86;align="left";bgcolor=-5197169;border={radius=10};dr=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF0C7';textPadding={left=30};z=7}
 )
 /*}}*/
+
+winform.添加plus.skin({
+	background={
+		active=0xFFD3E0BC;
+		default=0x668FB2B0;
+		disabled=0xFFCCCCCC;
+		focus=0xFFE3E3E3;
+		hover=0xFF928BB3
+	};
+	color={
+		default=0xFF000000;
+		disabled=0xFF6D6D6D
+	}
+})
 
 winform.勾选plus.skin({
 	color={
@@ -24,21 +40,6 @@ winform.勾选plus.skin({
 	};
 	checked={
 		iconText='\uF058'
-	}
-})
-
-winform.添加plus.skin({
-	background={
-		default=0x668FB2B0;
-		disabled=0xFFCCCCCC;
-		hover=0xFF928BB3
-	};
-	foreground={
-		active=0xFFF78987
-	};
-	color={
-		default=0xFF000000;
-		disabled=0xFF6D6D6D
 	}
 })
 
