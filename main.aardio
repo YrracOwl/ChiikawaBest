@@ -79,6 +79,29 @@ wbUserDataDir = io.appData("/appvar/userDataDir");
 wbHistoryDir = wbUserDataDir+"\EBWebView\Default\"; 
 import web.view;
 var wb = web.view(mainForm.html_watcher,wbUserDataDir,launch_params); 
+wb.preloadScript(`
+//禁止超链接默认开新窗口
+window.addEventListener('load',function(){ 
+	let base = document.querySelector('base'); 
+	if (base) base.removeAttribute('target');	
+})
+
+//禁止超链接开新窗口
+document.addEventListener('mousedown', function (event) {
+  var target = event.target;
+  for(var i=1;target && i<=5;i++){
+  	if ( target.tagName == 'A')  {
+  		target.removeAttribute('target');
+  		return;
+  	}
+  	
+  	target = target.parentNode; 
+  } 
+}, true);
+
+//禁止弹窗函数
+window.open =  function(url){ window.location.href = url; } 
+`)
 var url_loading = wsock.tcp.simpleHttpServer.getUrl("\res\loading.html"); 
 
 //复用代码，已经加入到"mainForm.配置选择.onOk()"中了
