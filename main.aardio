@@ -164,5 +164,7 @@ tray = win.util.tray(mainForm) //创建托盘图标
 tray.message = 0x400+9981/*_WM_TRAYMESSAGE*/
 tray.tip = "右键打开菜单" //设置鼠标提示
 
-mainForm.show();
+//mainForm.show();
+tray.pop("应用已启动，隐藏到托盘","Atoms",,3000);
+
 return win.loopMessage();
