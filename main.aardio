@@ -1,7 +1,9 @@
 import win.ui;
 /*DSG{{*/
-mainForm = win.form(text="atoms";right=255;bottom=63;border="thin")
-mainForm.add()
+mainForm = win.form(text="atoms";right=220;bottom=118;border="thin";max=false)
+mainForm.add(
+bk={cls="bk";left=0;top=0;right=224;bottom=120;ah=1;aw=1;background="\res\keai.jpg";z=1}
+)
 /*}}*/
 
 //////////////////////////////////////////////////////////////////////
@@ -142,6 +144,12 @@ mainForm.popmenu.add("隐藏",function(id){
 });
 
 mainForm.popmenu.add();//分隔线
+mainForm.popmenu.add("设置",function(){
+	var settings1 = mainForm.loadForm("\dlg\settings.aardio");
+	settings1.show();
+})
+
+mainForm.popmenu.add();//分隔线
 mainForm.popmenu.add("网页监控",function(){
 	var webwatcher1 = mainForm.loadForm("\dlg\webwatcher.aardio");
 	webwatcher1.show();
@@ -165,6 +173,6 @@ tray.message = 0x400+9981/*_WM_TRAYMESSAGE*/
 tray.tip = "右键打开菜单" //设置鼠标提示
 
 mainForm.show();
-mainForm.hitMin();
+//mainForm.hitMin();
 tray.pop("应用已启动，隐藏到托盘","Atoms",,3000);
 return win.loopMessage();
