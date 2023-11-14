@@ -2,11 +2,11 @@ import fonts.fontAwesome;
 
 import win.ui;
 /*DSG{{*/
-var winform = win.form(text="Timeline";right=647;bottom=719)
+var winform = win.form(text="Timeline";right=1279;bottom=719)
 winform.add(
 创建时间线={cls="plus";text="创建时间线";left=8;top=8;right=136;bottom=30;align="left";bgcolor=-5197169;border={radius=10};dl=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF160';notify=1;textPadding={left=30};z=2};
 新增子事项={cls="plus";text="新增子事项";left=152;top=8;right=280;bottom=30;align="left";bgcolor=-5197169;border={radius=10};dl=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF271';textPadding={left=30};z=3};
-时间线={cls="custom";text="自定义控件";left=8;top=48;right=640;bottom=717;db=1;dl=1;dr=1;dt=1;z=1};
+时间线={cls="custom";text="自定义控件";left=8;top=40;right=1272;bottom=712;db=1;dl=1;dr=1;dt=1;z=1};
 添加提醒项={cls="plus";text="添加提醒项";left=296;top=8;right=424;bottom=30;align="left";bgcolor=-5197169;border={radius=10};dl=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF0A2';notify=1;textPadding={left=30};z=4}
 )
 /*}}*/
@@ -68,8 +68,31 @@ winform.添加提醒项.oncommand = function(id,event){
 import web.view;
 var wb_tl = web.view(winform.时间线,..wbUserDataDir,..launch_params); 
 //var wb_tl = web.view(winform.时间线);
+wb_tl.preloadScript(`
+//禁止超链接默认开新窗口
+window.addEventListener('load',function(){ 
+	let base = document.querySelector('base'); 
+	if (base) base.removeAttribute('target');	
+})
 
-var template_func = loadcode("\res\template_timeline_5.aardio");
+//禁止超链接开新窗口
+document.addEventListener('mousedown', function (event) {
+  var target = event.target;
+  for(var i=1;target && i<=5;i++){
+  	if ( target.tagName == 'A')  {
+  		target.removeAttribute('target');
+  		return;
+  	}
+  	
+  	target = target.parentNode; 
+  } 
+}, true);
+
+//禁止弹窗函数
+//window.open =  function(url){ window.location.href = url; } 
+`);
+
+var template_func = loadcode("\res\template_timeline_1.aardio");
 
 content_css,content_body,content_js = template_func(); 
 
@@ -78,12 +101,8 @@ wb_tl.html = /**
 <html>
 <head>
     <meta charset="utf-8">
-    <style type="text/css">
-    	<?= content_css?>
-    </style>
-    <script type="text/javascript">
-    	<?= content_js?>
-    </script>
+    <?= content_css?>
+    <?= content_js?>
 </head>
 <body>
 	<?= content_body?>
@@ -92,5 +111,6 @@ wb_tl.html = /**
 **/;
 
 winform.show();
+winform.时间线.setFocus()
 win.loopMessage();
 return winform;

@@ -1,32 +1,21 @@
 import win.ui;
 /*DSG{{*/
-mainForm = win.form(text="atoms";right=599;bottom=695)
-mainForm.add(
-html_watcher={cls="custom";text="自定义控件";left=16;top=40;right=584;bottom=656;db=1;dl=1;dr=1;dt=1;z=5};
-task_show={cls="plus";text="-- 待显示 --";left=416;top=664;right=584;bottom=688;db=1;dl=1;z=4};
-关闭闹钟={cls="button";text="关闭闹钟";left=168;top=664;right=240;bottom=688;db=1;dl=1;z=3};
-刷新页面={cls="button";text="刷新页面";left=104;top=8;right=176;bottom=32;dl=1;dt=1;z=8};
-启动闹钟={cls="button";text="启动闹钟";left=88;top=664;right=160;bottom=688;db=1;dl=1;z=2};
-时间线={cls="button";text="时间线";left=248;top=664;right=320;bottom=688;db=1;dl=1;z=10};
-设置={cls="button";text="设置";left=512;top=8;right=552;bottom=32;dl=1;dt=1;z=11};
-返回={cls="button";text="返回";left=8;top=8;right=48;bottom=32;dl=1;dt=1;z=6};
-进程检测={cls="button";text="进程检测";left=8;top=664;right=80;bottom=688;db=1;dl=1;z=1};
-配置选择={cls="combobox";left=256;top=8;right=504;bottom=32;dl=1;dt=1;edge=1;items={};mode="dropdown";z=9};
-首页={cls="button";text="首页";left=56;top=8;right=96;bottom=32;dl=1;dt=1;z=7}
-)
+mainForm = win.form(text="atoms";right=255;bottom=63;border="thin")
+mainForm.add()
 /*}}*/
 
 //////////////////////////////////////////////////////////////////////
 //Libray导入
 //////////////////////////////////////////////////////////////////////
-//自定义库
-import quarks;
+
+//托盘库
+import win.ui.menu;
+import win.util.tray;
+
 //配置设置
 import fsys.config;
 cfgPath = io.appData("/appvar/app.config");
 cfg = fsys.config(cfgPath);
-//控制台
-import console;
 
 //为了访问本地文件而采用异步http服务器
 //异步可能会阻塞进程，所以采用了多线程http服务器
@@ -37,25 +26,10 @@ namespace wsock.tcp.simpleHttpServer{
     threadGlobal = { mainForm = ..mainForm }; //指定 HTTP 服务线程的默认全局变量,注意定义线程函数的作用域同名变量不能是局部变量
 }
 
-//导入fsys.file以获取文件的更新时间
-import fsys.file;
-
 //////////////////////////////////////////////////////////////////////
-//配置生成
+//全局变量
 //////////////////////////////////////////////////////////////////////
 
-/*
-配置生成方法：
-01. 由winform.bindconfig此函数dump配置到richedit
-02. 通过此richedit修改后的字符串，保存到cfg.html_crawler.richedit
-03. 调用eval(cfg.html_crawler.richedit)函数生成新的表，送入配置轮询中
-*/
-
-//////////////////////////////////////////////////////////////////////
-//界面线程变量
-//////////////////////////////////////////////////////////////////////
-
-//web.view导入
 if(cfg.proxy_setting){
 	if(cfg.proxy_setting.使用http代理){
 		launch_params = "--proxy-server=http://" + cfg.proxy_setting.地址文本 + ":" + cfg.proxy_setting.端口文本 + "  --accept-lang=zh-CN";
@@ -77,174 +51,118 @@ else {
 
 wbUserDataDir = io.appData("/appvar/userDataDir");
 wbHistoryDir = wbUserDataDir+"\EBWebView\Default\"; 
-import web.view;
-var wb = web.view(mainForm.html_watcher,wbUserDataDir,launch_params); 
-wb.preloadScript(`
-//禁止超链接默认开新窗口
-window.addEventListener('load',function(){ 
-	let base = document.querySelector('base'); 
-	if (base) base.removeAttribute('target');	
+
+//////////////////////////////////////////////////////////////////////
+//托盘消息拦截
+//////////////////////////////////////////////////////////////////////
+
+//托盘菜单设置
+mainForm.wndproc = function(hwnd,message,wparam,lparam){
+    select(message) {//判断消息类型
+        case  0x10/*_WM_CLOSE*/{
+            cleanHistory();
+            fadeHide();
+        };
+        case( 0x400+9981/*_WM_TRAYMESSAGE*/ ) { //托盘图标消息
+            if( lparam = 0x205/*_WM_RBUTTONUP*/ ){
+                    import mouse;
+                    x,y = mouse.getPos();
+                    //弹出托盘菜单以前，一定要前置主窗口中，不然不点击菜单不会消失
+                    win.setForeground(mainForm.hwnd)
+                    mainForm.popmenu.popup( x,y,true )
+            }
+             if(lparam = 0x203/*_WM_LBUTTONDBLCLK)*/){  //鼠标双击
+                mainForm.show(true);
+                mainForm.popmenu.setString(1,"隐藏");
+            }
+        };
+        case( 0x112/*_WM_SYSCOMMAND*/ ){ //系统命令消息
+            if( wparam == 0xF020/*_SC_MINIMIZE*/ ){ //用户点击了最小化按钮
+                mainForm.show(false); //隐藏窗口
+                mainForm.popmenu.setString(1,"显示")
+                return true;//阻击默认消息传递，取消最小化过程
+              }
+        };
+        
+     }
+        
+        //无返回值则继续调用默认回调函数
+}//endproc
+
+//////////////////////////////////////////////////////////////////////
+//自定义函数
+//////////////////////////////////////////////////////////////////////
+
+fadeHide = function(){
+    for(i=17;1;-1){
+        mainForm.transparent( i * 15);
+        x,y,cx,cy = mainForm.getPos();
+        mainForm.setPos(x-1,y-1,cx+2,cy+2);
+        win.delay(5);
+    };  
+    win.quitMessage();
+}
+
+cleanHistory = function(){
+	if(cfg.apps_setting){
+    	if(cfg.apps_setting.关闭时清空记录){
+    	    if(io.exist(wbHistoryDir + "Visited Links")){
+    	    	mainForm.msgbox("3秒后即将清理历史记录","注意",0,3000)
+    			if(io.remove(wbHistoryDir + "Visited Links") and io.remove(wbHistoryDir + "History") and io.remove(wbHistoryDir + "History-journal")){
+    				mainForm.msgbox("清理成功！即将自动退出！", "恭喜！",0,1200)
+    			}
+    			else {
+    				mainForm.msgbox("清理失败！请手动清理！即将自动退出！", "注意！",0,2000)
+    			}
+    	    }
+			else {
+				mainForm.msgbox("没有历史记录！即将自动退出！","恭喜！",0,1000)
+			}
+			
+    	}
+	}
+}
+
+//////////////////////////////////////////////////////////////////////
+//弹出菜单设置
+//////////////////////////////////////////////////////////////////////
+
+mainForm.popmenu = win.ui.popmenu(mainForm);//创建弹出菜单
+
+mainForm.popmenu.add("隐藏",function(id){
+    //在下面输入菜单响应代码
+    stat = win.isVisible(mainForm.hwnd);
+    if(stat){
+        mainForm.show(false);
+        mainForm.popmenu.setString(1,"显示")   
+    }else {
+        mainForm.show(true);
+        mainForm.popmenu.setString(1,"隐藏")
+    }
+});
+
+mainForm.popmenu.add();//分隔线
+mainForm.popmenu.add("网页监控",function(){
+	var webwatcher1 = mainForm.loadForm("\dlg\webwatcher.aardio");
+	webwatcher1.show();
+})
+mainForm.popmenu.add("时间线",function(){
+	var timeline1 = mainForm.loadForm("\dlg\timeline.aardio");
+	timeline1.show();
 })
 
-//禁止超链接开新窗口
-document.addEventListener('mousedown', function (event) {
-  var target = event.target;
-  for(var i=1;target && i<=5;i++){
-  	if ( target.tagName == 'A')  {
-  		target.removeAttribute('target');
-  		return;
-  	}
-  	
-  	target = target.parentNode; 
-  } 
-}, true);
-
-//禁止弹窗函数
-window.open =  function(url){ window.location.href = url; } 
-`)
-var url_loading = wsock.tcp.simpleHttpServer.getUrl("\res\loading.html"); 
-
-//复用代码，已经加入到"mainForm.配置选择.onOk()"中了
-//因此需要在onOk()函数之后再调用
-
-//计划任务导入
-import win.taskScheduler;
-var taskScheduler = win.taskScheduler( mainForm );
+mainForm.popmenu.add();//分隔线
+mainForm.popmenu.add('退出',function(id){ 
+	mainForm.close();
+})
 
 //////////////////////////////////////////////////////////////////////
-//函数调用
+//创建托盘图标
 //////////////////////////////////////////////////////////////////////
-//线程共享表
-import thread.table;
-var init_thrdTable = thread.table("init_shareVars",true/*清空*/ )
 
-var task  = taskScheduler.create("间隔一秒执行",function(){
-    mainForm.task_show.text = time(__,"%Y/%m/%d %H:%M:%S");
-    //win.setTop(mainForm.hwnd)
-    quarks.bring_to_me(mainForm)
-} )
-
-//设定计划任务执行时间方案
-task.interval = {  
-   second = 1;
-}
-
-//////////////////////////////////////////////////////////////////////
-//界面配置-放最后
-//////////////////////////////////////////////////////////////////////
-//窗口动效
-/*
-import win.animate;
-win.animate.fade( mainForm ).show();
-*/
-
-mainForm.进程检测.oncommand = function(id,event){
-	mainForm.进程检测.disabledText = {"✶";"✸";"✹";"✺";"✹";"✷"};	
-	var temp = quarks.process_detector("notepad.exe");
-	mainForm.进程检测.disabledText = null;
-	mainForm.task_show.text = "process id: " + tostring(temp);
-}
-
-mainForm.启动闹钟.oncommand = function(id,event){
-	taskScheduler.start();
-}
-
-mainForm.关闭闹钟.oncommand = function(id,event){
-	taskScheduler.stop();
-}
-
-mainForm.返回.oncommand = function(id,event){
-	if(wb.location != init_thrdTable.g_wb_location){
-		wb.doScript("window.history.back();");
-	}
-}
-
-mainForm.首页.oncommand = function(id,event){
-	var url_crwaler = wsock.tcp.simpleHttpServer.getUrl(init_thrdTable.path_html_crawler); 
-	wb.go(url_crwaler);
-	if(url_crwaler != url_loading){
-		init_thrdTable.g_wb_location = wb.location;
-		mainForm.返回.disabled = false;
-		mainForm.首页.disabled = false;
-		mainForm.刷新页面.disabled = false;
-	}
-}
-
-mainForm.刷新页面.oncommand = function(id,event){
-/*
-	var url_crwaler = wsock.tcp.simpleHttpServer.getUrl(init_thrdTable.path_html_crawler); 
-	console.log(io.remove(wbHistoryDir + "Visited Links"))
-*/
-/*
-	io.remove("/appvar/userDataDir/EBWebView/Default/History")
-	io.remove("/appvar/userDataDir/EBWebView/Default/History-journal")
-*/
-	mainForm.配置选择.onOk();
-}
-
-mainForm.配置选择.onOk = function(){ 
-	mainForm.html_watcher.setFocus();
-	wb.go(url_loading);
-	mainForm.返回.disabled = true;
-	mainForm.首页.disabled = true;
-	mainForm.刷新页面.disabled = true;
-	
-	var cfg_chosen = list_cfg[mainForm.配置选择.selText];
-	thread.invoke( 
-		function(mainForm,init_thrdTable,cfg_chosen){
-			import quarks;
-			var data_html_crawler,path_html_crawler,host_html_crawler = quarks.html_crawler(cfg_chosen,inet_launch_params);
-			init_thrdTable.path_html_crawler = path_html_crawler;
-			init_thrdTable.host_html_crawler = host_html_crawler;
-			init_thrdTable.flag_html_crawler = true;
-		},mainForm,init_thrdTable,cfg_chosen,inet_launch_params
-	)
-	
-	thread.invoke( 
-		function(mainForm,init_thrdTable){
-			while(1){
-				if(init_thrdTable.flag_html_crawler){
-					mainForm.首页.oncommand()
-					init_thrdTable.flag_html_crawler = null;
-					return ;
-				}
-			}
-		},mainForm,init_thrdTable
-	)
-}
-
-//配置选择的设置
-
-mainForm.设置.oncommand = function(id,event){
-	var frmChild = mainForm.loadForm("\dlg\settings.aardio");
-	frmChild.show();
-}
-//生成list内容
-if(cfg.html_crawler.richedit){
-	list_items,list_cfg = quarks.parse_cfg(cfg.html_crawler.richedit);
-	mainForm.配置选择.items = list_items;
-}
-if(mainForm.配置选择.count > 0){
-	mainForm.配置选择.selIndex = 1;
-	mainForm.配置选择.onOk();
-}
-
-mainForm.onClose = function(hwnd,message,wParam,lParam){
-    if(cfg.apps_setting){
-    	if(cfg.apps_setting.关闭时清空记录){
-    	    mainForm.disabled = true;
-    	    mainForm.html_watcher.close();
-    	    wb = null;
-    	   	mainForm.msgbox("5秒后即将清理历史记录","注意",0,5000)
-    		if(io.remove(wbHistoryDir + "Visited Links") and io.remove(wbHistoryDir + "History") and io.remove(wbHistoryDir + "History-journal")){
-    			mainForm.msgbox("清理成功！即将退出！", "恭喜！",0,2000)
-    		}
-    		else {
-    			mainForm.msgbox("清理失败！请手动清理！5秒后自动退出！", "注意！",0,5000)
-    		}
-    	}
-    }
-}
+tray = win.util.tray(mainForm) //创建托盘图标
+tray.message = 0x400+9981/*_WM_TRAYMESSAGE*/
+tray.tip = "右键打开菜单" //设置鼠标提示
 
 mainForm.show();
 return win.loopMessage();
