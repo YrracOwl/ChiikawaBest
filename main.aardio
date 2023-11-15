@@ -63,6 +63,7 @@ wbHistoryDir = wbUserDataDir+"\EBWebView\Default\";
 //设置：托盘消息
 //////////////////////////////////////////////////////////////////////
 
+
 mainForm.onTrayMessage = {
 	[0x205/*_WM_RBUTTONUP*/  ] = function(wParam){ 
 		win.setForeground(mainForm.hwnd);
@@ -127,9 +128,14 @@ mainForm.onClose = function(hwnd,message,wParam,lParam){
     fadeHide();
 }
 
+var minimize_1st_show = true; 
 
 mainForm.onMinimize = function(lParam){
 	mainForm.show(false); //隐藏窗口
+	if(!cfg.apps_setting.启动到托盘 and minimize_1st_show){
+		minimize_1st_show = false;
+		mainForm.tray.pop("应用已启动，右击托盘获取更多菜单","Atoms",,3000);
+	}
     //mainForm.popmenu.setString(1,"显示")
     return true;//阻击默认消息传递，取消最小化过程
 }
