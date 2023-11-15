@@ -1,6 +1,6 @@
 import win.ui;
 /*DSG{{*/
-mainForm = win.form(text="atoms";right=220;bottom=118;border="thin";max=false)
+mainForm = win.form(text="atoms";right=220;bottom=118;border="none";max=false)
 mainForm.add(
 bk={cls="bk";left=0;top=0;right=224;bottom=120;ah=1;aw=1;background="\res\keai.jpg";z=1}
 )
@@ -32,6 +32,7 @@ namespace wsock.tcp.simpleHttpServer{
 //全局变量
 //////////////////////////////////////////////////////////////////////
 
+//设置：webview2与inet代理
 if(cfg.proxy_setting){
 	if(cfg.proxy_setting.使用http代理){
 		launch_params = "--proxy-server=http://" + cfg.proxy_setting.地址文本 + ":" + cfg.proxy_setting.端口文本 + "  --accept-lang=zh-CN";
@@ -51,53 +52,96 @@ else {
 	inet_launch_params = " ";
 }
 
+//设置：webview2用户数据位置
 wbUserDataDir = io.appData("/appvar/userDataDir");
 wbHistoryDir = wbUserDataDir+"\EBWebView\Default\"; 
 
+//设置：数据库设置
+
+
 //////////////////////////////////////////////////////////////////////
-//托盘消息拦截
+//设置：托盘消息
 //////////////////////////////////////////////////////////////////////
 
-//托盘菜单设置
-mainForm.wndproc = function(hwnd,message,wparam,lparam){
-    select(message) {//判断消息类型
-        case  0x10/*_WM_CLOSE*/{
-            cleanHistory();
-            fadeHide();
-        };
-        case( 0x400+9981/*_WM_TRAYMESSAGE*/ ) { //托盘图标消息
-            if( lparam = 0x205/*_WM_RBUTTONUP*/ ){
-                    import mouse;
-                    x,y = mouse.getPos();
-                    //弹出托盘菜单以前，一定要前置主窗口中，不然不点击菜单不会消失
-                    win.setForeground(mainForm.hwnd)
-                    mainForm.popmenu.popup( x,y,true )
-            }
-             if(lparam = 0x203/*_WM_LBUTTONDBLCLK)*/){  //鼠标双击
-                mainForm.show(true);
-                mainForm.popmenu.setString(1,"隐藏");
-            }
-        };
-        case( 0x112/*_WM_SYSCOMMAND*/ ){ //系统命令消息
-            if( wparam == 0xF020/*_SC_MINIMIZE*/ ){ //用户点击了最小化按钮
-                mainForm.show(false); //隐藏窗口
-                mainForm.popmenu.setString(1,"显示")
-                return true;//阻击默认消息传递，取消最小化过程
-              }
-        };
-        
-     }
-        
-        //无返回值则继续调用默认回调函数
-}//endproc
+mainForm.onTrayMessage = {
+	[0x205/*_WM_RBUTTONUP*/  ] = function(wParam){ 
+		win.setForeground(mainForm.hwnd);
+		/*
+		下面创建托盘弹出菜单。
+		如果程序要开机启动到托盘，最好在这里创建菜单，在用户点击前不要创建菜单，
+		避免系统启动时 DPI 缩放前创建的菜单字体偏小（出现这情况的机率很小）。
+		如果不想重复创建菜单最好写到一个库里，然后在这里 import 即可避免上述问题。
+		*/
+		import win.ui.menu;
+		mainForm.popmenu = win.ui.popmenu(mainForm);//创建弹出菜单
+		mainForm.popmenu.add("&打开主窗口",function(id){
+    		//在下面输入菜单响应代码
+    		stat = win.isVisible(mainForm.hwnd);
+    		if(stat){
+        		mainForm.show(false);
+    		}else {
+        		mainForm.show(true);
+    		}
+		});
+		
+		mainForm.popmenu.add();//分隔线
+		mainForm.popmenu.add("&设置",function(){
+			var settings1 = mainForm.loadForm("\dlg\settings.aardio");
+			settings1.show();
+		})
+		
+		mainForm.popmenu.add();//分隔线
+		mainForm.popmenu.add("&网页监控",function(){
+			var webwatcher1 = mainForm.loadForm("\dlg\webwatcher.aardio");
+			webwatcher1.show();
+		})
+		mainForm.popmenu.add("&时间线",function(){
+			var timeline1 = mainForm.loadForm("\dlg\timeline.aardio");
+			timeline1.show();
+		})
+		
+		mainForm.popmenu.add();//分隔线
+		mainForm.popmenu.add('&退出',function(id){ 
+			mainForm.close();
+		})
+		mainForm.popmenu.popup();
+	    mainForm.popmenu.close();
+		
+	};
+	[0x202/*_WM_LBUTTONUP*/] = function(wParam){ 
+		
+	};
+	[0x203/*_WM_LBUTTONDBLCLK*/] = function(wParam){ 
+		mainForm.show(true);
+	};
+	[0x404/*_PARAM_DESTROY*/] = function(wParam){ 
+		
+	};
+	[0x405/*_PARAM_CLICKED*/] = function(wParam){ 
+		
+	};
+}
+
+mainForm.onClose = function(hwnd,message,wParam,lParam){
+    cleanHistory();
+    fadeHide();
+}
+
+
+mainForm.onMinimize = function(lParam){
+	mainForm.show(false); //隐藏窗口
+    //mainForm.popmenu.setString(1,"显示")
+    return true;//阻击默认消息传递，取消最小化过程
+}
 
 //////////////////////////////////////////////////////////////////////
 //自定义函数
 //////////////////////////////////////////////////////////////////////
 
+//渐隐扩散特效
 fadeHide = function(){
     for(i=17;1;-1){
-        mainForm.transparent( i * 15);
+        mainForm.transparent( i * 10);
         x,y,cx,cy = mainForm.getPos();
         mainForm.setPos(x-1,y-1,cx+2,cy+2);
         win.delay(5);
@@ -105,6 +149,7 @@ fadeHide = function(){
     win.quitMessage();
 }
 
+//清除用户webview2数据
 cleanHistory = function(){
 	if(cfg.apps_setting){
     	if(cfg.apps_setting.关闭时清空记录){
@@ -126,53 +171,33 @@ cleanHistory = function(){
 }
 
 //////////////////////////////////////////////////////////////////////
-//弹出菜单设置
-//////////////////////////////////////////////////////////////////////
-
-mainForm.popmenu = win.ui.popmenu(mainForm);//创建弹出菜单
-
-mainForm.popmenu.add("隐藏",function(id){
-    //在下面输入菜单响应代码
-    stat = win.isVisible(mainForm.hwnd);
-    if(stat){
-        mainForm.show(false);
-        mainForm.popmenu.setString(1,"显示")   
-    }else {
-        mainForm.show(true);
-        mainForm.popmenu.setString(1,"隐藏")
-    }
-});
-
-mainForm.popmenu.add();//分隔线
-mainForm.popmenu.add("设置",function(){
-	var settings1 = mainForm.loadForm("\dlg\settings.aardio");
-	settings1.show();
-})
-
-mainForm.popmenu.add();//分隔线
-mainForm.popmenu.add("网页监控",function(){
-	var webwatcher1 = mainForm.loadForm("\dlg\webwatcher.aardio");
-	webwatcher1.show();
-})
-mainForm.popmenu.add("时间线",function(){
-	var timeline1 = mainForm.loadForm("\dlg\timeline.aardio");
-	timeline1.show();
-})
-
-mainForm.popmenu.add();//分隔线
-mainForm.popmenu.add('退出',function(id){ 
-	mainForm.close();
-})
-
-//////////////////////////////////////////////////////////////////////
 //创建托盘图标
 //////////////////////////////////////////////////////////////////////
 
-tray = win.util.tray(mainForm) //创建托盘图标
-tray.message = 0x400+9981/*_WM_TRAYMESSAGE*/
-tray.tip = "右键打开菜单" //设置鼠标提示
+mainForm.tray = win.util.tray(mainForm) //创建托盘图标
+mainForm.tray.tip = "右键打开菜单" //设置鼠标提示
 
-mainForm.show();
-//mainForm.hitMin();
-tray.pop("应用已启动，隐藏到托盘","Atoms",,3000);
+import win.ui.simpleWindow;
+win.ui.simpleWindow(mainForm,,,18,).skin(
+	background = { 
+		hover = 0xff99ffcc;
+		active = 0xffff6666; 
+		default = 0x00000000; 
+	}
+	color = { 
+		hover = 0xff666666;
+		active = 0xffffffff; 
+		default = 0xFF7BA5BF; 
+	}
+)
+
+
+//主窗口是否显示
+if(cfg.apps_setting.启动到托盘){
+	mainForm.tray.pop("应用已启动，右击托盘获取更多菜单","Atoms",,3000);
+}
+else {
+	mainForm.show();
+}
+
 return win.loopMessage();
