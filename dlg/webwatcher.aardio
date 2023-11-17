@@ -1,6 +1,6 @@
 import win.ui;
 /*DSG{{*/
-winform = win.form(text="webwatcher";right=599;bottom=695)
+winform = win.form(text="webwatcher";right=599;bottom=695;clipch=1)
 winform.add(
 html_watcher={cls="custom";text="自定义控件";left=16;top=40;right=584;bottom=656;db=1;dl=1;dr=1;dt=1;z=5};
 task_show={cls="plus";text="-- 待显示 --";left=416;top=664;right=584;bottom=688;db=1;dl=1;z=4};
@@ -9,7 +9,7 @@ task_show={cls="plus";text="-- 待显示 --";left=416;top=664;right=584;bottom=6
 启动闹钟={cls="button";text="启动闹钟";left=88;top=664;right=160;bottom=688;db=1;dl=1;z=2};
 返回={cls="button";text="返回";left=8;top=8;right=48;bottom=32;dl=1;dt=1;z=6};
 进程检测={cls="button";text="进程检测";left=8;top=664;right=80;bottom=688;db=1;dl=1;z=1};
-配置选择={cls="combobox";left=184;top=8;right=432;bottom=32;aw=1;dt=1;edge=1;items={};mode="dropdown";z=9};
+配置选择={cls="combobox";left=184;top=8;right=432;bottom=32;aw=1;clip=1;dt=1;edge=1;items={};mode="dropdown";z=9};
 首页={cls="button";text="首页";left=56;top=8;right=96;bottom=32;dl=1;dt=1;z=7}
 )
 /*}}*/

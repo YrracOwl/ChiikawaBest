@@ -1,6 +1,6 @@
 import win.ui;
 /*DSG{{*/
-var winform = win.form(text="设置";right=591;bottom=295)
+var winform = win.form(text="设置";right=591;bottom=295;clipch=1)
 winform.add(
 tab={cls="tab";left=8;top=8;right=584;bottom=288;ah=1;aw=1;edge=1;z=1}
 )

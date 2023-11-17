@@ -9,6 +9,11 @@ bk={cls="bk";left=0;top=0;right=224;bottom=120;ah=1;aw=1;background="\res\keai.j
 //////////////////////////////////////////////////////////////////////
 //Libray导入
 //////////////////////////////////////////////////////////////////////
+//process库导入
+import process;
+
+//sqlite导入
+import sqlite;
 
 //托盘库
 import win.ui.menu;
@@ -57,7 +62,13 @@ wbUserDataDir = io.appData("/appvar/userDataDir");
 wbHistoryDir = wbUserDataDir+"\EBWebView\Default\"; 
 
 //设置：数据库设置
+dbDir = io.appData("/appvar/database");
+dbBase = sqlite(dbDir+"/base.db");
+dbTimeline = sqlite(dbDir+"/timeline.db");
 
+if( not dbTimeline.existsTable("default") ){ 
+	db.exec( "CREATE TABLE default (time, title, content);"); 
+} 
 
 //////////////////////////////////////////////////////////////////////
 //设置：托盘消息
@@ -99,6 +110,11 @@ mainForm.onTrayMessage = {
 		mainForm.popmenu.add("&时间线",function(){
 			var timeline1 = mainForm.loadForm("\dlg\timeline.aardio");
 			timeline1.show();
+		})
+		
+		mainForm.popmenu.add();//分隔线
+		mainForm.popmenu.add("&打开数据文件夹",function(){
+			process("explorer.exe",io.appData("/appvar/"))
 		})
 		
 		mainForm.popmenu.add();//分隔线
@@ -175,6 +191,34 @@ cleanHistory = function(){
     	}
 	}
 }
+
+//多线程写数据库函数
+//创建线程  
+thrdWriteDBFunc = function(db_path,db_prepare,db_step){
+        
+    import sqlite;
+    var db = sqlite(db_path)
+    
+    //多线程冲突锁定时的重试次数
+    db.busyTimeout(10000);
+    thread.lock("PRINT",λ() io.print("正在写数据库,线程ID:",thread.getId()) )
+    
+    //var command = db.prepare("REPLACE INTO film VALUES (@title,@length,@year, 'Jodie Foster');" ) 
+    var command = db.prepare(db_prepare) 
+    for(i=1;10;1){
+        command.step(db_step)
+/*
+        command.step(  
+            title = "标题";
+            length = 4;
+            year = thread.getId();
+        )
+*/
+    } 
+    
+    command.finalize();
+    db.close();
+} 
 
 //////////////////////////////////////////////////////////////////////
 //创建托盘图标
