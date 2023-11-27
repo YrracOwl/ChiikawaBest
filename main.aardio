@@ -21,7 +21,8 @@ import win.util.tray;
 
 //配置设置
 import fsys.config;
-cfgPath = io.appData("/appvar/app.config");
+appName = "/appvar/";
+cfgPath = io.appData(appName+"app.config");
 cfg = fsys.config(cfgPath);
 
 //为了访问本地文件而采用异步http服务器
@@ -58,17 +59,25 @@ else {
 }
 
 //设置：webview2用户数据位置
-wbUserDataDir = io.appData("/appvar/userDataDir");
+wbUserDataDir = io.appData(appName+"userDataDir");
 wbHistoryDir = wbUserDataDir+"\EBWebView\Default\"; 
 
 //设置：数据库设置
-dbDir = io.appData("/appvar/database");
-dbBase = sqlite(dbDir+"/base.db");
-dbTimeline = sqlite(dbDir+"/timeline.db");
+dbDir = io.appData(appName+"database");
+if(not io.exist(dbDir)){
+	io.createDir(dbDir);
+}
+
+dbBasePath = dbDir+"/base.db"
+dbBase = sqlite(dbBasePath);
+
+dbTimelinePath = dbDir+"/timeline.db";
+dbTimeline = sqlite(dbTimelinePath);
 
 if( not dbTimeline.existsTable("default") ){ 
-	db.exec( "CREATE TABLE default (time, title, content);"); 
-} 
+	dbTimeline.exec( "CREATE TABLE [default] (time, title, content);"); 
+}
+
 
 //////////////////////////////////////////////////////////////////////
 //设置：托盘消息
@@ -86,15 +95,16 @@ mainForm.onTrayMessage = {
 		*/
 		import win.ui.menu;
 		mainForm.popmenu = win.ui.popmenu(mainForm);//创建弹出菜单
-		mainForm.popmenu.add("&打开主窗口",function(id){
-    		//在下面输入菜单响应代码
-    		stat = win.isVisible(mainForm.hwnd);
-    		if(stat){
-        		mainForm.show(false);
-    		}else {
-        		mainForm.show(true);
-    		}
-		});
+    	stat = win.isVisible(mainForm.hwnd);
+    	if(stat){
+    	    mainForm.popmenu.add("&隐藏主窗口",function(id){
+				mainForm.show(false);
+			});
+    	}else {
+    	    mainForm.popmenu.add("&显示主窗口",function(id){
+				mainForm.show(true);
+			});
+    	}
 		
 		mainForm.popmenu.add();//分隔线
 		mainForm.popmenu.add("&设置",function(){
@@ -114,7 +124,7 @@ mainForm.onTrayMessage = {
 		
 		mainForm.popmenu.add();//分隔线
 		mainForm.popmenu.add("&打开数据文件夹",function(){
-			process("explorer.exe",io.appData("/appvar/"))
+			process("explorer.exe",io.appData(appName))
 		})
 		
 		mainForm.popmenu.add();//分隔线
@@ -202,20 +212,12 @@ thrdWriteDBFunc = function(db_path,db_prepare,db_step){
     //多线程冲突锁定时的重试次数
     db.busyTimeout(10000);
     thread.lock("PRINT",λ() io.print("正在写数据库,线程ID:",thread.getId()) )
-    
-    //var command = db.prepare("REPLACE INTO film VALUES (@title,@length,@year, 'Jodie Foster');" ) 
+
     var command = db.prepare(db_prepare) 
     for(i=1;10;1){
         command.step(db_step)
-/*
-        command.step(  
-            title = "标题";
-            length = 4;
-            year = thread.getId();
-        )
-*/
     } 
-    
+
     command.finalize();
     db.close();
 } 
