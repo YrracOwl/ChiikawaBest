@@ -8,7 +8,7 @@ winform.add(
 ["win时间线"]={cls="custom";text="win时间线";left=296;top=40;right=1272;bottom=712;border=1;db=1;dl=1;dr=1;dt=1;z=1};
 创建时间线={cls="plus";text="创建时间线";left=8;top=8;right=136;bottom=30;align="left";bgcolor=-5197169;border={radius=10};dl=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF160';notify=1;textPadding={left=30};z=2};
 添加提醒项={cls="plus";text="添加提醒项";left=440;top=8;right=568;bottom=30;align="left";bgcolor=-5197169;border={radius=10};dl=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF0A2';notify=1;textPadding={left=30};z=3};
-选择时间线={cls="combobox";left=144;top=8;right=288;bottom=32;edge=1;font=LOGFONT(h=-13);items={};mode="dropdown";z=5}
+选择时间线={cls="combobox";left=144;top=8;right=288;bottom=32;clipch=1;dl=1;dt=1;edge=1;font=LOGFONT(h=-13);items={};mode="dropdown";z=5}
 )
 /*}}*/
 
@@ -96,14 +96,15 @@ wb_tl.html = /**
 winform.win新增子事项.loadForm("\dlg\timeline_add_note.aardio")
 
 //winform.选择时间线.items = 
-import console;
-console.open();	
 for rowid, name, time in ..dbTimeline.each("SELECT rowid,* FROM timeline") {
 	/*
 	for 语句的第一个返回值如果为 null 就会退出循环,
 	如果数据库返回的第一个字段可能为空,那么可以把 SQLite 默认就有的索引字段 rowid 放在最前面
 	*/
-	console.log( rowid, name, time) 
+	..logInfo(tostring(rowid))	
+	..logInfo(tostring(name))
+	..logInfo(tostring(time))
+	..logInfo('\r\n')
 }
 
 winform.show();

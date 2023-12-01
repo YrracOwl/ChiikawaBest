@@ -137,6 +137,10 @@ mainForm.onTrayMessage = {
 			process("explorer.exe",io.appData(appName))
 		})
 		
+		mainForm.popmenu.add("&应用日志",function(){
+			logForm.show();
+		})
+		
 		mainForm.popmenu.add();//分隔线
 		mainForm.popmenu.add('&退出',function(id){ 
 			mainForm.close();
@@ -179,6 +183,15 @@ mainForm.onMinimize = function(lParam){
 //////////////////////////////////////////////////////////////////////
 //自定义函数
 //////////////////////////////////////////////////////////////////////
+
+//log函数
+logForm = mainForm.loadForm("\dlg\log.aardio");
+logForm.show(false);
+logInfo = function(text){
+	logForm.richedit.appendText(text)
+	logForm.richedit.appendText("    ")
+}
+
 
 //渐隐扩散特效
 fadeHide = function(){
