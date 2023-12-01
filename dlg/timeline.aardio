@@ -95,10 +95,16 @@ wb_tl.html = /**
 
 winform.win新增子事项.loadForm("\dlg\timeline_add_note.aardio")
 
-..dbTimeline.
-
-
-winform.选择时间线.items = 
+//winform.选择时间线.items = 
+import console;
+console.open();	
+for rowid, name, time in ..dbTimeline.each("SELECT rowid,* FROM timeline") {
+	/*
+	for 语句的第一个返回值如果为 null 就会退出循环,
+	如果数据库返回的第一个字段可能为空,那么可以把 SQLite 默认就有的索引字段 rowid 放在最前面
+	*/
+	console.log( rowid, name, time) 
+}
 
 winform.show();
 winform.win时间线.setFocus()

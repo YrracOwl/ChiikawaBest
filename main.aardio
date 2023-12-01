@@ -68,14 +68,24 @@ if(not io.exist(dbDir)){
 	io.createDir(dbDir);
 }
 
+//Base数据库路径
 dbBasePath = dbDir+"/base.db"
 dbBase = sqlite(dbBasePath);
-
+//Timeline数据库路径
 dbTimelinePath = dbDir+"/timeline.db";
 dbTimeline = sqlite(dbTimelinePath);
 
 if( not dbTimeline.existsTable("default") ){ 
 	dbTimeline.exec( "CREATE TABLE [default] (time, title, content);"); 
+}
+
+if( not dbTimeline.existsTable("timeline") ){ 
+	dbTimeline.exec( "CREATE TABLE [timeline] (name, time);");
+	var cmd = dbTimeline.prepare("REPLACE INTO [timeline] VALUES ( @name,@time);");
+	cmd.step(
+		name = "default";
+		time = time.now();
+	)
 }
 
 
@@ -204,8 +214,8 @@ cleanHistory = function(){
 
 //多线程写数据库函数
 //创建线程  
-thrdWriteDBFunc = function(db_path,db_prepare,db_step){
-        
+thrdWriteDBFunc = function(db_path,str_prepare,str_step){
+
     import sqlite;
     var db = sqlite(db_path)
     
@@ -213,9 +223,9 @@ thrdWriteDBFunc = function(db_path,db_prepare,db_step){
     db.busyTimeout(10000);
     thread.lock("PRINT",λ() io.print("正在写数据库,线程ID:",thread.getId()) )
 
-    var command = db.prepare(db_prepare) 
+    var command = db.prepare(str_prepare) 
     for(i=1;10;1){
-        command.step(db_step)
+        command.step(str_step)
     } 
 
     command.finalize();
