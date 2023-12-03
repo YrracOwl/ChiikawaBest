@@ -20,7 +20,6 @@
 		<file name="timeline.aardio" path="dlg\timeline.aardio" comment="dlg\timeline.aardio"/>
 		<file name="timeline_add_alarm.aardio" path="dlg\timeline_add_alarm.aardio" comment="dlg\timeline_add_alarm.aardio"/>
 		<file name="timeline_add_note.aardio" path="dlg\timeline_add_note.aardio" comment="dlg\timeline_add_note.aardio"/>
-		<file name="timeline_make.aardio" path="dlg\timeline_make.aardio" comment="dlg\timeline_make.aardio"/>
 		<file name="webwatcher.aardio" path="dlg\webwatcher.aardio" comment="dlg\webwatcher.aardio"/>
 		<file name="log.aardio" path="dlg\log.aardio" comment="dlg\log.aardio"/>
 	</folder>

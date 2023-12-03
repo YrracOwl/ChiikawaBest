@@ -1,9 +1,0 @@
-import win.ui;
-/*DSG{{*/
-var winform = win.form(text="创建时间线";right=759;bottom=469)
-winform.add()
-/*}}*/
-
-winform.show();
-win.loopMessage();
-return winform;

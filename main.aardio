@@ -12,6 +12,9 @@ bk={cls="bk";left=0;top=0;right=224;bottom=120;ah=1;aw=1;background="\res\keai.j
 //process库导入
 import process;
 
+//gid库导入用于翻转颜色
+import gdi;
+
 //sqlite导入
 import sqlite;
 
@@ -107,42 +110,42 @@ mainForm.onTrayMessage = {
 		mainForm.popmenu = win.ui.popmenu(mainForm);//创建弹出菜单
     	stat = win.isVisible(mainForm.hwnd);
     	if(stat){
-    	    mainForm.popmenu.add("&隐藏主窗口",function(id){
+    	    mainForm.popmenu.add("隐藏主窗口",function(id){
 				mainForm.show(false);
 			});
     	}else {
-    	    mainForm.popmenu.add("&显示主窗口",function(id){
+    	    mainForm.popmenu.add("显示主窗口",function(id){
 				mainForm.show(true);
 			});
     	}
 		
 		mainForm.popmenu.add();//分隔线
-		mainForm.popmenu.add("&设置",function(){
+		mainForm.popmenu.add("设置",function(){
 			var settings1 = mainForm.loadForm("\dlg\settings.aardio");
 			settings1.show();
 		})
 		
 		mainForm.popmenu.add();//分隔线
-		mainForm.popmenu.add("&网页监控",function(){
+		mainForm.popmenu.add("网页监控",function(){
 			var webwatcher1 = mainForm.loadForm("\dlg\webwatcher.aardio");
 			webwatcher1.show();
 		})
-		mainForm.popmenu.add("&时间线",function(){
+		mainForm.popmenu.add("时间线",function(){
 			var timeline1 = mainForm.loadForm("\dlg\timeline.aardio");
 			timeline1.show();
 		})
 		
 		mainForm.popmenu.add();//分隔线
-		mainForm.popmenu.add("&打开数据文件夹",function(){
+		mainForm.popmenu.add("打开数据文件夹",function(){
 			process("explorer.exe",io.appData(appName))
 		})
 		
-		mainForm.popmenu.add("&应用日志",function(){
+		mainForm.popmenu.add("应用日志",function(){
 			logForm.show();
 		})
 		
 		mainForm.popmenu.add();//分隔线
-		mainForm.popmenu.add('&退出',function(id){ 
+		mainForm.popmenu.add('退出',function(id){ 
 			mainForm.close();
 		})
 		mainForm.popmenu.popup();
@@ -187,9 +190,58 @@ mainForm.onMinimize = function(lParam){
 //log函数
 logForm = mainForm.loadForm("\dlg\log.aardio");
 logForm.show(false);
-logInfo = function(text){
-	logForm.richedit.appendText(text)
-	logForm.richedit.appendText("    ")
+
+logMsg = function(...){
+	logInfo("消息",...);
+}
+
+logWarn = function(...){
+	logInfo("警告",...);
+}
+
+logErr = function(...){
+	logInfo("错误",...);
+}
+
+logInfo = function(infoType, ...){
+	var colorSet = {
+	//0xbbggrr
+	0xffffff;//1白色
+	0x000000;//2黑色
+	0x0000ff;//3正红色
+	0x00ff00;//4正绿色
+	0xff0000;//5正蓝色
+	0x349bdb;//6黄不老
+	0x1d16c8;//7丹雘
+	0x6b4e35;//8青雀头黛
+	}; 
+	var color = colorSet[2]; 
+	var bkcolor = colorSet[1]; 
+	select(infoType) {
+		case "消息" {
+			color = colorSet[8];
+		}
+		case "警告" {
+			color = colorSet[6];
+		}
+		case "错误" {
+			color = colorSet[7];
+		}
+		else {
+			color = colorSet[2];
+		}
+	};
+	
+	logForm.richedit.appendText("[ "+infoType+" ] " + tostring(time.now()),":    ")
+	var arg = { ... };
+	for(k,v in arg){
+		logForm.richedit.appendText(tostring(v))
+		logForm.richedit.appendText("    ")
+	}
+	logForm.richedit.appendText('\r\n')
+	logForm.richedit.lineSel(-2);
+	logForm.richedit.setSelCharformat(textColor = color);
+	logForm.richedit.deselect();
 }
 
 

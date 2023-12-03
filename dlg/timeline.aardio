@@ -1,14 +1,24 @@
 import fonts.fontAwesome;
-
 import win.ui;
 /*DSG{{*/
 var winform = win.form(text="Timeline";right=1279;bottom=719;clipch=1)
 winform.add(
-["win新增子事项"]={cls="custom";text="win新增子事项";left=8;top=40;right=288;bottom=464;border=1;dl=1;dt=1;z=4};
-["win时间线"]={cls="custom";text="win时间线";left=296;top=40;right=1272;bottom=712;border=1;db=1;dl=1;dr=1;dt=1;z=1};
-创建时间线={cls="plus";text="创建时间线";left=8;top=8;right=136;bottom=30;align="left";bgcolor=-5197169;border={radius=10};dl=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF160';notify=1;textPadding={left=30};z=2};
-添加提醒项={cls="plus";text="添加提醒项";left=440;top=8;right=568;bottom=30;align="left";bgcolor=-5197169;border={radius=10};dl=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF0A2';notify=1;textPadding={left=30};z=3};
-选择时间线={cls="combobox";left=144;top=8;right=288;bottom=32;clipch=1;dl=1;dt=1;edge=1;font=LOGFONT(h=-13);items={};mode="dropdown";z=5}
+datetimepick={cls="datetimepick";left=64;top=8;right=272;bottom=32;dl=1;dt=1;edge=1;font=LOGFONT(h=-13);z=7};
+plus={cls="plus";text="当前主题";left=288;top=8;right=360;bottom=32;align="left";dl=1;dt=1;font=LOGFONT(h=-13);notify=1;z=6};
+plus10={cls="plus";text="内容：";left=8;top=104;right=64;bottom=128;dl=1;dt=1;font=LOGFONT(h=-13);notify=1;z=16};
+plus7={cls="plus";text="标题：";left=8;top=72;right=64;bottom=96;dl=1;dt=1;font=LOGFONT(h=-13);notify=1;z=13};
+plus8={cls="plus";text="时间：";left=8;top=40;right=64;bottom=64;dl=1;dt=1;font=LOGFONT(h=-13);notify=1;z=14};
+plus9={cls="plus";text="日期：";left=8;top=8;right=64;bottom=32;dl=1;dt=1;font=LOGFONT(h=-13);notify=1;z=15};
+["win时间线"]={cls="custom";text="win时间线";left=288;top=40;right=1272;bottom=712;border=1;db=1;dl=1;dr=1;dt=1;z=1};
+内容plus={cls="plus";left=8;top=128;right=272;bottom=416;align="left";border={color=-6908266;width=1};dl=1;dt=1;editable=1;font=LOGFONT(h=-13);forecolor=16777215;multiline=1;notify=1;textPadding={top=6;bottom=2};wrap=1;z=9};
+创建时间线={cls="plus";text="创建时间线";left=72;top=464;right=200;bottom=486;align="left";bgcolor=-5197169;border={radius=10};dl=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF160';notify=1;textPadding={left=30};z=2};
+勾选plus={cls="plus";text="当前时间";left=176;top=40;right=272;bottom=64;align="left";dl=1;dt=1;font=LOGFONT(h=-13);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome')};iconText='\uF111 ';notify=1;textPadding={left=24};z=12};
+时间plus={cls="plus";left=64;top=40;right=168;bottom=64;autohscroll=false;autovscroll=false;border={color=-6908266;width=1};dl=1;dt=1;editable="edit";font=LOGFONT(h=-16);notify=1;textPadding={bottom=1};z=11};
+时间线标题={cls="plus";left=8;top=424;right=272;bottom=456;border={bottom=1;color=-6908266};dl=1;dt=1;editable="edit";font=LOGFONT(h=-13);notify=1;textPadding={top=12};z=5};
+标题plus={cls="plus";left=64;top=72;right=272;bottom=96;border={bottom=1;color=-6908266};dl=1;dt=1;editable=1;font=LOGFONT(h=-13);forecolor=16777215;notify=1;textPadding={top=6;bottom=2};z=8};
+添加plus={cls="plus";text="添加";left=192;top=104;right=272;bottom=126;align="left";bgcolor=-5197169;border={radius=10};dl=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF0C7';textPadding={left=30};z=10};
+添加提醒项={cls="plus";text="添加提醒项";left=656;top=8;right=784;bottom=30;align="left";bgcolor=-5197169;border={radius=10};dl=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF0A2';notify=1;textPadding={left=30};z=3};
+选择时间线={cls="combobox";left=368;top=8;right=640;bottom=32;clipch=1;dl=1;dt=1;edge=1;font=LOGFONT(h=-13);items={};mode="dropdown";z=4}
 )
 /*}}*/
 
@@ -41,7 +51,7 @@ winform.创建时间线.skin({
 })
 
 winform.创建时间线.oncommand = function(id,event){
-	winform.loadForm("\dlg\timeline_make.aardio")
+	
 }
 
 winform.添加提醒项.oncommand = function(id,event){
@@ -93,19 +103,127 @@ wb_tl.html = /**
 </html>
 **/;
 
-winform.win新增子事项.loadForm("\dlg\timeline_add_note.aardio")
+var updateCombobox = function(winform){
+	var list_timeline = {};
+	for rowid, name, time in ..dbTimeline.each("SELECT rowid,* FROM timeline") {
+		/*
+		for 语句的第一个返回值如果为 null 就会退出循环,
+		如果数据库返回的第一个字段可能为空,那么可以把 SQLite 默认就有的索引字段 rowid 放在最前面
+		*/
+		table.push(list_timeline,name)
+		..logMsg("更新时间线中的combobox数据")
+		..logMsg(rowid,name,time)
+/*
+		..logWarn("这是一个警告")
+		..logErr("这是一个错误")
+*/
+	}
+	winform.选择时间线.items = list_timeline;
+};
 
-//winform.选择时间线.items = 
-for rowid, name, time in ..dbTimeline.each("SELECT rowid,* FROM timeline") {
-	/*
-	for 语句的第一个返回值如果为 null 就会退出循环,
-	如果数据库返回的第一个字段可能为空,那么可以把 SQLite 默认就有的索引字段 rowid 放在最前面
-	*/
-	..logInfo(tostring(rowid))	
-	..logInfo(tostring(name))
-	..logInfo(tostring(time))
-	..logInfo('\r\n')
+winform.时间线标题.skin(
+	background = { 
+		hover = "/res/images/btn-hover.png";
+		focus = "/res/images/btn-focus.jpg";
+		active = "/res/images/btn-active.png";
+		disabled = "/res/images/btn-disabled.png"; 
+	}
+)
+
+winform.plus.skin(
+	background = { 
+		hover = "/res/images/btn-hover.png";
+		focus = "/res/images/btn-focus.jpg";
+		active = "/res/images/btn-active.png";
+		disabled = "/res/images/btn-disabled.png"; 
+	}
+)
+
+updateCombobox(winform);
+
+
+////////////////////////////////////////////////////////////////////
+//新增子事项
+////////////////////////////////////////////////////////////////////
+
+winform.添加plus.skin({
+	background={
+		active=0xFFD3E0BC;
+		default=0x668FB2B0;
+		disabled=0xFFCCCCCC;
+		focus=0xFFE3E3E3;
+		hover=0xFF928BB3
+	};
+	color={
+		default=0xFF000000;
+		disabled=0xFF6D6D6D
+	}
+})
+
+winform.勾选plus.skin({
+	color={
+		active=0xFF00FF00;
+		default=0xFF000000;
+		disabled=0xFF6D6D6D;
+		hover=0xFFFF0000
+	};
+	checked={
+		iconText='\uF058'
+	}
+})
+
+winform.datetimepick.setFormat("''HH':'mm':'ss, dddd, MMMdd日', 'yyyy")
+winform.datetimepick.setFormat("yyyy年MMMdd日 - dddd")
+
+import win.taskScheduler;
+var taskScheduler = win.taskScheduler(winform); 
+
+var task  = taskScheduler.create("每秒执行",function(){
+	winform.时间plus.text = tostring(time(__,'%H:%M:%S'));
+	
+} )
+
+//设定计划任务执行时间方案
+task.interval = {  
+   second = 1;
 }
+
+winform.标题plus.skin(
+	background = { 
+		hover = "/res/images/btn-hover.png";
+		focus = "/res/images/btn-focus.jpg";
+		active = "/res/images/btn-active.png";
+		disabled = "/res/images/btn-disabled.png"; 
+	}
+)
+
+winform.内容plus.skin(
+	background = { 
+		hover = "/res/images/btn-hover.png";
+		focus = "/res/images/btn-focus.jpg";
+		active = "/res/images/btn-active.png";
+		disabled = "/res/images/btn-disabled.png"; 
+	}
+)
+
+winform.勾选plus.oncommand = function(id,event){
+	if(winform.勾选plus.checked){
+		winform.时间plus.editable = false;
+		winform.时间plus.background = null;
+		taskScheduler.start();
+	}
+	else {
+		winform.时间plus.editable = true;
+		winform.时间plus.background = 0xFFFFFFFF;
+		taskScheduler.stop();
+		
+	}
+	
+}
+winform.勾选plus.checked = true;
+winform.时间plus.editable = false;
+taskScheduler.start();
+winform.时间plus.text = tostring(time(__,'%H:%M:%S'));
 
 winform.show();
 winform.win时间线.setFocus()

@@ -1,16 +1,44 @@
 import win.ui;
 /*DSG{{*/
-var winform = win.form(text="应用日志";right=759;bottom=469)
+var winform = win.form(text="应用日志";right=759;bottom=503)
 winform.add(
-richedit={cls="richedit";text='---此处显示日志---\r\n';left=8;top=8;right=752;bottom=464;db=1;dl=1;dr=1;dt=1;edge=1;multiline=1;z=1}
+button={cls="button";text="保存日志";left=272;top=464;right=360;bottom=504;font=LOGFONT(h=-13);z=2};
+button2={cls="button";text="打开日志";left=384;top=464;right=472;bottom=504;font=LOGFONT(h=-13);z=3};
+richedit={cls="richedit";text='---此处显示日志---\r\n';left=8;top=8;right=752;bottom=464;db=1;dl=1;dr=1;dt=1;edge=1;font=LOGFONT(h=-13);multiline=1;z=1}
 )
 /*}}*/
+
+import win.ui.mask;
+var frmMask = win.ui.mask(winform,true)
 
 winform.onClose = function(hwnd,message,wParam,lParam){
     winform.show(false);
     return true; 
 }
 
-winform.show();
+winform.button.oncommand = function(id,event){
+	winform.button.disabled = true
+	frmMask.show(true);
+	
+	winform.savedFileName = ..io.appData(..appName+"/log_"+tonumber(time.now())+".txt");
+	string.save(winform.savedFileName, winform.richedit.text);
+	
+	..thread.delay(1000)
+	frmMask.show(false);
+	winform.button.disabled = false;
+
+}
+
+winform.button2.oncommand = function(id,event){
+	if(winform.savedFileName){
+		..process.exploreSelect(winform.savedFileName);
+	}
+	else {
+		..process.explore(..io.appData(..appName));
+	}
+	
+}
+
+//winform.show();
 win.loopMessage();
 return winform;
