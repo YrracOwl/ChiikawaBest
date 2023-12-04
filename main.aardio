@@ -116,6 +116,7 @@ mainForm.onTrayMessage = {
     	}else {
     	    mainForm.popmenu.add("显示主窗口",function(id){
 				mainForm.show(true);
+				win.setForeground(mainForm.hwnd)
 			});
     	}
 		
@@ -157,6 +158,7 @@ mainForm.onTrayMessage = {
 	};
 	[0x203/*_WM_LBUTTONDBLCLK*/] = function(wParam){ 
 		mainForm.show(true);
+		win.setForeground(mainForm.hwnd)
 	};
 	[0x404/*_PARAM_DESTROY*/] = function(wParam){ 
 		
