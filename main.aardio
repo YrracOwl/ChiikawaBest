@@ -65,6 +65,9 @@ else {
 wbUserDataDir = io.appData(appName+"userDataDir");
 wbHistoryDir = wbUserDataDir+"\EBWebView\Default\"; 
 
+//设置：时间线默认的名字
+
+
 //设置：数据库设置
 dbDir = io.appData(appName+"database");
 if(not io.exist(dbDir)){
@@ -132,7 +135,7 @@ mainForm.onTrayMessage = {
 			webwatcher1.show();
 		})
 		mainForm.popmenu.add("时间线",function(){
-			var timeline1 = mainForm.loadForm("\dlg\timeline.aardio");
+			var timeline1 = mainForm.loadForm("\dlg\timeline_choice.aardio");
 			timeline1.show();
 		})
 		

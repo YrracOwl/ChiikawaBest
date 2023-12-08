@@ -2,7 +2,7 @@ import win.ui;
 /*DSG{{*/
 var winform = win.form(text="配置设置";right=663;bottom=151;clipch=1)
 winform.add(
-richedit={cls="richedit";left=8;top=8;right=656;bottom=144;db=1;dl=1;dr=1;dt=1;edge=1;hscroll=1;multiline=1;vscroll=1;z=1}
+richedit={cls="richedit";left=8;top=8;right=656;bottom=144;border=1;db=1;dl=1;dr=1;dt=1;hscroll=1;multiline=1;vscroll=1;z=1}
 )
 /*}}*/
 

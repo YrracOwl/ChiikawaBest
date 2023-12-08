@@ -1,16 +1,16 @@
 import win.ui;
 /*DSG{{*/
-winform = win.form(text="webwatcher";right=599;bottom=695;clipch=1)
+winform = win.form(text="webwatcher";right=599;bottom=719;border="none";clipch=1)
 winform.add(
-html_watcher={cls="custom";text="自定义控件";left=16;top=40;right=584;bottom=656;db=1;dl=1;dr=1;dt=1;z=5};
-task_show={cls="plus";text="-- 待显示 --";left=416;top=664;right=584;bottom=688;db=1;dl=1;z=4};
-关闭闹钟={cls="button";text="关闭闹钟";left=168;top=664;right=240;bottom=688;db=1;dl=1;z=3};
-刷新页面={cls="button";text="刷新页面";left=104;top=8;right=176;bottom=32;dl=1;dt=1;z=8};
-启动闹钟={cls="button";text="启动闹钟";left=88;top=664;right=160;bottom=688;db=1;dl=1;z=2};
-返回={cls="button";text="返回";left=8;top=8;right=48;bottom=32;dl=1;dt=1;z=6};
-进程检测={cls="button";text="进程检测";left=8;top=664;right=80;bottom=688;db=1;dl=1;z=1};
-配置选择={cls="combobox";left=184;top=8;right=432;bottom=32;aw=1;clip=1;dt=1;edge=1;items={};mode="dropdown";z=9};
-首页={cls="button";text="首页";left=56;top=8;right=96;bottom=32;dl=1;dt=1;z=7}
+html_watcher={cls="custom";text="自定义控件";left=16;top=64;right=584;bottom=680;db=1;dl=1;dr=1;dt=1;z=5};
+task_show={cls="plus";text="-- 待显示 --";left=416;top=688;right=584;bottom=712;db=1;dl=1;z=4};
+关闭闹钟={cls="button";text="关闭闹钟";left=168;top=688;right=240;bottom=712;db=1;dl=1;z=3};
+刷新页面={cls="button";text="刷新页面";left=104;top=32;right=176;bottom=56;dl=1;dt=1;z=8};
+启动闹钟={cls="button";text="启动闹钟";left=88;top=688;right=160;bottom=712;db=1;dl=1;z=2};
+返回={cls="button";text="返回";left=8;top=32;right=48;bottom=56;dl=1;dt=1;z=6};
+进程检测={cls="button";text="进程检测";left=8;top=688;right=80;bottom=712;db=1;dl=1;z=1};
+配置选择={cls="combobox";left=184;top=32;right=432;bottom=56;aw=1;border=1;clip=1;dt=1;items={};mode="dropdown";z=9};
+首页={cls="button";text="首页";left=56;top=32;right=96;bottom=56;dl=1;dt=1;z=7}
 )
 /*}}*/
 
@@ -228,6 +228,20 @@ winform.bindConfig( ..cfg.web_watcher,{
 		["配置选择"] = "selIndex"
 	};
 } );
+
+import win.ui.simpleWindow;
+win.ui.simpleWindow(winform,,,,).skin(
+	background = { 
+		hover = 0xff99ffcc;
+		active = 0xffff6666; 
+		default = 0x00000000; 
+	}
+	color = { 
+		hover = 0xff666666;
+		active = 0xffffffff; 
+		default = 0xFF7BA5BF; 
+	}
+)
 
 winform.show();
 win.loopMessage();

@@ -1,8 +1,8 @@
 import win.ui;
 /*DSG{{*/
-var winform = win.form(text="设置";right=591;bottom=295;clipch=1)
+var winform = win.form(text="设置";right=591;bottom=295;border="none";clipch=1)
 winform.add(
-tab={cls="tab";left=8;top=8;right=584;bottom=288;ah=1;aw=1;edge=1;z=1}
+tab={cls="tab";left=8;top=16;right=584;bottom=288;ah=1;aw=1;edge=1;z=1}
 )
 /*}}*/
 
@@ -10,6 +10,19 @@ var frmWin1 = winform.tab.loadForm("\dlg\apps_setting.aardio")
 var frmWin2 = winform.tab.loadForm("\dlg\proxy_setting.aardio")
 var frmWin3 = winform.tab.loadForm("\dlg\html_crawler_setting.aardio")
 
+import win.ui.simpleWindow;
+win.ui.simpleWindow(winform,,,,).skin(
+	background = { 
+		hover = 0xff99ffcc;
+		active = 0xffff6666; 
+		default = 0x00000000; 
+	}
+	color = { 
+		hover = 0xff666666;
+		active = 0xffffffff; 
+		default = 0xFF7BA5BF; 
+	}
+)
 
 winform.show();
 win.loopMessage();
