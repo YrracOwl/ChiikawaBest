@@ -1,54 +1,83 @@
+import fonts.fontAwesome;
+
 import win.ui;
 /*DSG{{*/
 var winform = win.form(text="选择时间线";right=295;bottom=175;border="none")
 winform.add(
-["btn创建时间线"]={cls="plus";text="创建时间线";left=80;top=144;right=208;bottom=166;align="left";bgcolor=-5197169;border={radius=10};dl=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF160';notify=1;textPadding={left=30};z=1};
-["btn选择时间线"]={cls="plus";text="选择时间线";left=80;top=64;right=208;bottom=86;align="left";bgcolor=-5197169;border={radius=10};dl=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF160';notify=1;textPadding={left=30};z=4};
-["txt时间线标题"]={cls="plus";left=16;top=96;right=280;bottom=136;border={bottom=1;color=-6908266};dl=1;dt=1;editable="edit";font=LOGFONT(h=-16);notify=1;textPadding={top=16};z=2};
-选择时间线={cls="combobox";left=16;top=32;right=280;bottom=56;border=1;clipch=1;dl=1;dt=1;font=LOGFONT(h=-13);items={};mode="dropdown";z=3}
+["btn创建时间线"]={cls="plus";text="创建时间线";left=88;top=144;right=198;bottom=174;align="left";bgcolor=-5197169;border={radius=16};dl=1;dt=1;font=LOGFONT(h=-13);iconStyle={align="left";font=LOGFONT(h=-16;name='FontAwesome');padding={left=10;bottom=-2}};iconText='\uF02D';notify=1;textPadding={left=30};z=4};
+["btn打开时间线"]={cls="plus";text="打开时间线";left=88;top=64;right=198;bottom=94;align="left";bgcolor=-5197169;border={radius=16};dl=1;dt=1;font=LOGFONT(h=-13);iconStyle={align="left";font=LOGFONT(h=-16;name='FontAwesome');padding={left=10;bottom=-2}};iconText='\uF07C';notify=1;textPadding={left=30};z=3};
+["txt时间线标题"]={cls="plus";left=16;top=96;right=280;bottom=136;border={bottom=1;color=-6908266};dl=1;dt=1;editable="edit";font=LOGFONT(h=-16);notify=1;textPadding={top=16};z=1};
+选择时间线={cls="combobox";left=16;top=32;right=280;bottom=56;border=1;clipch=1;dl=1;dt=1;font=LOGFONT(h=-13);items={};mode="dropdown";z=2}
 )
 /*}}*/
+
+winform.btn创建时间线.skin({
+	background={
+		default=0x668FB2B0;
+		disabled=0xFFCCCCCC;
+		hover=0xFF928BB3
+	};
+	color={
+		default=0xFF000000;
+		disabled=0xFF6D6D6D
+	}
+})
+
+winform.btn打开时间线.skin({
+	background={
+		default=0x668FB2B0;
+		disabled=0xFFCCCCCC;
+		hover=0xFF928BB3
+	};
+	color={
+		default=0xFF000000;
+		disabled=0xFF6D6D6D
+	}
+})
 
 import win.ui.mask;
 var frmMask = win.ui.mask(winform,true)
 
 var updateCombobox = function(winform){
 	var list_timeline = {};
+	..logMsg(">>>更新时间线中的combobox数据")
 	for rowid, name, time in ..dbTimeline.each("SELECT rowid,* FROM timeline") {
 		/*
 		for 语句的第一个返回值如果为 null 就会退出循环,
 		如果数据库返回的第一个字段可能为空,那么可以把 SQLite 默认就有的索引字段 rowid 放在最前面
 		*/
 		table.push(list_timeline,name)
-		..logMsg("更新时间线中的combobox数据")
-		..logMsg(rowid,name,time)
-/*
-		..logWarn("这是一个警告")
-		..logErr("这是一个错误")
-*/
+		..logMsg(rowid,time,name)
 	}
 	winform.选择时间线.items = list_timeline;
-	winform.选择时间线.selIndex = 1;
+	winform.选择时间线.selIndex = table.len(list_timeline);
 };
 
-winform.btn选择时间线.skin(
-	background = { 
-		hover = "/res/images/btn-hover.png";
-		focus = "/res/images/btn-focus.jpg";
-		active = "/res/images/btn-active.png";
-		disabled = "/res/images/btn-disabled.png"; 
-	}
-)
-winform.btn选择时间线.oncommand = function(id,event){
+winform.btn打开时间线.oncommand = function(id,event){
 	//winform.show(false)
 	frmMask.show(true);
+	winform.btn打开时间线.disabledText = {'\uF254';'\uF251';'\uF252';'\uF253';'\uF250';text='打开中...'}
+	
 	var timelineChild = ..mainForm.loadForm("\dlg\timeline.aardio");
 	timelineChild.childWinUpdate(winform.选择时间线.selText);
+	
+	winform.btn打开时间线.disabledText = null;
 	frmMask.show(false);
 	//winform.close();
 }
 
 updateCombobox(winform);
+
+winform.btn创建时间线.oncommand = function(id,event){
+	var cmd = dbTimeline.prepare("REPLACE INTO [timeline] VALUES ( @name,@time);");
+	cmd.step(
+		name = winform.txt时间线标题.text;
+		time = time.now();
+	)
+	..logWrite(">>>新增时间线：",winform.txt时间线标题.text)
+	winform.txt时间线标题.text = null;
+	updateCombobox(winform);
+}
 
 import win.ui.simpleWindow;
 win.ui.simpleWindow(winform,,,,).skin(
@@ -63,7 +92,6 @@ win.ui.simpleWindow(winform,,,,).skin(
 		default = 0xFF7BA5BF; 
 	}
 )
-
 winform.show();
 win.loopMessage();
 return winform;

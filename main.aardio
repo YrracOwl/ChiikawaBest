@@ -82,11 +82,11 @@ dbTimelinePath = dbDir+"/timeline.db";
 dbTimeline = sqlite(dbTimelinePath);
 
 if( not dbTimeline.existsTable("default") ){ 
-	dbTimeline.exec( "CREATE TABLE [default] (time, title, content);"); 
+	dbTimeline.exec( "CREATE TABLE [default] (time PRIMARY KEY, title, content);"); 
 }
 
 if( not dbTimeline.existsTable("timeline") ){ 
-	dbTimeline.exec( "CREATE TABLE [timeline] (name, time);");
+	dbTimeline.exec( "CREATE TABLE [timeline] (name PRIMARY KEY, time);");
 	var cmd = dbTimeline.prepare("REPLACE INTO [timeline] VALUES ( @name,@time);");
 	cmd.step(
 		name = "default";
@@ -208,6 +208,11 @@ logErr = function(...){
 	logInfo("错误",...);
 }
 
+logWrite = function(...){
+	logInfo("写入",...);
+}
+
+
 logInfo = function(infoType, ...){
 	var colorSet = {
 	//0xbbggrr
@@ -219,6 +224,7 @@ logInfo = function(infoType, ...){
 	0x349bdb;//6黄不老
 	0x1d16c8;//7丹雘
 	0x6b4e35;//8青雀头黛
+	0x84a71b;//9竹绿
 	}; 
 	var color = colorSet[2]; 
 	var bkcolor = colorSet[1]; 
@@ -231,6 +237,9 @@ logInfo = function(infoType, ...){
 		}
 		case "错误" {
 			color = colorSet[7];
+		}
+		case "写入" {
+			color = colorSet[9];
 		}
 		else {
 			color = colorSet[2];
@@ -322,7 +331,6 @@ win.ui.simpleWindow(mainForm,,,18,).skin(
 		default = 0xFF7BA5BF; 
 	}
 )
-
 
 //主窗口是否显示
 if(cfg.apps_setting.启动到托盘){

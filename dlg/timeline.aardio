@@ -9,7 +9,7 @@ plus10={cls="plus";text="内容：";left=8;top=160;right=64;bottom=184;dl=1;dt=1
 plus7={cls="plus";text="标题：";left=8;top=128;right=64;bottom=152;dl=1;dt=1;font=LOGFONT(h=-13);notify=1;z=10};
 plus8={cls="plus";text="时间：";left=8;top=96;right=64;bottom=120;dl=1;dt=1;font=LOGFONT(h=-13);notify=1;z=11};
 plus9={cls="plus";text="日期：";left=8;top=64;right=64;bottom=88;dl=1;dt=1;font=LOGFONT(h=-13);notify=1;z=12};
-["win时间线"]={cls="custom";text="win时间线";left=288;top=64;right=1272;bottom=736;border=1;db=1;dl=1;dr=1;dt=1;z=1};
+["win时间线"]={cls="custom";text="win时间线";left=280;top=64;right=1272;bottom=736;db=1;dl=1;dr=1;dt=1;z=1};
 内容plus={cls="plus";left=8;top=184;right=272;bottom=472;align="left";border={color=-6908266;width=1};dl=1;dt=1;editable=1;font=LOGFONT(h=-13);forecolor=16777215;multiline=1;notify=1;textPadding={top=6;bottom=2};wrap=1;z=6};
 勾选plus={cls="plus";text="当前时间";left=176;top=96;right=272;bottom=120;align="left";dl=1;dt=1;font=LOGFONT(h=-13);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome')};iconText='\uF111 ';notify=1;textPadding={left=24};z=9};
 当前主题={cls="plus";left=88;top=32;right=1232;bottom=56;dl=1;dr=1;dt=1;font=LOGFONT(h=-16;underline=1;weight=700);z=14};
@@ -67,7 +67,7 @@ document.addEventListener('mousedown', function (event) {
 //window.open =  function(url){ window.location.href = url; } 
 `);
 
-var template_func = loadcode("\res\template_timeline_1.aardio");
+var template_func = loadcode("\res\template_timeline_5.aardio");
 
 content_css,content_body,content_js = template_func(); 
 
