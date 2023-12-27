@@ -67,7 +67,7 @@ document.addEventListener('mousedown', function (event) {
 //window.open =  function(url){ window.location.href = url; } 
 `);
 
-var template_func = loadcode("\res\template_timeline_5.aardio");
+var template_func = loadcode("\res\template_timeline_3.aardio");
 
 content_css,content_body,content_js = template_func(); 
 
