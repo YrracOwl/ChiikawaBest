@@ -7,10 +7,18 @@ winform.add(
 ["btn创建时间线"]={cls="plus";text="创建时间线(Ctrl+G)";left=72;top=144;right=232;bottom=174;align="left";bgcolor=-5197169;border={radius=16};dl=1;dt=1;font=LOGFONT(h=-13);iconStyle={align="left";font=LOGFONT(h=-16;name='FontAwesome');padding={left=10;bottom=-2}};iconText='\uF02D';notify=1;textPadding={left=30};z=4};
 ["btn删除时间线"]={cls="plus";text="删除";left=200;top=64;right=272;bottom=94;align="left";bgcolor=-13228317;border={radius=16};dl=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-16;name='FontAwesome');padding={left=10}};iconText='\uF014';notify=1;textPadding={left=28};z=5};
 ["btn打开时间线"]={cls="plus";text="打开(Ctrl+D)";left=24;top=64;right=144;bottom=94;align="left";bgcolor=-5197169;border={radius=16};dl=1;dt=1;font=LOGFONT(h=-13);iconStyle={align="left";font=LOGFONT(h=-16;name='FontAwesome');padding={left=10;bottom=-2}};iconText='\uF07C';notify=1;textPadding={left=30;top=1};z=3};
-["txt时间线标题"]={cls="plus";left=16;top=96;right=280;bottom=136;border={bottom=1;color=-6908266};dl=1;dt=1;editable="edit";font=LOGFONT(h=-16);notify=1;textPadding={top=16};z=1};
-选择时间线={cls="combobox";left=16;top=32;right=280;bottom=56;border=1;clipch=1;dl=1;dt=1;font=LOGFONT(h=-13);items={};mode="dropdown";z=2}
+["txt时间线标题"]={cls="plus";left=16;top=96;right=280;bottom=136;border={bottom=1;color=-6908266};dl=1;dt=1;editable="edit";font=LOGFONT(h=-16);notify=1;tabstop=1;textPadding={top=16};z=1};
+选择时间线={cls="combobox";left=16;top=32;right=280;bottom=56;border=1;clipch=1;dl=1;dt=1;font=LOGFONT(h=-13);items={};mode="dropdown";tabstop=1;z=2}
 )
 /*}}*/
+
+import win.ui.tooltip; 
+
+//下面创建一个手动跟踪模式的提示控件
+var balloonTipCtrl = win.ui.tooltip.tracking(winform,false);
+
+winform.txt时间线标题.text = "";
+winform.txt时间线标题.setCueBannerText("请输入时间线标题")
 
 winform.btn删除时间线.skin({
 	background={
@@ -48,13 +56,22 @@ winform.btn打开时间线.skin({
 	}
 })
 
+winform.txt时间线标题.skin(
+	background = { 
+		hover = "/res/images/btn-hover.png";
+		focus = "/res/images/btn-focus.jpg";
+		active = "/res/images/btn-active.png";
+		disabled = "/res/images/btn-disabled.png"; 
+	}
+)
+
 import win.ui.mask;
 var frmMask = win.ui.mask(winform,true)
 
 var updateCombobox = function(winform){
 	var list_timeline = {};
-	..logMsg(">>>更新时间线中的combobox数据")
-	for rowid, name, time in ..dbTimeline.each("SELECT rowid,* FROM timeline") {
+	..logMsg(">>>更新items")
+	for rowid, name, time in ..dbBase.each("SELECT rowid,* FROM timeline") {
 		/*
 		for 语句的第一个返回值如果为 null 就会退出循环,
 		如果数据库返回的第一个字段可能为空,那么可以把 SQLite 默认就有的索引字段 rowid 放在最前面
@@ -73,7 +90,7 @@ winform.btn打开时间线.oncommand = function(id,event){
 	
 	var timelineChild = ..mainForm.loadForm("\dlg\timeline.aardio");
 	timelineChild.childWinUpdate(winform.选择时间线.selText);
-	
+	timelineChild.listboxUpdate(timelineChild);
 	winform.btn打开时间线.disabledText = null;
 	frmMask.show(false);
 	//winform.close();
@@ -82,13 +99,31 @@ winform.btn打开时间线.oncommand = function(id,event){
 updateCombobox(winform);
 
 winform.btn创建时间线.oncommand = function(id,event){
-	var cmd = ..dbTimeline.prepare("REPLACE INTO [timeline] VALUES ( @name,@time);");
-	cmd.step(
-		name = winform.txt时间线标题.text;
-		time = time.now();
-	)
-	..logWrite(">>>新增时间线：",winform.txt时间线标题.text)
-	winform.txt时间线标题.text = null;
+	if(winform.txt时间线标题.text != ""){
+		try{
+			if( not ..dbTimeline.existsTable(winform.txt时间线标题.text) ){ 
+				..dbTimeline.exec( "CREATE TABLE ?? (time PRIMARY KEY, title, content);",{winform.txt时间线标题.text}); 
+				..logWrite(">>>Timeline数据库新增表：",winform.txt时间线标题.text)
+			}
+			var cmd = ..dbBase.prepare("REPLACE INTO [timeline] VALUES ( @name,@time);");
+			cmd.step(
+				name = winform.txt时间线标题.text;
+				time = time.now();
+			)
+			..logWrite(">>>Base数据库新增Timeline：",winform.txt时间线标题.text)
+		}
+		catch(e){
+			..logErr(">>>Timeline数据库创建表失败：",winform.txt时间线标题.text);
+			..logErr(">>>Base数据库新增Timeline失败：",winform.txt时间线标题.text);
+			..logErr(e) 
+		}
+		winform.txt时间线标题.text = "";
+	}
+	else {
+	    //手动显示提示
+    	var x,y,cx,cy = winform.txt时间线标题.getPos(true);
+    	balloonTipCtrl.setText("请输入标题再创建").trackPopup(true,x+cx*3/4,y+cy);
+	}
 	updateCombobox(winform);
 }
 
@@ -107,20 +142,25 @@ win.ui.simpleWindow(winform,,,,).skin(
 )
 
 winform.btn删除时间线.oncommand = function(id,event){
-	..dbTimeline.exec("DELETE FROM ?? WHERE name=?;",{ "timeline",winform.选择时间线.selText} )
-	..logWarn(">>>已删除[Timeline]中的",winform.选择时间线.selText)
+	var confirmed = win.msgboxTest("确认删除时间线："""+winform.选择时间线.selText+"""吗？","确认删除");
+	if(confirmed){
+		try{
+			..dbTimeline.exec("DROP TABLE ??",{winform.选择时间线.selText})
+			..logWarn(">>>已删除Base数据库Timeline中: ",winform.选择时间线.selText)
+			..dbBase.exec("DELETE FROM ?? WHERE name=?;",{ "timeline",winform.选择时间线.selText} )
+			..logWarn(">>>已删除Timeline数据库中的表：",winform.选择时间线.selText)	
+		}
+		catch(e){
+			..logErr(">>>删除失败：", winform.选择时间线.selText)
+			..logErr(e)
+		}		
+	}
+	else {
+		..logWarn(">>>取消删除")
+	}
+
 	updateCombobox(winform);
 }
-
-
-winform.txt时间线标题.skin(
-	background = { 
-		hover = "/res/images/btn-hover.png";
-		focus = "/res/images/btn-focus.jpg";
-		active = "/res/images/btn-active.png";
-		disabled = "/res/images/btn-disabled.png"; 
-	}
-)
 
 import win.ui.accelerator;
 win.ui.accelerator({

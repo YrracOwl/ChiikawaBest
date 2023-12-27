@@ -1,10 +1,21 @@
 import win.ui;
+import win.ui.atom;
 /*DSG{{*/
 mainForm = win.form(text="atoms";right=220;bottom=118;border="none";max=false)
 mainForm.add(
 bk={cls="bk";left=0;top=0;right=224;bottom=120;ah=1;aw=1;background="\res\keai.jpg";z=1}
 )
 /*}}*/
+
+var atom,hwnd/*冲突窗口的句柄,该函数会自动激活此窗口*/ = mainForm.atom("3C6F3EEC-7B25-44F1-B612-FBAA2319827D");
+if(!atom){
+	/*为窗口设置原子值可以避免一个程序重复运行多个实例*/
+	//win.show(hwnd,0x9/*_SW_RESTORE*/);
+	//win.setForeground(hwnd);
+	win.msgbox("程序已启动！请查看托盘！","Atoms",0,0,1200)
+	win.quitMessage();
+	return;
+}
 
 //////////////////////////////////////////////////////////////////////
 //Libray导入
@@ -85,9 +96,9 @@ if( not dbTimeline.existsTable("default") ){
 	dbTimeline.exec( "CREATE TABLE [default] (time PRIMARY KEY, title, content);"); 
 }
 
-if( not dbTimeline.existsTable("timeline") ){ 
-	dbTimeline.exec( "CREATE TABLE [timeline] (name PRIMARY KEY, time);");
-	var cmd = dbTimeline.prepare("REPLACE INTO [timeline] VALUES ( @name,@time);");
+if( not dbBase.existsTable("timeline") ){ 
+	dbBase.exec( "CREATE TABLE [timeline] (name PRIMARY KEY, time);");
+	var cmd = dbBase.prepare("REPLACE INTO [timeline] VALUES ( @name,@time);");
 	cmd.step(
 		name = "default";
 		time = time.now();
@@ -246,11 +257,11 @@ logInfo = function(infoType, ...){
 		}
 	};
 	
-	logForm.richedit.appendText("[ "+infoType+" ] " + tostring(time.now()),":    ")
+	logForm.richedit.appendText("[ "+infoType+" ] " + tostring(time.now()),": ")
 	var arg = { ... };
 	for(k,v in arg){
 		logForm.richedit.appendText(tostring(v))
-		logForm.richedit.appendText("    ")
+		logForm.richedit.appendText(" ")
 	}
 	logForm.richedit.appendText('\r\n')
 	logForm.richedit.lineSel(-2);
