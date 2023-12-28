@@ -13,7 +13,6 @@ winform.add(
 /*}}*/
 
 import win.ui.tooltip; 
-
 //下面创建一个手动跟踪模式的提示控件
 var balloonTipCtrl = win.ui.tooltip.tracking(winform,false);
 
@@ -122,10 +121,12 @@ winform.btn创建时间线.oncommand = function(id,event){
 	else {
 	    //手动显示提示
     	var x,y,cx,cy = winform.txt时间线标题.getPos(true);
-    	balloonTipCtrl.setText("请输入标题再创建").trackPopup(true,x+cx*3/4,y+cy);
+    	balloonTipCtrl.setText("请输入标题再创建").trackPopup(true,x+cx*3/4,y+cy,2000);
 	}
 	updateCombobox(winform);
+	
 }
+
 
 import win.ui.simpleWindow;
 win.ui.simpleWindow(winform,,,,).skin(
@@ -167,6 +168,18 @@ win.ui.accelerator({
 	{ ctrl = true; vkey = 'G'#; oncommand = winform.btn创建时间线.oncommand } 
 	{ ctrl = true; vkey = 'D'#; oncommand = winform.btn打开时间线.oncommand } 
 },winform);
+
+winform.wndproc = function(hwnd,message,wParam,lParam){
+	select( message ) { 
+		case 0x200/*_WM_MOUSEMOVE*/{
+			balloonTipCtrl.popup(false);
+		}
+		else{
+			
+		}
+	}
+	//无返回值则继续调用默认回调函数
+}
 
 winform.show();
 win.loopMessage();
