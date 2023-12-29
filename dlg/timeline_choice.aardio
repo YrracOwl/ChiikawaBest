@@ -15,9 +15,10 @@ winform.add(
 import win.ui.tooltip; 
 //下面创建一个手动跟踪模式的提示控件
 var balloonTipCtrl = win.ui.tooltip.tracking(winform,false);
+winform.balloonTipCtrlState = false;
 
 winform.txt时间线标题.text = "";
-winform.txt时间线标题.setCueBannerText("请输入时间线标题")
+winform.txt时间线标题.setCueBannerText("请输入时间线标题");
 
 winform.btn删除时间线.skin({
 	background={
@@ -122,6 +123,7 @@ winform.btn创建时间线.oncommand = function(id,event){
 	    //手动显示提示
     	var x,y,cx,cy = winform.txt时间线标题.getPos(true);
     	balloonTipCtrl.setText("请输入标题再创建").trackPopup(true,x+cx*3/4,y+cy,2000);
+    	winform.balloonTipCtrlState = true;
 	}
 	updateCombobox(winform);
 	
@@ -172,7 +174,17 @@ win.ui.accelerator({
 winform.wndproc = function(hwnd,message,wParam,lParam){
 	select( message ) { 
 		case 0x200/*_WM_MOUSEMOVE*/{
-			balloonTipCtrl.popup(false);
+			if(winform.balloonTipCtrlState){
+				balloonTipCtrl.popup(false);
+				winform.balloonTipCtrlState = false;
+			}
+			
+		}
+		case 3/*_WM_MOVE*/{
+			if(winform.balloonTipCtrlState){
+    			var x,y,cx,cy = winform.txt时间线标题.getPos(true);
+    			balloonTipCtrl.setText("请输入标题再创建").trackPopup(true,x+cx*3/4,y+cy,2000);
+			}
 		}
 		else{
 			
