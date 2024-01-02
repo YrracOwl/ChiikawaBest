@@ -4,20 +4,21 @@ import win.ui;
 var winform = win.form(text="Timeline";right=1279;bottom=743;border="none";clipch=1)
 winform.add(
 datetimepick={cls="datetimepick";left=64;top=64;right=272;bottom=88;border=1;dl=1;dt=1;font=LOGFONT(h=-13);z=2};
-listbox={cls="listbox";left=8;top=480;right=272;bottom=736;db=1;dl=1;dt=1;edge=1;font=LOGFONT(h=-13);items={};ownerDraw=1;vscroll=1;z=14};
+listbox={cls="listbox";left=8;top=512;right=272;bottom=744;db=1;dl=1;dt=1;edge=1;font=LOGFONT(h=-13);items={};ownerDraw=1;vscroll=1;z=14};
 plus10={cls="plus";text="内容：";left=8;top=160;right=64;bottom=184;dl=1;dt=1;font=LOGFONT(h=-13);notify=1;z=10};
 plus7={cls="plus";text="标题：";left=8;top=128;right=64;bottom=152;dl=1;dt=1;font=LOGFONT(h=-13);notify=1;z=7};
 plus8={cls="plus";text="时间：";left=8;top=96;right=64;bottom=120;dl=1;dt=1;font=LOGFONT(h=-13);notify=1;z=8};
 plus9={cls="plus";text="日期：";left=8;top=64;right=64;bottom=88;dl=1;dt=1;font=LOGFONT(h=-13);notify=1;z=9};
 ["win时间线"]={cls="custom";text="win时间线";left=280;top=64;right=1280;bottom=736;db=1;dl=1;dr=1;dt=1;z=1};
 内容plus={cls="plus";left=8;top=184;right=272;bottom=472;align="left";border={color=-6908266;width=1};dl=1;dt=1;editable=1;font=LOGFONT(h=-13);forecolor=16777215;multiline=1;notify=1;tabstop=1;textPadding={top=6;bottom=2};wrap=1;z=4};
-删除plus={cls="plus";text="删除";left=8;top=32;right=80;bottom=58;align="left";bgcolor=-13228317;border={radius=13};dl=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-16;name='FontAwesome');padding={left=10}};iconText='\uF014';notify=1;textPadding={left=28};z=15};
+删除plus={cls="plus";text="删除";left=8;top=32;right=84;bottom=58;align="left";bgcolor=-13228317;border={radius=13};dl=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-16;name='FontAwesome');padding={left=10}};iconText='\uF014';notify=1;textPadding={left=28};z=15};
 勾选plus={cls="plus";text="当前时间";left=176;top=96;right=272;bottom=120;align="left";dl=1;dt=1;font=LOGFONT(h=-13);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome')};iconText='\uF111 ';notify=1;textPadding={left=24};z=6};
-当前主题={cls="plus";left=272;top=32;right=1232;bottom=56;dl=1;dr=1;dt=1;font=LOGFONT(h=-16;underline=1;weight=700);z=11};
+取消plus={cls="plus";text="取消";left=200;top=32;right=276;bottom=58;align="left";bgcolor=10389606;border={radius=13};dl=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-16;name='FontAwesome');padding={left=10}};iconText='\uF00D';notify=1;textPadding={left=28};z=16};
+当前主题={cls="plus";left=392;top=32;right=1152;bottom=56;dl=1;dr=1;dt=1;font=LOGFONT(h=-16;underline=1;weight=700);notify=1;z=11};
 时间plus={cls="plus";left=64;top=96;right=168;bottom=120;autohscroll=false;autovscroll=false;border={color=-6908266;width=1};dl=1;dt=1;editable="edit";font=LOGFONT(h=-16);notify=1;tabstop=1;textPadding={bottom=1};z=5};
 标题plus={cls="plus";left=64;top=128;right=272;bottom=152;border={bottom=1;color=-6908266};dl=1;dt=1;editable=1;font=LOGFONT(h=-13);forecolor=16777215;notify=1;tabstop=1;textPadding={top=2;bottom=2};z=3};
-添加plus={cls="plus";text="添加(Ctrl+G)";left=144;top=32;right=272;bottom=58;align="left";bgcolor=-5197169;border={radius=13};dl=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF0C7';notify=1;textPadding={left=30};z=12};
-添加提醒项={cls="plus";text="添加提醒项";left=144;top=440;right=264;bottom=462;align="left";bgcolor=-5197169;border={radius=10};dl=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF0A2';notify=1;textPadding={left=30};z=13}
+添加plus={cls="plus";text="添加(Ctrl+G)";left=144;top=480;right=272;bottom=506;align="left";bgcolor=-5197169;border={radius=13};dl=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF0C7';notify=1;textPadding={left=30};z=12};
+添加提醒项={cls="plus";text="添加提醒项";left=8;top=480;right=136;bottom=506;align="left";bgcolor=-5197169;border={radius=10};dl=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF0A2';notify=1;textPadding={left=30};z=13}
 )
 /*}}*/
 
@@ -92,6 +93,15 @@ winform.内容plus.skin(
 )
 
 winform.删除plus.skin(
+	background = { 
+		hover = "/res/images/btn-hover.png";
+		focus = "/res/images/btn-focus.jpg";
+		active = "/res/images/btn-active.png";
+		disabled = "/res/images/btn-disabled.png"; 
+	}
+)
+
+winform.取消plus.skin(
 	background = { 
 		hover = "/res/images/btn-hover.png";
 		focus = "/res/images/btn-focus.jpg";
@@ -194,6 +204,7 @@ wb_tl.external = {
 		else {
 			winform.勾选plus.checked = false;
     		winform.删除plus.disabled = false;
+    		winform.取消plus.disabled = false;
     		winform.tiktokChecker(winform);
     		winform.datetimepick.disabled = true;
     		winform.勾选plus.disabled = true;
@@ -212,8 +223,35 @@ wb_tl.external = {
 	};
 	
 	deleteList = function(){
-		winform.删除plus.oncommand();
-	}
+		var tl_time = winform.datetimepick.text + '-' + winform.时间plus.text; 
+		var confirmed = win.msgboxTest("确认删除"""+tl_time+"""吗？","确认删除");
+		if(confirmed){
+			try{
+				..dbTimeline.exec("DELETE FROM ?? WHERE time=?;",{ winform.当前主题.text,tl_time} )
+				..logWarn(">>>已删除项",winform.当前主题.text,"中的：",tl_time)
+				
+				wb_tl.xcall("removeContent",{tostring(tl_time)});
+				winform.listboxUpdate(winform);
+				winform.timelineWebUpdate(winform);
+				
+				winform.addUIReset(winform);
+			}
+			catch(e){
+				..logErr(">>>删除",winform.当前主题.text,"中的：",tl_time,"失败")
+				..logErr(e)
+			}
+		}
+		else {
+			..logWarn(">>>取消删除")
+		}
+	};
+	
+	flush = function(){
+		winform.addUIReset(winform);
+		winform.listboxUpdate(winform);
+		winform.timelineWebUpdate(winform);
+	};
+	
 	
 };
 
@@ -328,6 +366,7 @@ winform.addUIReset = function(winform){
 	balloonTipCtrl.trackPopup(false);
 	winform.勾选plus.checked = true;
 	winform.删除plus.disabled = true;
+	winform.取消plus.disabled = true;
 	winform.tiktokChecker(winform);
 }
 
@@ -336,6 +375,7 @@ winform.addUIReset = function(winform){
 //addUI复位
 winform.勾选plus.checked = true;
 winform.删除plus.disabled = true;
+winform.取消plus.disabled = true;
 winform.tiktokChecker(winform);
 
 timeUpdate.start();
@@ -388,6 +428,7 @@ winform.listbox.oncommand = function(id,event){
     if( event ==  0x2/*_LBN_DBLCLK*/ ){
     	winform.勾选plus.checked = false;
     	winform.删除plus.disabled = false;
+    	winform.取消plus.disabled = false;
     	winform.tiktokChecker(winform);
     	winform.datetimepick.disabled = true;
     	winform.勾选plus.disabled = true;
@@ -437,7 +478,7 @@ winform.删除plus.oncommand = function(id,event){
 			winform.listboxUpdate(winform);
 			winform.timelineWebUpdate(winform);
 			
-			winform.addUIReset(winform);			
+			winform.addUIReset(winform);
 		}
 		catch(e){
 			..logErr(">>>删除",winform.当前主题.text,"中的：",tl_time,"失败")
@@ -448,6 +489,19 @@ winform.删除plus.oncommand = function(id,event){
 		..logWarn(">>>取消删除")
 	}
 }
+
+winform.取消plus.oncommand = function(id,event){
+	winform.addUIReset(winform);
+}
+
+winform.当前主题.skin(
+	background = { 
+		hover = "/res/images/btn-hover.png";
+		focus = "/res/images/btn-focus.jpg";
+		active = "/res/images/btn-active.png";
+		disabled = "/res/images/btn-disabled.png"; 
+	}
+)
 
 winform.show();
 winform.win时间线.setFocus();

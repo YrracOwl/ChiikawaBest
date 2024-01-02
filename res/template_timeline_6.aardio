@@ -4,6 +4,18 @@ var content_css = /**
 /* Variables */
 /* Fonts */
 /* @import url(https://fonts.googleapis.com/css?family=Open+Sans:300,700); */
+//打印机媒体查询
+@media print {
+     body{
+        -webkit-print-color-adjust:exact;
+        -moz-print-color-adjust:exact;
+        -ms-print-color-adjust:exact;
+        print-color-adjust:exact;
+    } 
+    button{display:none;}
+    .custom-context-menu{display:none;}
+}
+
 body {
   font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 1em;
@@ -26,12 +38,12 @@ body {
   max-width: 46em;
 }
 .timeline:before {
-  background-color: black;
+  background-color: #31322c;
   content: '';
-  margin-left: -1px;
+  margin-left: 1em;
   position: absolute;
   top: 0;
-  left: 2.2em;
+  left: 3.44em;
   width: 2px;
   height: 100%;
 }
@@ -93,7 +105,7 @@ body {
   -ms-transform: rotate(45deg);
   -webkit-transform: rotate(45deg);
   transform: rotate(45deg);
-  background-color: black;
+  background-color: #31322c;
   outline: 10px solid white;
   display: block;
   margin: 0.5em 0.5em 0.5em -0.5em;
@@ -112,7 +124,7 @@ body {
   transition: box-shadow 0.5s ease-in 0.1s;
   color: white;
   font-size: 0.75em;
-  background-color: black;
+  background-color: #31322c;
   -moz-box-shadow: inset 0 0 0 0em #ef795a;
   -webkit-box-shadow: inset 0 0 0 0em #ef795a;
   box-shadow: inset 0 0 0 0em #ef795a;
@@ -179,6 +191,7 @@ var content_js = /**
 		var liEle = document.createElement("li");
 		liEle.setAttribute("class","timeline-event");
 		liEle.setAttribute("id",datas[0])
+		liEle.setAttribute("ondblclick","dblFunc()")
 		
 		var labelEle = document.createElement("label");
 		labelEle.setAttribute("class","timeline-event-icon");
@@ -188,7 +201,7 @@ var content_js = /**
 		
 		var timeEle = document.createElement("p");
 		timeEle.setAttribute("class","timeline-event-thumbnail");
-		timeEle.setAttribute("ondblclick","dblFunc()")
+		//timeEle.setAttribute("ondblclick","dblFunc()")
 
 		timeEle.innerText = datas[0];
 		
@@ -208,34 +221,63 @@ var content_js = /**
 	};
 	
 	function dblFunc() {
-	    let timeIndex = event.currentTarget.innerText;//取出当前元素
+	    let currentLi = event.currentTarget;//取出当前元素
+	    let timeIndex = currentLi.getAttribute("id");
 	    console.log(timeIndex);
+	    //console.log(event);
 	    aardio.modifyList(timeIndex);
 	};
 	
+	var currentMouseEle = document.querySelectorAll(":hover"); 
+	
 	document.addEventListener("contextmenu", (e) => {
+		currentMouseEle = document.querySelectorAll(":hover");
   		e.preventDefault();
+  		hideMenu(e);
   		showMenu(e);
 	});
 	
 	function showMenu(e) {
-  		const menus = menuSinglton.getInstance();
-  		menus.style.top = `${e.clientY}px`;
-  		menus.style.left = `${e.clientX}px`;
-  		menus.style.display = "block";
-  		menus.style.position = "fixed";
-  		menus.style.border = "2px solid black";
-  		menus.style.padding = "6px 3px";
+		if(currentMouseEle.length>3){
+			const menus1 = menuSinglton.getInstance();
+  			menus1.style.top = `${e.clientY-20}px`;
+  			menus1.style.left = `${e.clientX-6}px`;
+  			menus1.style.display = "block";
+  			menus1.style.position = "fixed";
+  			menus1.style.border = "1px solid #31322c";
+  			menus1.style.padding = "6px 3px";
+  			menus1.style.fontSize = "large";
+  			menus1.style.fontWeight = "600";
+  			menus1.style.backdropFilter = "blur(5px)";
+  			menus1.style.boxShadow = "6px 6px 3px 3px rgba(122, 123, 120, .3)";
+  			menus1.style.color = "#b93a26";
+		}
+  		else {
+  			const menus2 = menuLess.getInstance();
+  			menus2.style.top = `${e.clientY-20}px`;
+  			menus2.style.left = `${e.clientX-6}px`;
+  			menus2.style.display = "block";
+  			menus2.style.position = "fixed";
+  			menus2.style.border = "1px solid #31322c";
+  			menus2.style.padding = "6px 3px";
+  			menus2.style.fontSize = "large";
+  			menus2.style.fontWeight = "600";
+  			menus2.style.backdropFilter = "blur(5px)";
+  			menus2.style.boxShadow = "6px 6px 3px 3px rgba(122, 123, 120, .3)";
+  			menus2.style.color = "#b93a26";
+  		}
 	}
 	
 	function hideMenu(e) {
-  		const menus = menuSinglton.getInstance();
-  		menus.style.display = "none";
+  		const menus1 = menuSinglton.getInstance();
+  		menus1.style.display = "none";
+  		const menus2 = menuLess.getInstance();
+  		menus2.style.display = "none";
 	}
 	
 	document.addEventListener("click", hideMenu);
 	
-	const ContextMenu = function (options) {
+	const ContextMenuSinglton = function (options) {
   	// 唯一实例
   		let instance;
 		
@@ -267,29 +309,89 @@ var content_js = /**
     		},
   		};
 	};
-
-	const menuSinglton = ContextMenu({
+	
+	const ContextMenuLess = function (options) {
+  	// 唯一实例
+  		let instance;
+		
+  		// 创建实例方法
+  		function createMenu() {
+  			const ul = document.createElement("ul");
+  			ul.classList.add("custom-context-menu");
+  			const { menus } = options;
+  			if (menus && menus.length > 0) {
+    			for (let menu of menus) {
+      				const li = document.createElement("li");
+      				li.textContent = menu.name;
+      				li.onclick = menu.onClick;
+      				ul.appendChild(li);
+    			}
+  			}
+  			const body = document.querySelector("body");
+  			body.appendChild(ul);
+  			return ul;
+  		}
+		
+  		return {
+    		// 获取实例的唯一方式
+    		getInstance: function () {
+      			if (!instance) {
+        			instance = createMenu();
+      			}
+      			return instance;
+    		},
+  		};
+	};
+	
+	const menuSinglton = ContextMenuSinglton({
   		menus: [
     		{
       			name: "刷新",
       			onClick: function (e) {
-        			console.log("refresh!");
+        			aardio.flush();
       			},
     		},
     		{
       			name: "删除此项",
       			onClick: function (e) {
-        			console.log("delete!");
+      			    if(currentMouseEle.length>3){
+				    	console.log(currentMouseEle[3]);
+				    	let currentMouseEleLi = currentMouseEle[3];
+	    				let timeIndex = currentMouseEleLi.getAttribute("id");
+	    				console.log(timeIndex);
+	    				aardio.modifyList(timeIndex);
+	    				aardio.deleteList();
+      			    };
       			},
     		},
     		{
       			name: "导出为pdf",
       			onClick: function (e) {
-        			console.log("export!");
+      			    hideMenu(e);
+        			window.print();
       			},
     		},
   		],
 	});
+	
+	const menuLess = ContextMenuLess({
+  		menus: [
+    		{
+      			name: "刷新",
+      			onClick: function (e) {
+        			aardio.flush();
+      			},
+    		},
+    		{
+      			name: "导出为pdf",
+      			onClick: function (e) {
+      			    hideMenu(e);
+        			window.print();
+      			},
+    		},
+  		],
+	});
+	
 </script>
 **/;
 
