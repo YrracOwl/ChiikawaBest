@@ -4,7 +4,7 @@ var winform = win.form(text="应用日志";right=759;bottom=527;border="none")
 winform.add(
 button={cls="button";text="保存日志";left=272;top=488;right=360;bottom=528;font=LOGFONT(h=-13);z=2};
 button2={cls="button";text="打开日志";left=384;top=488;right=472;bottom=528;font=LOGFONT(h=-13);z=3};
-richedit={cls="richedit";text='---此处显示日志---\r\n';left=8;top=32;right=752;bottom=488;border=1;db=1;dl=1;dr=1;dt=1;font=LOGFONT(h=-13);multiline=1;z=1}
+richedit={cls="richedit";text='---此处显示日志---\r\n';left=8;top=32;right=752;bottom=488;border=1;db=1;dl=1;dr=1;dt=1;font=LOGFONT(h=-13);multiline=1;vscroll=1;z=1}
 )
 /*}}*/
 

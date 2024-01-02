@@ -3,7 +3,7 @@ var content_css = /**
 
 /* Variables */
 /* Fonts */
-@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,700);
+/* @import url(https://fonts.googleapis.com/css?family=Open+Sans:300,700); */
 body {
   font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 1em;
@@ -31,7 +31,7 @@ body {
   margin-left: -1px;
   position: absolute;
   top: 0;
-  left: 2em;
+  left: 2.2em;
   width: 2px;
   height: 100%;
 }
@@ -53,24 +53,35 @@ body {
 }
 
 .timeline-event-copy {
-  padding: 2em;
+  padding-left: 1.5em;
+  padding-right: 1.5em
+  padding-top: 1em;
+  padding-bottom: 0em;
   position: relative;
-  top: -1.875em;
-  left: 4em;
+  top: -0.5em;
+  left: 2em;
   width: 80%;
 }
 .timeline-event-copy h3 {
-  font-size: 1.75em;
+  font-size: 1.5em;
+  margin-top: 0.3em;
+  margin-bottom: 0.3em;
 }
 .timeline-event-copy h4 {
   font-size: 1.2em;
-  margin-bottom: 1.2em;
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+}
+.timeline-event-copy h5 {
+  font-size: 1.1em;
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
 }
 .timeline-event-copy strong {
   font-weight: 700;
 }
 .timeline-event-copy p:not(.timeline-event-thumbnail) {
-  padding-bottom: 1.2em;
+  padding-bottom: 0.1em;
 }
 
 .timeline-event-icon {
@@ -106,46 +117,179 @@ body {
   -webkit-box-shadow: inset 0 0 0 0em #ef795a;
   box-shadow: inset 0 0 0 0em #ef795a;
   display: inline-block;
-  margin-bottom: 1.2em;
+  margin-bottom: 0.5em;
   padding: 0.25em 1em 0.2em 1em;
+}
+
+li::marker {
+  content: '';
 }
 </style>
 **/; 
 var content_body = /**
-<ul class="timeline">
+<ul id="listContent" class="timeline">
   <li class="timeline-event">
     <label class="timeline-event-icon"></label>
     <div class="timeline-event-copy">
-      <p class="timeline-event-thumbnail">April 2011 - heute</p>
-      <h3>Geil,Danke! GmbH</h3>
-      <h4>Geschäftsführerin eines Web-Studios</h4>
-      <p><strong>Schwerpunkt: Frontend-Entwicklung</strong><br>Entwickeln von anspruchsvollen, animierten, responsive und adaptive Webseiten mit HTML5, SCSS, jQuery; für alle Browser, optimiert für Desktop, Notebook, Smartphones und Tablets (iOS, Android, Windows).</p>
-      <p><strong>Projektmanagement mit Scrum</strong><br>Ständiges Verbessern des agilen Entwicklungsprozesses beispielsweise durch Grunt, Yeoman, GIT, JIRA und BrowserStack.</p>
-    </div>
-  </li>
-  <li class="timeline-event">
-    <label class="timeline-event-icon"></label>
-    <div class="timeline-event-copy">
-      <p class="timeline-event-thumbnail">November 2009 - März 2011</p>
-      <h3>Freelancer</h3>
-      <h4>Designer und Autor</h4>
-      <p>Konzeption, Design und Produktion von Digitalen Magazinen mit InDesign, der Adobe Digital Publishing Suite und HTML5. Co-Autorin der Fachbücher "Digitales Publizieren für Tablets" und "Adobe Digital Publishing Suite" erschienen im dpunkt.verlag.</p>
-    </div>
-  </li>
-  <li class="timeline-event">
-    <label class="timeline-event-icon"></label>
-    <div class="timeline-event-copy">
-      <p class="timeline-event-thumbnail">April 2011 - heute</p>
-      <h3>konplan gmbh</h3>
-      <h4>IT-Consultant</h4>
-      <p><strong>Systemarchitektur, Consulting</strong><br>Konzeption und Modellierung von Systemen und APIs für Digital Publishing und Entitlement nach SOA</p>
+      <p class="timeline-event-thumbnail">当前无内容</p>
+      <h5>无内容</h5>
+      <p>请在左侧添加，双击列表内容可修改内容</p>
     </div>
   </li>
 </ul>  
 **/;
+
 var content_js = /**
 <script type="text/javascript">
+	var tempTable = document.createElement("ul");
+	tempTable.setAttribute("id","listContentTemp");
+	
+	//定义全局函数
+	window.clearList = function(){
+		var ListEles = document.getElementById("listContent");
+		ListEles.innerHTML = "";
+	};
+	
+	window.clearListTemp = function(){
+		tempTable.innerHTML = "";
+	}
+	
+	window.replaceList = function(){
+		var ListEles = document.getElementById("listContent");
+		ListEles.innerHTML = tempTable.innerHTML;
+	}
+	
+	window.pushTable = function(datas){	
+		var liEle = window.createLi(datas);
+		tempTable.appendChild(liEle);
+	};
+	
+	window.updateContent = function(datas){
+		var liEle = document.getElementById(datas[0]);
+		var tempEle = window.createLi(datas);
+		liEle.parentNode.replaceChild(tempEle,liEle);
+	}
+	
+	window.removeContent = function(datas){
+		var liEle = document.getElementById(datas[0]);
+		liEle.remove();
+	}
+	
+	window.createLi = function(datas){
+		var liEle = document.createElement("li");
+		liEle.setAttribute("class","timeline-event");
+		liEle.setAttribute("id",datas[0])
+		
+		var labelEle = document.createElement("label");
+		labelEle.setAttribute("class","timeline-event-icon");
+		
+		var divEle = document.createElement("div");
+		divEle.setAttribute("class","timeline-event-copy");
+		
+		var timeEle = document.createElement("p");
+		timeEle.setAttribute("class","timeline-event-thumbnail");
+		timeEle.setAttribute("ondblclick","dblFunc()")
 
+		timeEle.innerText = datas[0];
+		
+		var titleEle = document.createElement("h5"); 
+		titleEle.innerText = datas[1];
+		
+		var contentEle = document.createElement("p");
+		contentEle.innerText = datas[2];
+		
+		divEle.appendChild(timeEle);
+		divEle.appendChild(titleEle);
+		divEle.appendChild(contentEle);
+		
+		liEle.appendChild(labelEle);
+		liEle.appendChild(divEle);
+		return liEle; 
+	};
+	
+	function dblFunc() {
+	    let timeIndex = event.currentTarget.innerText;//取出当前元素
+	    console.log(timeIndex);
+	    aardio.modifyList(timeIndex);
+	};
+	
+	document.addEventListener("contextmenu", (e) => {
+  		e.preventDefault();
+  		showMenu(e);
+	});
+	
+	function showMenu(e) {
+  		const menus = menuSinglton.getInstance();
+  		menus.style.top = `${e.clientY}px`;
+  		menus.style.left = `${e.clientX}px`;
+  		menus.style.display = "block";
+  		menus.style.position = "fixed";
+  		menus.style.border = "2px solid black";
+  		menus.style.padding = "6px 3px";
+	}
+	
+	function hideMenu(e) {
+  		const menus = menuSinglton.getInstance();
+  		menus.style.display = "none";
+	}
+	
+	document.addEventListener("click", hideMenu);
+	
+	const ContextMenu = function (options) {
+  	// 唯一实例
+  		let instance;
+		
+  		// 创建实例方法
+  		function createMenu() {
+  			const ul = document.createElement("ul");
+  			ul.classList.add("custom-context-menu");
+  			const { menus } = options;
+  			if (menus && menus.length > 0) {
+    			for (let menu of menus) {
+      				const li = document.createElement("li");
+      				li.textContent = menu.name;
+      				li.onclick = menu.onClick;
+      				ul.appendChild(li);
+    			}
+  			}
+  			const body = document.querySelector("body");
+  			body.appendChild(ul);
+  			return ul;
+  		}
+		
+  		return {
+    		// 获取实例的唯一方式
+    		getInstance: function () {
+      			if (!instance) {
+        			instance = createMenu();
+      			}
+      			return instance;
+    		},
+  		};
+	};
+
+	const menuSinglton = ContextMenu({
+  		menus: [
+    		{
+      			name: "刷新",
+      			onClick: function (e) {
+        			console.log("refresh!");
+      			},
+    		},
+    		{
+      			name: "删除此项",
+      			onClick: function (e) {
+        			console.log("delete!");
+      			},
+    		},
+    		{
+      			name: "导出为pdf",
+      			onClick: function (e) {
+        			console.log("export!");
+      			},
+    		},
+  		],
+	});
 </script>
 **/;
 
