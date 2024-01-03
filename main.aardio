@@ -12,7 +12,7 @@ if(!atom){
 	/*为窗口设置原子值可以避免一个程序重复运行多个实例*/
 	//win.show(hwnd,0x9/*_SW_RESTORE*/);
 	//win.setForeground(hwnd);
-	win.msgbox("程序已启动！请查看托盘！","Atoms",0,0,1200)
+	win.msgbox("程序已启动！请查看托盘！","ChiikawaBest",0,0,1200)
 	win.quitMessage();
 	return;
 }
@@ -92,6 +92,10 @@ dbBase = sqlite(dbBasePath);
 dbTimelinePath = dbDir+"/timeline.db";
 dbTimeline = sqlite(dbTimelinePath);
 
+//AlarmClock数据库路径
+dbAlarmClockPath = dbDir+"/alarmClock.db";
+dbAlarmClock = sqlite(dbAlarmClockPath);
+
 if( not dbTimeline.existsTable("default") ){ 
 	dbTimeline.exec( "CREATE TABLE [default] (time PRIMARY KEY, title, content);"); 
 }
@@ -105,6 +109,9 @@ if( not dbBase.existsTable("timeline") ){
 	)
 }
 
+if( not dbAlarmClock.existsTable("default")){
+	dbAlarmClock.exec( "CREATE TABLE [default] (time PRIMARY KEY, content);"); 
+}
 
 //////////////////////////////////////////////////////////////////////
 //设置：托盘消息
@@ -196,7 +203,7 @@ mainForm.onMinimize = function(lParam){
 	mainForm.show(false); //隐藏窗口
 	if(!cfg.apps_setting.启动到托盘 and minimize_1st_show){
 		minimize_1st_show = false;
-		mainForm.tray.pop("应用已启动，右击托盘获取更多菜单","Atoms",,3000);
+		mainForm.tray.pop("应用已启动，右击托盘获取更多菜单","ChiikawaBest",,3000);
 	}
     //mainForm.popmenu.setString(1,"显示")
     return true;//阻击默认消息传递，取消最小化过程
@@ -352,7 +359,7 @@ win.ui.simpleWindow(mainForm,,,18,).skin(
 
 //主窗口是否显示
 if(cfg.apps_setting.启动到托盘){
-	mainForm.tray.pop("应用已启动，右击托盘获取更多菜单","Atoms",,3000);
+	mainForm.tray.pop("应用已启动，右击托盘获取更多菜单","ChiikawaBest",,3000);
 }
 else {
 	mainForm.show();

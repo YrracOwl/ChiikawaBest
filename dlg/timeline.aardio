@@ -426,32 +426,44 @@ win.ui.simpleWindow(winform,,,,).skin(
 )
 
 winform.添加plus.oncommand = function(id,event){
-	var tl_time = winform.datetimepick.text + '-' + winform.时间plus.text; 
-	var tl_title = winform.时间plus.text; 
-	var tl_content = "还没想好"; 
-	if(winform.标题plus.text != ""){
-		tl_title = winform.标题plus.text;
-	}
-	if(winform.内容plus.text != ""){
-		tl_content = winform.内容plus.text;
-	}
-	var cmd = ..dbTimeline.prepare("REPLACE INTO ?? VALUES ( @time,@title,@content);",{winform.当前主题.text});
-	cmd.step(
-		time = tl_time;
-		title = tl_title;
-		content = tl_content;
-	)
-	..logMsg(">>>写入成功：",winform.当前主题.text)
-	
-	if(winform.勾选plus.disabled){
-		wb_tl.xcall("updateContent",{tostring(tl_time);tostring(tl_title);tostring(tl_content)})
+	var timeFormat = string.split(winform.时间plus.text,':');
+	if(tonumber(timeFormat[1]) && tonumber(timeFormat[2]) && tonumber(timeFormat[3])){
+		if(tonumber(timeFormat[1])<24 && tonumber(timeFormat[2])<60 && tonumber(timeFormat[3])<60){
+				var tl_time = winform.datetimepick.text + '-' + winform.时间plus.text; 
+				var tl_title = winform.时间plus.text; 
+				var tl_content = "还没想好"; 
+				if(winform.标题plus.text != ""){
+					tl_title = winform.标题plus.text;
+				}
+				if(winform.内容plus.text != ""){
+					tl_content = winform.内容plus.text;
+				}
+				var cmd = ..dbTimeline.prepare("REPLACE INTO ?? VALUES ( @time,@title,@content);",{winform.当前主题.text});
+				cmd.step(
+					time = tl_time;
+					title = tl_title;
+					content = tl_content;
+				)
+				..logMsg(">>>写入成功：",winform.当前主题.text)
+				
+				if(winform.勾选plus.disabled){
+					wb_tl.xcall("updateContent",{tostring(tl_time);tostring(tl_title);tostring(tl_content)})
+				}
+				else {
+					winform.listboxUpdate(winform);
+					winform.timelineWebUpdate(winform);
+				}
+				winform.addUIReset(winform);
+		}
+		else {
+			var x,y,cx,cy = winform.时间plus.getPos(true);
+    		balloonTipCtrl.setText("时间格式不合法，请输入24小时制时间").trackPopup(true,x+cx*3/4,y+cy );
+		}
 	}
 	else {
-		winform.listboxUpdate(winform);
-		winform.timelineWebUpdate(winform);
+		var x,y,cx,cy = winform.时间plus.getPos(true);
+    	balloonTipCtrl.setText("时间格式不合法，请输入24小时制时间").trackPopup(true,x+cx*3/4,y+cy );
 	}
-	
-	winform.addUIReset(winform);
 }
 
 winform.listbox.oncommand = function(id,event){

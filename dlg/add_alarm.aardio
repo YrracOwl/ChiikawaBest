@@ -48,49 +48,58 @@ winform.datetimepick.setFormat("          yyyy年MM月dd日dddd")
 
 taskScheduler.start();
 
-var taskTable = {}; 
-if(..cfg.alarmTimes){
+var taskTable = {};
+var scheduleTable = {};
+if(..dbAlarmClock.existsTable("default")){
 	..logMsg(">>>加载闹钟：")
-	for(k,v in ..cfg.alarmTimes){
-		..logMsg(k,v)
-		var tm = time(k,"%Y/%m/%d %H:%M:%S");
-		tm.format = "%Y年%m月%d日%H时%M分%S秒";
-		var tmstr = tostring(tm);
-		
-		tm.format = "%Y";
-		var ystr = tostring(tm);
-		
-		tm.format = "%m";
-		var mstr = tostring(tm);
-		
-		tm.format = "%d";
-		var dstr = tostring(tm);
-		
-		tm.format = "%H";
-		var Hstr = tostring(tm);
-		
-		tm.format = "%M";
-		var Mstr = tostring(tm);
-		
-		tm.format = "%S";
-		var Sstr = tostring(tm);
-		var AlarmContent = ..cfg.alarmText[k];
-		taskTable[k] = taskScheduler.create(k,function(AlarmContent,k){
-			var frmChild = ..mainForm.loadForm("\dlg\alarms.aardio");
-			frmChild.updateContent(AlarmContent,k);
-			frmChild.show();
-			win.setForeground(frmChild.hwnd);
-			win.setTopmost(frmChild.hwnd);
-		},AlarmContent,k);
-		
-		taskTable[k].time = { 
-    		second =  Sstr ;
-    		minute = Mstr ; 
-    		hour = Hstr ;
-    		day = dstr ;
-    		month = mstr ;
-		};
-	};
+	for rowid, time, content in ..dbAlarmClock.each("SELECT rowid,* FROM [default]") {
+		taskTable[time] = content;
+	}
+	..logWarn(table.count(taskTable))
+	if(table.count(taskTable)>0){
+		for(k,v in taskTable){
+			..logMsg(k,v)
+			var tm = time(k,"%Y/%m/%d %H:%M:%S");
+			tm.format = "%Y年%m月%d日%H时%M分%S秒";
+			var tmstr = tostring(tm);
+			
+			tm.format = "%Y";
+			var ystr = tostring(tm);
+			
+			tm.format = "%m";
+			var mstr = tostring(tm);
+			
+			tm.format = "%d";
+			var dstr = tostring(tm);
+			
+			tm.format = "%H";
+			var Hstr = tostring(tm);
+			
+			tm.format = "%M";
+			var Mstr = tostring(tm);
+			
+			tm.format = "%S";
+			var Sstr = tostring(tm);
+			var AlarmContent = v;
+			scheduleTable[k] = taskScheduler.create(k,function(AlarmContent,k){
+				var frmChild = ..mainForm.loadForm("\dlg\alarms.aardio");
+				frmChild.updateContent(AlarmContent,k);
+				frmChild.show();
+				win.setForeground(frmChild.hwnd);
+				win.setTopmost(frmChild.hwnd);
+			},AlarmContent,k);
+			
+			scheduleTable[k].time = { 
+    			second =  Sstr ;
+    			minute = Mstr ; 
+    			hour = Hstr ;
+    			day = dstr ;
+    			month = mstr ;
+			};
+		}
+	}
+	
+	
 }
 
 winform.onClose = function(hwnd,message,wParam,lParam){
@@ -168,15 +177,20 @@ winform.plusBtn.oncommand = function(id,event){
 	import console;
 	//从字符串创建时间值
 	var tm = time(tempTime,"%Y/%m/%d %H:%M:%S");
-	var alarmNum = tonumber(tm);
 	
-	..cfg.alarmTimes[tempTime] = alarmNum;
+
 	if(winform.plusContent.text == ""){
-		..cfg.alarmText[tempTime] = "闹钟来了";
+		taskTable[tempTime] = "闹钟来了";
 	}
 	else {
-		..cfg.alarmText[tempTime] = winform.plusContent.text;
+		taskTable[tempTime] = winform.plusContent.text;
 	}
+	
+	var cmd = ..dbAlarmClock.prepare("REPLACE INTO [default] VALUES ( @time,@content);");
+	cmd.step(
+		time = tempTime;
+		content = taskTable[tempTime];
+	)
 	
 	tm.format = "%Y年%m月%d日%H时%M分%S秒";
 	var tmstr = tostring(tm);
@@ -199,17 +213,18 @@ winform.plusBtn.oncommand = function(id,event){
 	tm.format = "%S";
 	var Sstr = tostring(tm);
 	
-	var AlarmContent = ..cfg.alarmText[tempTime];
+	var AlarmContent = taskTable[tempTime];
 	..logMsg("添加闹钟：",tempTime,AlarmContent)
-	taskTable[tempTime] = taskScheduler.create(tempTime,function(AlarmContent,tempTime){
+	scheduleTable[tempTime] = taskScheduler.create(tempTime,function(AlarmContent,tempTime){
 		var frmChild = ..mainForm.loadForm("\dlg\alarms.aardio");
 		frmChild.updateContent(AlarmContent,tempTime);
 		frmChild.show();
 		win.setForeground(frmChild.hwnd);
 		win.setTopmost(frmChild.hwnd);
+		win.flash(frmChild.hwnd,9)
 	},AlarmContent,tempTime);
 	
-	taskTable[tempTime].time = { 
+	scheduleTable[tempTime].time = { 
     	second =  Sstr ;
     	minute = Mstr ; 
     	hour = Hstr ;
