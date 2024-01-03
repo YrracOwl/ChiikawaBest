@@ -1,7 +1,7 @@
 import win.ui;
 import win.ui.atom;
 /*DSG{{*/
-mainForm = win.form(text="atoms";right=220;bottom=118;border="none";max=false)
+mainForm = win.form(text="ChiikawaBest";right=220;bottom=118;border="none";max=false)
 mainForm.add(
 bk={cls="bk";left=0;top=0;right=224;bottom=120;ah=1;aw=1;background="\res\keai.jpg";z=1}
 )
@@ -35,7 +35,7 @@ import win.util.tray;
 
 //配置设置
 import fsys.config;
-appName = "/appvar/";
+appName = "/ChiikawaBest/";
 cfgPath = io.appData(appName+"app.config");
 cfg = fsys.config(cfgPath);
 
@@ -148,6 +148,9 @@ mainForm.onTrayMessage = {
 		mainForm.popmenu.add("时间线",function(){
 			var timeline1 = mainForm.loadForm("\dlg\timeline_choice.aardio");
 			timeline1.show();
+		})
+		mainForm.popmenu.add("闹钟",function(){
+			alarmForm.show();
 		})
 		
 		mainForm.popmenu.add();//分隔线
@@ -321,6 +324,10 @@ thrdWriteDBFunc = function(db_path,str_prepare,str_step){
     command.finalize();
     db.close();
 } 
+
+//全局闹钟
+alarmForm = mainForm.loadForm("\dlg\add_alarm.aardio");
+
 
 //////////////////////////////////////////////////////////////////////
 //创建托盘图标

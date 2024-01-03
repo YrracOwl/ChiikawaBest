@@ -162,7 +162,7 @@ winform.listbox.onDrawItem = function(drawItem,dpiScaleX,dpiScaleY){
 
 //界面设置
 winform.添加提醒项.oncommand = function(id,event){
-	winform.loadForm("\dlg\timeline_add_alarm.aardio")
+	..alarmForm.show(true);
 }
 
 import web.view;
@@ -192,9 +192,61 @@ document.addEventListener('mousedown', function (event) {
 //window.open =  function(url){ window.location.href = url; }
 `);
 
-var template_func = loadcode("\res\template_timeline_6.aardio");
+var template_func = loadcode("\res\template_timeline.aardio");
 
 content_css,content_body,content_js = template_func();
+
+//winform.datetimepick.setFormat("''HH':'mm':'ss, dddd, MMMdd日', 'yyyy")
+winform.datetimepick.setFormat("yyyy年MM月dd日dddd")
+
+import win.taskScheduler;
+var timeUpdate = win.taskScheduler(winform); 
+
+var task  = timeUpdate.create("每秒执行",function(){
+	winform.datetimepick.time = time();
+	winform.时间plus.text = tostring(time(__,'%H:%M:%S'));
+	
+} )
+
+//每秒更新时间plus中的内容
+task.interval = {  
+   second = 1;
+}
+var thrdListboxUpdate = function(winform,database){
+	var list_items = {}; 
+	for rowid, time, title, content in database.each("SELECT rowid,* FROM ??",{winform.当前主题.text}) {
+		table.push(list_items,time);
+	}
+	table.sort(list_items);
+	winform.listbox.clear();
+	for(k,v in list_items){
+		winform.listbox.add(v)
+	}
+	
+	if(winform.listbox.count<1){
+		winform.listbox.show(false);
+	}
+	else {
+		winform.listbox.show(true);
+	}
+};
+
+var thrdTimelineUpdate = function(winform,database,wb_tl){
+	wb_tl.xcall("clearListTemp");
+	if(winform.listbox.count<1){
+		wb_tl.xcall("pushTable",{"当前无内容";"无内容";"请在左侧添加"});
+	}
+	else {
+		for(i=1;winform.listbox.count;1){
+			var result = database.stepQuery("SELECT * FROM ??",{time = winform.listbox.items[i], winform.当前主题.text} )
+			wb_tl.xcall("pushTable",{tostring(result.time);tostring(result.title);tostring(result.content)});
+		}
+	}
+	wb_tl.xcall("replaceList");
+};
+
+thread.set("thrdListboxUpdate", thrdListboxUpdate);
+thread.set("thrdTimelineUpdate", thrdTimelineUpdate);
 
 wb_tl.external = {
 	modifyList = function(timeSel){
@@ -221,38 +273,30 @@ wb_tl.external = {
     		balloonTipCtrl.setText("点击<添加>保存，否则不修改").trackPopup(true,x+cx*3/4,y+cy );
 		}
 	};
-	
-	deleteList = function(){
-		var tl_time = winform.datetimepick.text + '-' + winform.时间plus.text; 
-		var confirmed = win.msgboxTest("确认删除"""+tl_time+"""吗？","确认删除");
-		if(confirmed){
-			try{
-				..dbTimeline.exec("DELETE FROM ?? WHERE time=?;",{ winform.当前主题.text,tl_time} )
-				..logWarn(">>>已删除项",winform.当前主题.text,"中的：",tl_time)
-				
-				wb_tl.xcall("removeContent",{tostring(tl_time)});
-				winform.listboxUpdate(winform);
-				winform.timelineWebUpdate(winform);
-				
-				winform.addUIReset(winform);
-			}
-			catch(e){
-				..logErr(">>>删除",winform.当前主题.text,"中的：",tl_time,"失败")
-				..logErr(e)
-			}
+
+	flush = function(){
+		winform.标题plus.text = "";
+		winform.内容plus.text = "";
+		winform.时间plus.text = tostring(time(__,'%H:%M:%S'));
+		balloonTipCtrl.trackPopup(false);
+		winform.勾选plus.checked = true;
+		winform.删除plus.disabled = true;
+		winform.取消plus.disabled = true;
+		winform.勾选plus.disabled = false;
+		if(winform.勾选plus.checked){
+			winform.datetimepick.disabled = true;
+			winform.时间plus.editable = false;
+			winform.时间plus.background = null;
+			timeUpdate.start();
 		}
 		else {
-			..logWarn(">>>取消删除")
-		}
+			winform.datetimepick.disabled = false;
+			winform.时间plus.editable = true;
+			winform.时间plus.background = 0xFFFFFFFF;
+			timeUpdate.stop();
+		};
 	};
-	
-	flush = function(){
-		winform.addUIReset(winform);
-		winform.listboxUpdate(winform);
-		winform.timelineWebUpdate(winform);
-	};
-	
-	
+
 };
 
 wb_tl.html = /**
@@ -275,22 +319,7 @@ wb_tl.html = /**
 新增子事项
 */
 
-//winform.datetimepick.setFormat("''HH':'mm':'ss, dddd, MMMdd日', 'yyyy")
-winform.datetimepick.setFormat("yyyy年MM月dd日dddd")
 
-import win.taskScheduler;
-var timeUpdate = win.taskScheduler(winform); 
-
-var task  = timeUpdate.create("每秒执行",function(){
-	winform.datetimepick.time = time();
-	winform.时间plus.text = tostring(time(__,'%H:%M:%S'));
-	
-} )
-
-//每秒更新时间plus中的内容
-task.interval = {  
-   second = 1;
-}
 
 
 winform.勾选plus.oncommand = function(id,event){
@@ -342,6 +371,7 @@ winform.timelineWebUpdate = function(winform){
 	}
 	wb_tl.xcall("replaceList");
 }
+
 
 winform.tiktokChecker = function(winform){
 	winform.勾选plus.disabled = false;

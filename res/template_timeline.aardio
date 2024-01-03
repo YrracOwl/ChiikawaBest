@@ -1,0 +1,407 @@
+var content_css = /**
+<style type="text/css">
+
+/* Variables */
+/* Fonts */
+/* @import url(https://fonts.googleapis.com/css?family=Open+Sans:300,700); */
+//打印机媒体查询
+@media print {
+     body{
+        -webkit-print-color-adjust:exact;
+        -moz-print-color-adjust:exact;
+        -ms-print-color-adjust:exact;
+        print-color-adjust:exact;
+    } 
+    button{display:none;}
+    .custom-context-menu{display:none;}
+    
+}
+
+body {
+  font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 1em;
+  font-weight: 300;
+  line-height: 1.5;
+  letter-spacing: 0.05em;
+}
+
+/* Layout */
+* {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+/* Styling */
+.timeline {
+  margin: 4em auto;
+  position: relative;
+  max-width: 46em;
+}
+.timeline:before {
+  background-color: #31322c;
+  content: '';
+  margin-left: 1em;
+  position: absolute;
+  top: 0;
+  left: 3.44em;
+  width: 2px;
+  height: 100%;
+}
+
+.timeline-event {
+  position: relative;
+}
+
+@media only screen {
+	.timeline-event:hover .timeline-event-icon {
+  	-moz-transform: rotate(-45deg);
+  	-ms-transform: rotate(-45deg);
+  	-webkit-transform: rotate(-45deg);
+  	transform: rotate(-45deg);
+  	background-color: #801dae;
+	}
+	
+	.timeline-event:hover .timeline-event-thumbnail {
+  	-moz-box-shadow: inset 40em 0 0 0 #801dae;
+  	-webkit-box-shadow: inset 40em 0 0 0 #801dae;
+  	box-shadow: inset 40em 0 0 0 #801dae;
+	}
+}
+
+.timeline-event-copy {
+  padding-left: 1.5em;
+  padding-right: 1.5em
+  padding-top: 1em;
+  padding-bottom: 0em;
+  position: relative;
+  top: -0.5em;
+  left: 2em;
+  width: 80%;
+}
+.timeline-event-copy h3 {
+  font-size: 1.5em;
+  margin-top: 0.3em;
+  margin-bottom: 0.3em;
+}
+.timeline-event-copy h4 {
+  font-size: 1.2em;
+  margin-top: 0.2em;
+  margin-bottom: 0.2em;
+}
+.timeline-event-copy h5 {
+  font-size: 1.1em;
+  margin-top: 0.1em;
+  margin-bottom: 0.1em;
+}
+.timeline-event-copy strong {
+  font-weight: 700;
+}
+.timeline-event-copy p:not(.timeline-event-thumbnail) {
+  padding-bottom: 0.1em;
+}
+
+.timeline-event-icon {
+  -moz-transition: -moz-transform 0.2s ease-in;
+  -o-transition: -o-transform 0.2s ease-in;
+  -webkit-transition: -webkit-transform 0.2s ease-in;
+  transition: transform 0.2s ease-in;
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background-color: #31322c;
+  outline: 10px solid white;
+  display: block;
+  margin: 0.5em 0.5em 0.5em -0.5em;
+  position: absolute;
+  top: 0;
+  left: 2em;
+  width: 1em;
+  height: 1em;
+}
+
+.timeline-event-thumbnail {
+  -moz-transition: box-shadow 0.5s ease-in 0.1s;
+  -o-transition: box-shadow 0.5s ease-in 0.1s;
+  -webkit-transition: box-shadow 0.5s ease-in;
+  -webkit-transition-delay: 0.1s;
+  transition: box-shadow 0.5s ease-in 0.1s;
+  color: white;
+  font-size: 0.75em;
+  background-color: #31322c;
+  -moz-box-shadow: inset 0 0 0 0em #bf242a;
+  -webkit-box-shadow: inset 0 0 0 0em #bf242a;
+  box-shadow: inset 0 0 0 0em #bf242a;
+  display: inline-block;
+  margin-bottom: 0.5em;
+  padding: 0.25em 1em 0.2em 1em;
+}
+
+li::marker {
+  content: '';
+}
+</style>
+**/; 
+var content_body = /**
+<ul id="listContent" class="timeline">
+  <li class="timeline-event">
+    <label class="timeline-event-icon"></label>
+    <div class="timeline-event-copy">
+      <p class="timeline-event-thumbnail">当前无内容</p>
+      <h5>无内容</h5>
+      <p>请在左侧添加，双击列表内容可修改内容</p>
+    </div>
+  </li>
+</ul>  
+**/;
+
+var content_js = /**
+<script type="text/javascript">
+	var tempTable = document.createElement("ul");
+	tempTable.setAttribute("id","listContentTemp");
+	
+	//定义全局函数
+	window.clearList = function(){
+		var ListEles = document.getElementById("listContent");
+		ListEles.innerHTML = "";
+	};
+	
+	window.clearListTemp = function(){
+		tempTable.innerHTML = "";
+	}
+	
+	window.replaceList = function(){
+		var ListEles = document.getElementById("listContent");
+		ListEles.innerHTML = tempTable.innerHTML;
+	}
+	
+	window.lengthList = function(){
+		var ListEles = document.getElementById("listContent");
+		return ListEles.childElementCount; 
+	}
+	
+	window.pushTable = function(datas){	
+		var liEle = window.createLi(datas);
+		tempTable.appendChild(liEle);
+	};
+	
+	window.updateContent = function(datas){
+		var liEle = document.getElementById(datas[0]);
+		var tempEle = window.createLi(datas);
+		liEle.parentNode.replaceChild(tempEle,liEle);
+	}
+	
+	window.removeContent = function(datas){
+		var liEle = document.getElementById(datas[0]);
+		liEle.remove();
+	}
+	
+	window.createLi = function(datas){
+		var liEle = document.createElement("li");
+		liEle.setAttribute("class","timeline-event");
+		liEle.setAttribute("id",datas[0])
+		liEle.setAttribute("ondblclick","dblFunc()")
+		
+		var labelEle = document.createElement("label");
+		labelEle.setAttribute("class","timeline-event-icon");
+		
+		var divEle = document.createElement("div");
+		divEle.setAttribute("class","timeline-event-copy");
+		
+		var timeEle = document.createElement("p");
+		timeEle.setAttribute("class","timeline-event-thumbnail");
+		//timeEle.setAttribute("ondblclick","dblFunc()")
+
+		timeEle.innerText = datas[0];
+		
+		var titleEle = document.createElement("h5"); 
+		titleEle.innerText = datas[1];
+		
+		var contentEle = document.createElement("p");
+		contentEle.innerText = datas[2];
+		
+		divEle.appendChild(timeEle);
+		divEle.appendChild(titleEle);
+		divEle.appendChild(contentEle);
+		
+		liEle.appendChild(labelEle);
+		liEle.appendChild(divEle);
+		return liEle; 
+	};
+	
+	function dblFunc() {
+	    let currentLi = event.currentTarget;//取出当前元素
+	    let timeIndex = currentLi.getAttribute("id");
+	    console.log(timeIndex);
+	    //console.log(event);
+	    aardio.modifyList(timeIndex);
+	};
+	
+	var currentMouseEle = document.querySelectorAll(":hover"); 
+	
+	document.addEventListener("contextmenu", (e) => {
+		currentMouseEle = document.querySelectorAll(":hover");
+  		e.preventDefault();
+  		hideMenu(e);
+  		showMenu(e);
+	});
+	
+	function showMenu(e) {
+		if(currentMouseEle.length>3){
+			const menus1 = menuSinglton.getInstance();
+  			menus1.style.top = `${e.clientY-20}px`;
+  			menus1.style.left = `${e.clientX-6}px`;
+  			menus1.style.display = "block";
+  			menus1.style.position = "fixed";
+  			menus1.style.border = "1px solid #31322c";
+  			menus1.style.padding = "6px 3px";
+  			menus1.style.fontSize = "large";
+  			menus1.style.fontWeight = "600";
+  			menus1.style.backdropFilter = "blur(5px)";
+  			menus1.style.boxShadow = "6px 6px 3px 3px rgba(122, 123, 120, .3)";
+  			menus1.style.color = "#b93a26";
+		}
+  		else {
+  			const menus2 = menuLess.getInstance();
+  			menus2.style.top = `${e.clientY-20}px`;
+  			menus2.style.left = `${e.clientX-6}px`;
+  			menus2.style.display = "block";
+  			menus2.style.position = "fixed";
+  			menus2.style.border = "1px solid #31322c";
+  			menus2.style.padding = "6px 3px";
+  			menus2.style.fontSize = "large";
+  			menus2.style.fontWeight = "600";
+  			menus2.style.backdropFilter = "blur(5px)";
+  			menus2.style.boxShadow = "6px 6px 3px 3px rgba(122, 123, 120, .3)";
+  			menus2.style.color = "#b93a26";
+  		}
+	}
+	
+	function hideMenu(e) {
+  		const menus1 = menuSinglton.getInstance();
+  		menus1.style.display = "none";
+  		const menus2 = menuLess.getInstance();
+  		menus2.style.display = "none";
+	}
+	
+	document.addEventListener("click", hideMenu);
+	
+	const ContextMenuSinglton = function (options) {
+  	// 唯一实例
+  		let instance;
+		
+  		// 创建实例方法
+  		function createMenu() {
+  			const ul = document.createElement("ul");
+  			ul.classList.add("custom-context-menu");
+  			const { menus } = options;
+  			if (menus && menus.length > 0) {
+    			for (let menu of menus) {
+      				const li = document.createElement("li");
+      				li.textContent = menu.name;
+      				li.onclick = menu.onClick;
+      				ul.appendChild(li);
+    			}
+  			}
+  			const body = document.querySelector("body");
+  			body.appendChild(ul);
+  			return ul;
+  		}
+		
+  		return {
+    		// 获取实例的唯一方式
+    		getInstance: function () {
+      			if (!instance) {
+        			instance = createMenu();
+      			}
+      			return instance;
+    		},
+  		};
+	};
+	
+	const ContextMenuLess = function (options) {
+  	// 唯一实例
+  		let instance;
+		
+  		// 创建实例方法
+  		function createMenu() {
+  			const ul = document.createElement("ul");
+  			ul.classList.add("custom-context-menu");
+  			const { menus } = options;
+  			if (menus && menus.length > 0) {
+    			for (let menu of menus) {
+      				const li = document.createElement("li");
+      				li.textContent = menu.name;
+      				li.onclick = menu.onClick;
+      				ul.appendChild(li);
+    			}
+  			}
+  			const body = document.querySelector("body");
+  			body.appendChild(ul);
+  			return ul;
+  		}
+		
+  		return {
+    		// 获取实例的唯一方式
+    		getInstance: function () {
+      			if (!instance) {
+        			instance = createMenu();
+      			}
+      			return instance;
+    		},
+  		};
+	};
+	
+	const menuSinglton = ContextMenuSinglton({
+  		menus: [
+    		{
+      			name: "刷新",
+      			onClick: function (e) {
+        			aardio.flush();
+      			},
+    		},
+    		{
+      			name: "编辑此项",
+      			onClick: function (e) {
+      			    if(currentMouseEle.length>3){
+				    	console.log(currentMouseEle[3]);
+				    	let currentMouseEleLi = currentMouseEle[3];
+	    				let timeIndex = currentMouseEleLi.getAttribute("id");
+	    				console.log(timeIndex);
+	    				aardio.modifyList(timeIndex);
+      			    };
+      			},
+    		},
+    		{
+      			name: "导出为pdf",
+      			onClick: function (e) {
+      			    hideMenu(e);
+        			window.print();
+      			},
+    		},
+  		],
+	});
+	
+	const menuLess = ContextMenuLess({
+  		menus: [
+    		{
+      			name: "刷新",
+      			onClick: function (e) {
+        			aardio.flush();
+      			},
+    		},
+    		{
+      			name: "导出为pdf",
+      			onClick: function (e) {
+      			    hideMenu(e);
+        			window.print();
+      			},
+    		},
+  		],
+	});
+	
+</script>
+**/;
+
+return content_css,content_body,content_js; 

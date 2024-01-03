@@ -1,9 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<project ver="10" name="atoms" libEmbed="true" icon="..." ui="win" output="atoms.exe" CompanyName="单位名称" FileDescription="atoms" LegalCopyright="Copyright (C) 作者 2023" ProductName="atoms" InternalName="atoms" FileVersion="0.0.0.02" ProductVersion="0.0.0.02" publishDir="/dist/" dstrip="false" local="false" ignored="false">
+<project ver="10" name="ChiikawaBest" libEmbed="true" icon="res\chiikawa64.ico" ui="win" output="ChiikawaBest.exe" CompanyName="单位名称" FileDescription="ChiikawaBest" LegalCopyright="Copyright (C) 作者 2023" ProductName="ChiikawaBest" InternalName="ChiikawaBest" FileVersion="0.0.0.03" ProductVersion="0.0.0.03" publishDir="/dist/" dstrip="false" local="false" ignored="false">
 	<file name="main.aardio" path="main.aardio" comment="main.aardio"/>
 	<folder name="资源文件" path="res" embed="true" local="false" ignored="false">
+		<file name="keai.jpg" path="res\keai.jpg" comment="res\keai.jpg"/>
 		<file name="loading.gif" path="res\loading.gif" comment="res\loading.gif"/>
 		<file name="loading.html" path="res\loading.html" comment="res\loading.html"/>
+		<file name="template_timeline.aardio" path="res\template_timeline.aardio" comment="res\template_timeline.aardio"/>
 		<file name="template_timeline_0.aardio" path="res\template_timeline_0.aardio" comment="res\template_timeline_0.aardio"/>
 		<file name="template_timeline_1.aardio" path="res\template_timeline_1.aardio" comment="res\template_timeline_1.aardio"/>
 		<file name="template_timeline_2.aardio" path="res\template_timeline_2.aardio" comment="res\template_timeline_2.aardio"/>
@@ -13,16 +15,17 @@
 		<file name="template_timeline_6.aardio" path="res\template_timeline_6.aardio" comment="res\template_timeline_6.aardio"/>
 	</folder>
 	<folder name="窗体文件" path="dlg" comment="目录" embed="true" local="false" ignored="false">
+		<file name="add_alarm.aardio" path="dlg\add_alarm.aardio" comment="dlg\add_alarm.aardio"/>
 		<file name="apps_setting.aardio" path="dlg\apps_setting.aardio" comment="dlg\apps_setting.aardio"/>
 		<file name="html_crawler_setting.aardio" path="dlg\html_crawler_setting.aardio" comment="dlg\html_crawler_setting.aardio"/>
+		<file name="log.aardio" path="dlg\log.aardio" comment="dlg\log.aardio"/>
 		<file name="proxy_setting.aardio" path="dlg\proxy_setting.aardio" comment="dlg\proxy_setting.aardio"/>
 		<file name="settings.aardio" path="dlg\settings.aardio" comment="dlg\settings.aardio"/>
 		<file name="timeline.aardio" path="dlg\timeline.aardio" comment="dlg\timeline.aardio"/>
-		<file name="timeline_add_alarm.aardio" path="dlg\timeline_add_alarm.aardio" comment="dlg\timeline_add_alarm.aardio"/>
 		<file name="timeline_add_note.aardio" path="dlg\timeline_add_note.aardio" comment="dlg\timeline_add_note.aardio"/>
-		<file name="webwatcher.aardio" path="dlg\webwatcher.aardio" comment="dlg\webwatcher.aardio"/>
-		<file name="log.aardio" path="dlg\log.aardio" comment="dlg\log.aardio"/>
 		<file name="timeline_choice.aardio" path="dlg\timeline_choice.aardio" comment="dlg\timeline_choice.aardio"/>
+		<file name="webwatcher.aardio" path="dlg\webwatcher.aardio" comment="dlg\webwatcher.aardio"/>
+		<file name="alarms.aardio" path="dlg\alarms.aardio" comment="dlg\alarms.aardio"/>
 	</folder>
 	<folder name="html_crawler" path="html_crawler" comment="html_crawler" local="false" embed="false" ignored="false">
 		<file name="halo.carrywho.com.html" path="html_crawler\halo.carrywho.com.html" comment="html_crawler\halo.carrywho.com.html"/>

@@ -104,11 +104,12 @@ winform.进程检测.oncommand = function(id,event){
 }
 
 winform.启动闹钟.oncommand = function(id,event){
-	taskScheduler.start();
+	//taskScheduler.start();
+	..alarmForm.show(true);
 }
 
 winform.关闭闹钟.oncommand = function(id,event){
-	taskScheduler.stop();
+	//taskScheduler.stop();
 }
 
 winform.返回.oncommand = function(id,event){

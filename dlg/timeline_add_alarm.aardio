@@ -1,9 +1,0 @@
-import win.ui;
-/*DSG{{*/
-var winform = win.form(text="添加提醒项";right=471;bottom=255)
-winform.add()
-/*}}*/
-
-winform.show();
-win.loopMessage();
-return winform;

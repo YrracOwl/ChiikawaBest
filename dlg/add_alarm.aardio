@@ -1,0 +1,243 @@
+import fonts.fontAwesome;
+
+import win.ui;
+import win.ui.atom;
+/*DSG{{*/
+var winform = win.form(text="闹钟";right=263;bottom=215;border="none";clipch=1;max=false)
+winform.add(
+datetimepick={cls="datetimepick";left=8;top=32;right=256;bottom=56;dl=1;dt=1;edge=1;font=LOGFONT(h=-13);z=1};
+edithh={cls="edit";text="1";left=46;top=66;right=88;bottom=91;db=1;dl=1;edge=1;font=LOGFONT(h=-13);multiline=1;z=2};
+editmm={cls="edit";text="1";left=109;top=66;right=151;bottom=91;db=1;dl=1;edge=1;font=LOGFONT(h=-13);multiline=1;z=4};
+editss={cls="edit";text="1";left=168;top=66;right=210;bottom=91;db=1;dl=1;edge=1;font=LOGFONT(h=-13);multiline=1;z=8};
+plusBtn={cls="plus";text="添加闹钟";left=160;top=176;right=256;bottom=206;align="left";bgcolor=-5197169;border={radius=22};font=LOGFONT(h=-13);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=3}};iconText='\uF274';notify=1;textPadding={left=30};z=7};
+plusContent={cls="plus";left=8;top=120;right=256;bottom=152;bgcolor=16777215;border={bottom=1;color=-6908266};editable=1;font=LOGFONT(h=-13);textPadding={top=6;bottom=2};z=6};
+spinhh={cls="spin";left=68;top=66;right=88;bottom=91;db=1;dl=1;font=LOGFONT(h=-13);z=3};
+spinmm={cls="spin";left=131;top=66;right=151;bottom=91;db=1;dl=1;font=LOGFONT(h=-13);z=5};
+spinss={cls="spin";left=192;top=66;right=212;bottom=91;db=1;dl=1;font=LOGFONT(h=-13);z=9}
+)
+/*}}*/
+
+var atom,hwnd/*冲突窗口的句柄,该函数会自动激活此窗口*/ = winform.atom("BA886D45-C828-4ECB-B520-66FC5263545F");
+if(!atom){
+	/*为窗口设置原子值可以避免一个程序重复运行多个实例*/
+	win.show(hwnd,true);
+	win.quitMessage();	
+	return;
+}
+
+winform.plusBtn.skin({
+	background={
+		default=0x668FB2B0;
+		disabled=0xFFCCCCCC;
+		hover=0xFF928BB3
+	};
+	color={
+		default=0xFF000000;
+		disabled=0xFF6D6D6D
+	}
+})
+
+winform.plusContent.setCueBannerText("请输入闹钟标题");
+
+import quarks;
+//计划任务导入
+import win.taskScheduler;
+var taskScheduler = win.taskScheduler( winform );
+//winform.datetimepick.setFormat("''HH':'mm':'ss, dddd, MMMdd日', 'yyyy")
+winform.datetimepick.setFormat("          yyyy年MM月dd日dddd")
+
+taskScheduler.start();
+
+var taskTable = {}; 
+if(..cfg.alarmTimes){
+	..logMsg(">>>加载闹钟：")
+	for(k,v in ..cfg.alarmTimes){
+		..logMsg(k,v)
+		var tm = time(k,"%Y/%m/%d %H:%M:%S");
+		tm.format = "%Y年%m月%d日%H时%M分%S秒";
+		var tmstr = tostring(tm);
+		
+		tm.format = "%Y";
+		var ystr = tostring(tm);
+		
+		tm.format = "%m";
+		var mstr = tostring(tm);
+		
+		tm.format = "%d";
+		var dstr = tostring(tm);
+		
+		tm.format = "%H";
+		var Hstr = tostring(tm);
+		
+		tm.format = "%M";
+		var Mstr = tostring(tm);
+		
+		tm.format = "%S";
+		var Sstr = tostring(tm);
+		var AlarmContent = ..cfg.alarmText[k];
+		taskTable[k] = taskScheduler.create(k,function(AlarmContent,k){
+			var frmChild = ..mainForm.loadForm("\dlg\alarms.aardio");
+			frmChild.updateContent(AlarmContent,k);
+			frmChild.show();
+			win.setForeground(frmChild.hwnd);
+			win.setTopmost(frmChild.hwnd);
+		},AlarmContent,k);
+		
+		taskTable[k].time = { 
+    		second =  Sstr ;
+    		minute = Mstr ; 
+    		hour = Hstr ;
+    		day = dstr ;
+    		month = mstr ;
+		};
+	};
+}
+
+winform.onClose = function(hwnd,message,wParam,lParam){
+    winform.show(false);
+    return true; 
+}
+
+
+import win.ui.simpleWindow;
+win.ui.simpleWindow(winform,,,,).skin(
+	background = { 
+		hover = 0xff99ffcc;
+		active = 0xffff6666; 
+		default = 0x00000000; 
+	}
+	color = { 
+		hover = 0xff666666;
+		active = 0xffffffff; 
+		default = 0xFF7BA5BF; 
+	}
+)
+
+winform.spinhh.buddy = winform.edithh; 
+winform.spinhh.setRange(0,23); //一定要设置数值的上下限
+winform.spinhh.pos = tostring(time(__,'%H'));//设置数值
+winform.spinhh.inc = 1;//设置每次点击箭头的增减量（步长）
+
+//处理spin事件通知,将要改变值之前触发
+winform.spinhh.onnotify = function(id,code,ptr){ 
+	if(code==0xFFFFFD2E/*_UDN_DELTAPOS*/){
+		var nmUpDown = ..raw.convert(ptr, {
+			struct hdr = ::NMHDR();
+			int pos; //当前位置
+			int delta; //位置的增减量,单击向上箭头此值为负数
+		} );  
+	} 
+}
+
+winform.spinmm.buddy = winform.editmm; 
+winform.spinmm.setRange(0,59); //一定要设置数值的上下限
+winform.spinmm.pos = tostring(time(__,'%M'));//设置数值
+winform.spinmm.inc = 1;//设置每次点击箭头的增减量（步长）
+
+//处理spin事件通知,将要改变值之前触发
+winform.spinmm.onnotify = function(id,code,ptr){ 
+	if(code==0xFFFFFD2E/*_UDN_DELTAPOS*/){
+		var nmUpDown = ..raw.convert(ptr, {
+			struct hdr = ::NMHDR();
+			int pos; //当前位置
+			int delta; //位置的增减量,单击向上箭头此值为负数
+		} );  
+	} 
+}
+
+winform.spinss.buddy = winform.editss; 
+winform.spinss.setRange(0,59); //一定要设置数值的上下限
+winform.spinss.pos = tostring(time(__,'%S'));//设置数值
+winform.spinss.inc = 1;//设置每次点击箭头的增减量（步长）
+
+//处理spin事件通知,将要改变值之前触发
+winform.spinss.onnotify = function(id,code,ptr){ 
+	if(code==0xFFFFFD2E/*_UDN_DELTAPOS*/){
+		var nmUpDown = ..raw.convert(ptr, {
+			struct hdr = ::NMHDR();
+			int pos; //当前位置
+			int delta; //位置的增减量,单击向上箭头此值为负数
+		} );  
+	} 
+}
+
+winform.plusBtn.oncommand = function(id,event){
+	
+	var tempTime = tostring(time(winform.datetimepick.time,"%Y/%m/%d")) + "  "+ winform.edithh.text + ":" + winform.editmm.text + ":" + winform.editss.text;
+	
+	import console;
+	//从字符串创建时间值
+	var tm = time(tempTime,"%Y/%m/%d %H:%M:%S");
+	var alarmNum = tonumber(tm);
+	
+	..cfg.alarmTimes[tempTime] = alarmNum;
+	if(winform.plusContent.text == ""){
+		..cfg.alarmText[tempTime] = "闹钟来了";
+	}
+	else {
+		..cfg.alarmText[tempTime] = winform.plusContent.text;
+	}
+	
+	tm.format = "%Y年%m月%d日%H时%M分%S秒";
+	var tmstr = tostring(tm);
+	
+	tm.format = "%Y";
+	var ystr = tostring(tm);
+	
+	tm.format = "%m";
+	var mstr = tostring(tm);
+	
+	tm.format = "%d";
+	var dstr = tostring(tm);
+	
+	tm.format = "%H";
+	var Hstr = tostring(tm);
+	
+	tm.format = "%M";
+	var Mstr = tostring(tm);
+	
+	tm.format = "%S";
+	var Sstr = tostring(tm);
+	
+	var AlarmContent = ..cfg.alarmText[tempTime];
+	..logMsg("添加闹钟：",tempTime,AlarmContent)
+	taskTable[tempTime] = taskScheduler.create(tempTime,function(AlarmContent,tempTime){
+		var frmChild = ..mainForm.loadForm("\dlg\alarms.aardio");
+		frmChild.updateContent(AlarmContent,tempTime);
+		frmChild.show();
+		win.setForeground(frmChild.hwnd);
+		win.setTopmost(frmChild.hwnd);
+	},AlarmContent,tempTime);
+	
+	taskTable[tempTime].time = { 
+    	second =  Sstr ;
+    	minute = Mstr ; 
+    	hour = Hstr ;
+    	day = dstr ;
+    	month = mstr ;
+	};
+	
+	winform.spinhh.pos = tostring(time(__,'%H'));
+	winform.spinmm.pos = tostring(time(__,'%M'));
+	winform.spinss.pos = tostring(time(__,'%S'));
+	winform.plusContent.text = "";
+
+};
+
+winform.wndproc = function(hwnd,message,wParam,lParam){
+	select( message ) { 
+		case 0x18/*_WM_SHOWWINDOW*/{
+			winform.spinhh.pos = tostring(time(__,'%H'));
+			winform.spinmm.pos = tostring(time(__,'%M'));
+			winform.spinss.pos = tostring(time(__,'%S'));
+		}
+		else{
+
+		}
+	}
+	//无返回值则继续调用默认回调函数
+}
+
+//winform.show();
+win.loopMessage();
+return winform;
