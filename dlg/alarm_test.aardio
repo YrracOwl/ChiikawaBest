@@ -15,7 +15,12 @@ console.log(hwndFullscreen,hwndForeground)
 winform.button.oncommand = function(id,event){
 	var hwndFullscreen = win.getFullscreen();
 	var hwndForeground = win.getForeground();
+	var frmX, frmY, frmWidth, frmHeight = win.getScreenPos();
 	console.log(hwndFullscreen,hwndForeground)
+	console.log(frmX, frmY, frmWidth, frmHeight)
+	
+	var frmWidth, frmHeight = win.getScreen();
+	console.log(frmWidth, frmHeight)
 }
 
 import win.taskScheduler;
@@ -29,7 +34,7 @@ taskBackground.interval = {
 	second = 1 ;
 }
 
-taskDo.start();
+//taskDo.start();
 
 winform.show();
 win.loopMessage();

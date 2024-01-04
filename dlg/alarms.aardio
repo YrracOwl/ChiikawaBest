@@ -14,6 +14,6 @@ winform.updateContent = function(contentStr,timeStr){
 	winform.plusTime.text = timeFormatted;
 }
 
-winform.show();
+//winform.show();
 win.loopMessage();
 return winform;
