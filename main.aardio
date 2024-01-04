@@ -1,7 +1,7 @@
 import win.ui;
 import win.ui.atom;
 /*DSG{{*/
-mainForm = win.form(text="ChiikawaBest";right=220;bottom=118;border="none";max=false)
+mainForm = win.form(text="ChiikawaBest";right=220;bottom=118;border="none";max=false;min=false)
 mainForm.add(
 bk={cls="bk";left=0;top=0;right=224;bottom=120;ah=1;aw=1;background="\res\keai.jpg";z=1}
 )
@@ -117,68 +117,76 @@ if( not dbAlarmClock.existsTable("default")){
 //设置：托盘消息
 //////////////////////////////////////////////////////////////////////
 
+mainForm.trayCreate = function(){
+	win.setForeground(mainForm.hwnd);
+	/*
+	下面创建托盘弹出菜单。
+	如果程序要开机启动到托盘，最好在这里创建菜单，在用户点击前不要创建菜单，
+	避免系统启动时 DPI 缩放前创建的菜单字体偏小（出现这情况的机率很小）。
+	如果不想重复创建菜单最好写到一个库里，然后在这里 import 即可避免上述问题。
+	*/
+	import win.ui.menu;
+	mainForm.popmenu = win.ui.popmenu(mainForm);//创建弹出菜单
+    stat = win.isVisible(mainForm.hwnd);
+    if(stat){
+    	mainForm.popmenu.add("隐藏主窗口",function(id){
+			mainForm.show(false);
+		});
+    }else {
+    	mainForm.popmenu.add("显示主窗口",function(id){
+			mainForm.show(true);
+			win.setForeground(mainForm.hwnd)
+		});
+    }
+	
+	mainForm.popmenu.add();//分隔线
+	mainForm.popmenu.add("设置",function(){
+		var settings1 = mainForm.loadForm("\dlg\settings.aardio");
+		settings1.show();
+	})
+	
+	mainForm.popmenu.add();//分隔线
+	mainForm.popmenu.add("网页监控",function(){
+		var webwatcher1 = mainForm.loadForm("\dlg\webwatcher.aardio");
+		webwatcher1.show();
+	})
+	mainForm.popmenu.add("时间线",function(){
+		var timeline1 = mainForm.loadForm("\dlg\timeline_choice.aardio");
+		timeline1.show();
+	})
+	mainForm.popmenu.add("闹钟",function(){
+		alarmForm.show();
+	})
+	
+	mainForm.popmenu.add();//分隔线
+	mainForm.popmenu.add("打开数据文件夹",function(){
+		process("explorer.exe",io.appData(appName))
+	})
+	
+	mainForm.popmenu.add("应用日志",function(){
+		logForm.show();
+	})
+	
+	mainForm.popmenu.add();//分隔线
+	mainForm.popmenu.add('退出',function(id){
+		mainForm.onClose = null;
+		mainForm.onClose = function(hwnd,message,wParam,lParam){
+			cleanHistory();
+    		fadeHide();			
+		}
+		mainForm.close();
+	})
+	mainForm.popmenu.popup();
+	mainForm.popmenu.close();
+}
+
 
 mainForm.onTrayMessage = {
-	[0x205/*_WM_RBUTTONUP*/  ] = function(wParam){ 
-		win.setForeground(mainForm.hwnd);
-		/*
-		下面创建托盘弹出菜单。
-		如果程序要开机启动到托盘，最好在这里创建菜单，在用户点击前不要创建菜单，
-		避免系统启动时 DPI 缩放前创建的菜单字体偏小（出现这情况的机率很小）。
-		如果不想重复创建菜单最好写到一个库里，然后在这里 import 即可避免上述问题。
-		*/
-		import win.ui.menu;
-		mainForm.popmenu = win.ui.popmenu(mainForm);//创建弹出菜单
-    	stat = win.isVisible(mainForm.hwnd);
-    	if(stat){
-    	    mainForm.popmenu.add("隐藏主窗口",function(id){
-				mainForm.show(false);
-			});
-    	}else {
-    	    mainForm.popmenu.add("显示主窗口",function(id){
-				mainForm.show(true);
-				win.setForeground(mainForm.hwnd)
-			});
-    	}
-		
-		mainForm.popmenu.add();//分隔线
-		mainForm.popmenu.add("设置",function(){
-			var settings1 = mainForm.loadForm("\dlg\settings.aardio");
-			settings1.show();
-		})
-		
-		mainForm.popmenu.add();//分隔线
-		mainForm.popmenu.add("网页监控",function(){
-			var webwatcher1 = mainForm.loadForm("\dlg\webwatcher.aardio");
-			webwatcher1.show();
-		})
-		mainForm.popmenu.add("时间线",function(){
-			var timeline1 = mainForm.loadForm("\dlg\timeline_choice.aardio");
-			timeline1.show();
-		})
-		mainForm.popmenu.add("闹钟",function(){
-			alarmForm.show();
-		})
-		
-		mainForm.popmenu.add();//分隔线
-		mainForm.popmenu.add("打开数据文件夹",function(){
-			process("explorer.exe",io.appData(appName))
-		})
-		
-		mainForm.popmenu.add("应用日志",function(){
-			logForm.show();
-		})
-		
-		mainForm.popmenu.add();//分隔线
-		mainForm.popmenu.add('退出',function(id){ 
-			mainForm.close();
-		})
-		mainForm.popmenu.popup();
-	    mainForm.popmenu.close();
-		
+	[0x205/*_WM_RBUTTONUP*/] = function(wParam){
+		mainForm.trayCreate();
 	};
 	[0x202/*_WM_LBUTTONUP*/] = function(wParam){ 
-		
+		mainForm.trayCreate();
 	};
 	[0x203/*_WM_LBUTTONDBLCLK*/] = function(wParam){ 
 		mainForm.show(true);
@@ -193,9 +201,15 @@ mainForm.onTrayMessage = {
 }
 
 mainForm.onClose = function(hwnd,message,wParam,lParam){
-    cleanHistory();
-    fadeHide();
+	mainForm.show(false); //隐藏窗口
+	if(!cfg.apps_setting.启动到托盘 and minimize_1st_show){
+		minimize_1st_show = false;
+		mainForm.tray.pop("应用已启动，右击托盘获取更多菜单","ChiikawaBest",,3000);
+	}
+    //mainForm.popmenu.setString(1,"显示")
+    return true;//阻击默认消息传递，取消最小化过程
 }
+
 
 var minimize_1st_show = true; 
 

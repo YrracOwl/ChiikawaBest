@@ -1,29 +1,17 @@
 import win.ui;
 /*DSG{{*/
-var winform = win.form(text="闹钟";right=295;bottom=151;border="none")
+var winform = win.form(text="闹钟";right=295;bottom=151;border="thin";max=false;min=false)
 winform.add(
 plusContent={cls="plus";left=8;top=72;right=288;bottom=144;db=1;dl=1;dr=1;dt=1;font=LOGFONT(h=-16;weight=700);multiline=1;valign="top";wrap=1;z=1};
 plusTime={cls="plus";left=8;top=32;right=288;bottom=72;dl=1;dr=1;dt=1;font=LOGFONT(h=-13);z=2}
 )
 /*}}*/
 
-import win.ui.simpleWindow;
-win.ui.simpleWindow(winform,,,,).skin(
-	background = { 
-		hover = 0xff99ffcc;
-		active = 0xffff6666; 
-		default = 0x00000000; 
-	}
-	color = { 
-		hover = 0xff666666;
-		active = 0xffffffff; 
-		default = 0xFF7BA5BF; 
-	}
-);
-
 winform.updateContent = function(contentStr,timeStr){
+	
+	var timeFormatted = time(timeStr,"%Y年%m月%d日%H时%M分%S秒"); 
 	winform.plusContent.text = tostring(contentStr);
-	winform.plusTime.text = tostring(timeStr);
+	winform.plusTime.text = timeFormatted;
 }
 
 winform.show();
