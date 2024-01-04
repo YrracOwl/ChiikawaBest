@@ -5,8 +5,8 @@ import win.ui;
 var winform = win.form(text="选择时间线";right=295;bottom=175;border="none";max=false)
 winform.add(
 ["btn创建时间线"]={cls="plus";text="创建时间线(Ctrl+G)";left=72;top=144;right=232;bottom=174;align="left";bgcolor=-5197169;border={radius=16};dl=1;dt=1;font=LOGFONT(h=-13);iconStyle={align="left";font=LOGFONT(h=-16;name='FontAwesome');padding={left=10;bottom=-2}};iconText='\uF02D';notify=1;textPadding={left=30};z=4};
-["btn删除时间线"]={cls="plus";text="删除";left=200;top=64;right=276;bottom=94;align="left";bgcolor=-13228317;border={radius=16};dl=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-16;name='FontAwesome');padding={left=10}};iconText='\uF014';notify=1;textPadding={left=28};z=5};
-["btn打开时间线"]={cls="plus";text="打开(Ctrl+D)";left=24;top=64;right=144;bottom=94;align="left";bgcolor=-5197169;border={radius=16};dl=1;dt=1;font=LOGFONT(h=-13);iconStyle={align="left";font=LOGFONT(h=-16;name='FontAwesome');padding={left=10;bottom=-2}};iconText='\uF07C';notify=1;textPadding={left=30;top=1};z=3};
+["btn删除时间线"]={cls="plus";text="删除";left=32;top=64;right=108;bottom=94;align="left";bgcolor=-13228317;border={radius=16};dl=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-16;name='FontAwesome');padding={left=10}};iconText='\uF014';notify=1;textPadding={left=28};z=5};
+["btn打开时间线"]={cls="plus";text="打开(Ctrl+D)";left=144;top=64;right=264;bottom=94;align="left";bgcolor=-5197169;border={radius=16};dl=1;dt=1;font=LOGFONT(h=-13);iconStyle={align="left";font=LOGFONT(h=-16;name='FontAwesome');padding={left=10;bottom=-2}};iconText='\uF07C';notify=1;textPadding={left=30;top=1};z=3};
 ["txt时间线标题"]={cls="plus";left=16;top=96;right=280;bottom=136;border={bottom=1;color=-6908266};dl=1;dt=1;editable="edit";font=LOGFONT(h=-16);notify=1;tabstop=1;textPadding={top=16};z=1};
 选择时间线={cls="combobox";left=16;top=32;right=280;bottom=56;border=1;clipch=1;dl=1;dt=1;font=LOGFONT(h=-13);items={};mode="dropdown";tabstop=1;z=2}
 )

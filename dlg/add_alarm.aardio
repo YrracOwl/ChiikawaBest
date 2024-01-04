@@ -218,10 +218,17 @@ winform.plusBtn.oncommand = function(id,event){
 	scheduleTable[tempTime] = taskScheduler.create(tempTime,function(AlarmContent,tempTime){
 		var frmChild = ..mainForm.loadForm("\dlg\alarms.aardio");
 		frmChild.updateContent(AlarmContent,tempTime);
-		frmChild.show();
-		win.setForeground(frmChild.hwnd);
+		var hwndFullscreen = win.getFullscreen();
+		var hwndForeground = win.getForeground();
+		if(hwndFullscreen){
+			win.setParent(frmChild.hwnd,hwndFullscreen);
+		}else {
+			win.setParent(frmChild.hwnd,hwndForeground)
+		}
 		win.setTopmost(frmChild.hwnd);
-		win.flash(frmChild.hwnd,9)
+		win.setForeground(frmChild.hwnd);
+		frmChild.redrawBackground();
+		win.flash(frmChild.hwnd,32);
 	},AlarmContent,tempTime);
 	
 	scheduleTable[tempTime].time = { 
