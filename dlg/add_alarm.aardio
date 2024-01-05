@@ -3,18 +3,24 @@ import fonts.fontAwesome;
 import win.ui;
 import win.ui.atom;
 /*DSG{{*/
-var winform = win.form(text="闹钟";right=263;bottom=215;border="none";clipch=1;max=false)
+var winform = win.form(text="添加闹钟";right=303;bottom=256;border="none";clipch=1;max=false)
 winform.add(
-combobox={cls="combobox";left=7;top=176;right=119;bottom=200;edge=1;font=LOGFONT(h=-13);items={};mode="dropdown";z=10};
-datetimepick={cls="datetimepick";left=8;top=32;right=256;bottom=56;dl=1;dt=1;edge=1;font=LOGFONT(h=-13);z=1};
-edithh={cls="edit";text="1";left=46;top=66;right=88;bottom=91;db=1;dl=1;edge=1;font=LOGFONT(h=-13);multiline=1;z=2};
-editmm={cls="edit";text="1";left=109;top=66;right=151;bottom=91;db=1;dl=1;edge=1;font=LOGFONT(h=-13);multiline=1;z=4};
-editss={cls="edit";text="1";left=168;top=66;right=210;bottom=91;db=1;dl=1;edge=1;font=LOGFONT(h=-13);multiline=1;z=8};
-plusBtn={cls="plus";text="添加闹钟";left=160;top=172;right=256;bottom=202;align="left";bgcolor=-5197169;border={radius=22};font=LOGFONT(h=-13);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=3}};iconText='\uF274';notify=1;textPadding={left=30};z=7};
-plusContent={cls="plus";left=8;top=120;right=256;bottom=152;bgcolor=16777215;border={bottom=1;color=-6908266};editable=1;font=LOGFONT(h=-13);textPadding={top=6;bottom=2};z=6};
-spinhh={cls="spin";left=68;top=66;right=88;bottom=91;db=1;dl=1;font=LOGFONT(h=-13);z=3};
-spinmm={cls="spin";left=131;top=66;right=151;bottom=91;db=1;dl=1;font=LOGFONT(h=-13);z=5};
-spinss={cls="spin";left=192;top=66;right=212;bottom=91;db=1;dl=1;font=LOGFONT(h=-13);z=9}
+alarmState={cls="plus";left=7;top=209;right=295;bottom=250;align="left";font=LOGFONT(italic=255;h=-13);multiline=1;valign="top";wrap=1;z=11};
+combobox={cls="combobox";left=7;top=163;right=119;bottom=187;edge=1;font=LOGFONT(h=-13);items={};mode="dropdown";z=10};
+datetimepick={cls="datetimepick";left=28;top=55;right=276;bottom=79;dl=1;dt=1;edge=1;font=LOGFONT(h=-13);z=1};
+edithh={cls="edit";text="1";left=66;top=89;right=108;bottom=114;db=1;dl=1;edge=1;font=LOGFONT(h=-13);multiline=1;z=2};
+editmm={cls="edit";text="1";left=129;top=89;right=171;bottom=114;db=1;dl=1;edge=1;font=LOGFONT(h=-13);multiline=1;z=4};
+editss={cls="edit";text="1";left=190;top=89;right=232;bottom=114;db=1;dl=1;edge=1;font=LOGFONT(h=-13);multiline=1;z=8};
+plusBtn={cls="plus";text="添加闹钟(Ctrl+G)";left=148;top=159;right=296;bottom=189;align="left";bgcolor=-5197169;border={radius=22};font=LOGFONT(h=-13);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=3}};iconText='\uF274';notify=1;textPadding={left=30};z=7};
+plusContent={cls="plus";left=28;top=122;right=276;bottom=154;bgcolor=16777215;border={bottom=1;color=-6908266};editable=1;font=LOGFONT(h=-13);textPadding={top=6;bottom=2};z=6};
+plusSplit={cls="plus";text="__________________________________________________________";left=7;top=191;right=295;bottom=210;align="left";autohscroll=false;autovscroll=false;font=LOGFONT(h=-11);valign="top";z=16};
+["plus分"]={cls="plus";text="分";left=173;top=89;right=189;bottom=114;font=LOGFONT(h=-13);z=14};
+["plus时"]={cls="plus";text="时";left=111;top=89;right=127;bottom=114;font=LOGFONT(h=-13);z=13};
+["plus秒"]={cls="plus";text="秒";left=236;top=89;right=252;bottom=114;font=LOGFONT(h=-13);z=15};
+spinhh={cls="spin";left=88;top=89;right=108;bottom=114;db=1;dl=1;font=LOGFONT(h=-13);z=3};
+spinmm={cls="spin";left=151;top=89;right=171;bottom=114;db=1;dl=1;font=LOGFONT(h=-13);z=5};
+spinss={cls="spin";left=214;top=89;right=234;bottom=114;db=1;dl=1;font=LOGFONT(h=-13);z=9};
+timeNow={cls="plus";left=72;top=24;right=234;bottom=47;font=LOGFONT(h=-13;weight=700);z=12}
 )
 /*}}*/
 
@@ -49,6 +55,15 @@ import win.taskScheduler;
 var taskScheduler = win.taskScheduler( winform );
 //winform.datetimepick.setFormat("''HH':'mm':'ss, dddd, MMMdd日', 'yyyy")
 winform.datetimepick.setFormat("          yyyy年MM月dd日dddd")
+
+var timeShowClock = taskScheduler.create("timeShowClock",function(){
+    var timeNowSeconds = time(,"%H:%M:%S");
+    winform.timeNow.text = "当前时间 " + tostring(timeNowSeconds);
+});
+
+timeShowClock.interval = { 
+	second = 1;
+};
 
 taskScheduler.start();
 
@@ -88,19 +103,12 @@ if(..dbAlarmClock.existsTable("default")){
 			scheduleTable[k] = taskScheduler.create(k,function(AlarmContent,k){
 				var frmChild = ..mainForm.loadForm("\dlg\alarms.aardio");
 				frmChild.updateContent(AlarmContent,k);
-				
-/*
-				var hwndFullscreen = win.getFullscreen();
-				var hwndForeground = win.getForeground();
-				if(hwndFullscreen){
-					win.setParent(frmChild.hwnd,hwndFullscreen);
-				}else {
-					win.setParent(frmChild.hwnd,hwndForeground)
-				}
-*/
+
 				win.setParent(frmChild.hwnd,win.getDesktop());
-				var alarmClockX, alarmClockY = winform.showPos(winform.combobox.selText);		
-				win.setPos(frmChild.hwnd,alarmClockX, alarmClockY);
+				
+				winform.enableDpiScaling("init");
+				var alarmClockX, alarmClockY = winform.showPos(winform.combobox.selText, frmChild.width, frmChild.height);		
+				win.setPos(frmChild.hwnd, alarmClockX, alarmClockY);
 				frmChild.show();
 				
 				win.setTopmost(frmChild.hwnd);
@@ -191,33 +199,32 @@ winform.spinss.onnotify = function(id,code,ptr){
 	} 
 }
 
-winform.showPos = function(posStr){
-	var alarmPosX, alarmPosY = 0, 0;
-	var alarmWidth,alarmHeight = 296, 152;
-		
-	var frmX, frmY, frmWidth, frmHeight = win.getScreenPos();
-	var frmMainWidth, frmMainHeight = win.getScreen();
+winform.showPos = function(posStr, frmChildWidth, frmChildHeight){
 	
-	var PosLUX, PosLUY = 0, 0;
-	var PosRUX, PosRUY = frmMainWidth-alarmWidth-72, 0;
-	var PosRDX, PosRDY = frmMainWidth-alarmWidth-72, frmMainHeight-alarmHeight-72;
-	var PosLDX, PosLDY = 0, frmMainHeight-alarmHeight-72;
-	var PosMX, PosMY = frmMainWidth*0.5-alarmWidth*0.5, frmMainHeight*0.5-alarmHeight*0.5; 
+	var alarmWidth, alarmHeight = frmChildWidth, frmChildHeight;
 	
-/*
-	var hwndFullscreen = win.getFullscreen();
-	var hwndForeground = win.getForeground();
-	if(hwndFullscreen){
-		var winParentX, winParentY, winParentWidth, winParentHeight = win.getPos(hwndFullscreen,true)
-	}
-	else {
-		var winParentX, winParentY, winParentWidth, winParentHeight = win.getPos(hwndForeground,true)
-	}
 	
-	var winParentPosMiddleX = winParentX + 0.5*winParentWidth; 
-	var winParentPosMiddleY = winParentY + 0.5*winParentHeight;
-*/
+	var workAreaTable = win.getWorkArea(win.getDesktop());
+	var bottomPos, leftPos, rightPos, topPos = workAreaTable.bottom, workAreaTable.left, workAreaTable.right, workAreaTable.top;
+	
+	var alarmPosX, alarmPosY = leftPos, topPos;
+	
+	var PosLUX, PosLUY = leftPos, topPos;
+	var PosRUX, PosRUY = rightPos-alarmWidth, topPos;
+	var PosRDX, PosRDY = rightPos-alarmWidth, bottomPos-alarmHeight;
+	var PosLDX, PosLDY = leftPos, bottomPos-alarmHeight;
+	var PosMX, PosMY = leftPos + (rightPos-leftPos)*0.5-alarmWidth*0.5, topPos + (bottomPos-topPos)*0.5-alarmHeight*0.5;
 
+	var hwndForeground = win.getForeground();
+	var workAreaTable = win.getWorkArea(hwndForeground);
+	var bottomPos, leftPos, rightPos, topPos = workAreaTable.bottom, workAreaTable.left, workAreaTable.right, workAreaTable.top;
+	
+	var PosLUX, PosLUY = leftPos, topPos;
+	var PosRUX, PosRUY = rightPos-alarmWidth, topPos;
+	var PosRDX, PosRDY = rightPos-alarmWidth, bottomPos-alarmHeight;
+	var PosLDX, PosLDY = leftPos, bottomPos-alarmHeight;
+	var PosMX, PosMY = leftPos + (rightPos-leftPos)*0.5-alarmWidth*0.5, topPos + (bottomPos-topPos)*0.5-alarmHeight*0.5;
+	
 	select(posStr) {
 		case "居中显示" {
 			alarmPosX, alarmPosY = PosMX, PosMY;
@@ -244,10 +251,10 @@ winform.showPos = function(posStr){
 
 
 winform.plusBtn.oncommand = function(id,event){
+	winform.plusBtn.disabled = true;
 	
 	var tempTime = tostring(time(winform.datetimepick.time,"%Y/%m/%d")) + "  "+ winform.edithh.text + ":" + winform.editmm.text + ":" + winform.editss.text;
 	
-	import console;
 	//从字符串创建时间值
 	var tm = time(tempTime,"%Y/%m/%d %H:%M:%S");
 	
@@ -291,20 +298,12 @@ winform.plusBtn.oncommand = function(id,event){
 	scheduleTable[tempTime] = taskScheduler.create(tempTime,function(AlarmContent,tempTime){
 		var frmChild = ..mainForm.loadForm("\dlg\alarms.aardio");
 		frmChild.updateContent(AlarmContent,tempTime);
-		
-/*
-		var hwndFullscreen = win.getFullscreen();
-		var hwndForeground = win.getForeground();
-		if(hwndFullscreen){
-			win.setParent(frmChild.hwnd,hwndFullscreen);
-		}else {
-			win.setParent(frmChild.hwnd,hwndForeground)
-		}
-*/
-		
+				
 		win.setParent(frmChild.hwnd,win.getDesktop());
-		var alarmClockX, alarmClockY = winform.showPos(winform.combobox.selText);		
-		win.setPos(frmChild.hwnd,alarmClockX, alarmClockY);
+		
+		winform.enableDpiScaling("init");
+		var alarmClockX, alarmClockY = winform.showPos(winform.combobox.selText, frmChild.width, frmChild.height);
+		win.setPos(frmChild.hwnd, alarmClockX, alarmClockY);
 		frmChild.show();
 		
 		win.setTopmost(frmChild.hwnd);
@@ -326,6 +325,11 @@ winform.plusBtn.oncommand = function(id,event){
 	winform.spinmm.pos = tostring(time(__,'%M'));
 	winform.spinss.pos = tostring(time(__,'%S'));
 	winform.plusContent.text = "";
+	
+	winform.alarmState.text = '闹钟：\n' + tmstr + '已添加';
+	
+	win.delay(1000)
+	winform.plusBtn.disabled = false;
 
 };
 
@@ -343,14 +347,10 @@ winform.wndproc = function(hwnd,message,wParam,lParam){
 	//无返回值则继续调用默认回调函数
 }
 
-/*
-winform.combobox.oncommand = function(id,event){
-	var alarmClockX, alarmClockY = winform.showPos(winform.combobox.selText);
-	import console;
-	console.log(winform.combobox.selText)
-	console.log(alarmClockX,alarmClockY);
-}
-*/
+import win.ui.accelerator;
+win.ui.accelerator({
+	{ ctrl = true; vkey = 'G'#; oncommand = winform.plusBtn.oncommand }  
+},winform);
 
 //winform.show();
 win.loopMessage();

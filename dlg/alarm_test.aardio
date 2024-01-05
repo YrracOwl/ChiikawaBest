@@ -15,12 +15,24 @@ console.log(hwndFullscreen,hwndForeground)
 winform.button.oncommand = function(id,event){
 	var hwndFullscreen = win.getFullscreen();
 	var hwndForeground = win.getForeground();
+	console.log("全屏hwnd：",hwndFullscreen,"激活hwnd：",hwndForeground)
+	
 	var frmX, frmY, frmWidth, frmHeight = win.getScreenPos();
-	console.log(hwndFullscreen,hwndForeground)
-	console.log(frmX, frmY, frmWidth, frmHeight)
+	console.log("虚拟屏幕", frmX, frmY, frmWidth, frmHeight)
 	
 	var frmWidth, frmHeight = win.getScreen();
-	console.log(frmWidth, frmHeight)
+	console.log("主屏幕：", frmWidth, frmHeight)
+
+	console.dumpTable(win.getWorkArea(hwndForeground,2/*_MONITOR_DEFAULTTONEAREST*/))
+	
+	var xx,yy,widthx,heighty = win.getPos(hwndForeground);
+	console.log("激活hwnd坐标：",xx,yy,widthx,heighty);
+/**
+	console.dumpTable(win.getWorkArea(hwndFullscreen,2/*_MONITOR_DEFAULTTONEAREST*/))
+	console.dumpTable(win.getWorkArea(hwndFullscreen,0/*_MONITOR_DEFAULTTONULL*/))
+	console.dumpTable(win.getWorkArea(hwndFullscreen,1/*_MONITORINFOF_PRIMARY*/))
+	console.dumpTable(win.getWorkArea(hwndFullscreen,1/*_MONITOR_DEFAULTTOPRIMARY*/))
+**/
 }
 
 import win.taskScheduler;

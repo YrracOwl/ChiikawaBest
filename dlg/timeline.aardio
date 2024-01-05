@@ -1,7 +1,7 @@
 import fonts.fontAwesome;
 import win.ui;
 /*DSG{{*/
-var winform = win.form(text="Timeline";right=1279;bottom=743;border="none";clipch=1)
+var winform = win.form(text="时间线";right=1279;bottom=743;border="none";clipch=1)
 winform.add(
 datetimepick={cls="datetimepick";left=64;top=64;right=272;bottom=88;border=1;dl=1;dt=1;font=LOGFONT(h=-13);z=2};
 listbox={cls="listbox";left=8;top=512;right=272;bottom=744;db=1;dl=1;dt=1;edge=1;font=LOGFONT(h=-13);items={};ownerDraw=1;vscroll=1;z=14};
@@ -258,10 +258,12 @@ wb_tl.external = {
     		winform.删除plus.disabled = false;
     		winform.取消plus.disabled = false;
     		winform.tiktokChecker(winform);
+/*
     		winform.datetimepick.disabled = true;
     		winform.勾选plus.disabled = true;
     		winform.时间plus.editable = false;
 			winform.时间plus.background = null;
+*/
 	
     		var result = ..dbTimeline.stepQuery("SELECT * FROM ??",{time = timeSel, winform.当前主题.text} );
     		winform.datetimepick.time = time(result.time);
@@ -426,6 +428,8 @@ win.ui.simpleWindow(winform,,,,).skin(
 )
 
 winform.添加plus.oncommand = function(id,event){
+	winform.添加plus.disabled = true;
+	
 	var timeFormat = string.split(winform.时间plus.text,':');
 	if(tonumber(timeFormat[1]) && tonumber(timeFormat[2]) && tonumber(timeFormat[3])){
 		if(tonumber(timeFormat[1])<24 && tonumber(timeFormat[2])<60 && tonumber(timeFormat[3])<60){
@@ -464,6 +468,9 @@ winform.添加plus.oncommand = function(id,event){
 		var x,y,cx,cy = winform.时间plus.getPos(true);
     	balloonTipCtrl.setText("时间格式不合法，请输入24小时制时间").trackPopup(true,x+cx*3/4,y+cy );
 	}
+	
+	win.delay(1000);
+	winform.添加plus.disabled = false;
 }
 
 winform.listbox.oncommand = function(id,event){
@@ -472,10 +479,12 @@ winform.listbox.oncommand = function(id,event){
     	winform.删除plus.disabled = false;
     	winform.取消plus.disabled = false;
     	winform.tiktokChecker(winform);
+/*
     	winform.datetimepick.disabled = true;
     	winform.勾选plus.disabled = true;
     	winform.时间plus.editable = false;
 		winform.时间plus.background = null;
+*/
 
     	var result = ..dbTimeline.stepQuery("SELECT * FROM ??",{time = winform.listbox.selText, winform.当前主题.text} );
     	winform.datetimepick.time = time(result.time);

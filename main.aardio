@@ -185,12 +185,12 @@ mainForm.onTrayMessage = {
 	[0x205/*_WM_RBUTTONUP*/] = function(wParam){
 		mainForm.trayCreate();
 	};
-	[0x202/*_WM_LBUTTONUP*/] = function(wParam){ 
-		mainForm.trayCreate();
-	};
-	[0x203/*_WM_LBUTTONDBLCLK*/] = function(wParam){ 
+	[0x201/*_WM_LBUTTONDOWN*/] = function(wParam){
 		mainForm.show(true);
 		win.setForeground(mainForm.hwnd)
+	};
+	[0x203/*_WM_LBUTTONDBLCLK*/] = function(wParam){
+
 	};
 	[0x404/*_PARAM_DESTROY*/] = function(wParam){ 
 		

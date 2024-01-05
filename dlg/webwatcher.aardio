@@ -1,6 +1,6 @@
 import win.ui;
 /*DSG{{*/
-winform = win.form(text="webwatcher";right=599;bottom=719;border="none";clipch=1)
+winform = win.form(text="内容监控";right=599;bottom=719;border="none";clipch=1)
 winform.add(
 html_watcher={cls="custom";text="自定义控件";left=16;top=64;right=584;bottom=680;db=1;dl=1;dr=1;dt=1;z=5};
 task_show={cls="plus";text="-- 待显示 --";left=416;top=688;right=584;bottom=712;db=1;dl=1;z=4};

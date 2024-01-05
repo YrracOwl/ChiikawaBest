@@ -1,6 +1,7 @@
 import fonts.fontAwesome;
 
 import win.ui;
+import win.ui.atom;
 /*DSG{{*/
 var winform = win.form(text="选择时间线";right=295;bottom=175;border="none";max=false)
 winform.add(
@@ -84,6 +85,9 @@ var updateCombobox = function(winform){
 };
 
 winform.btn打开时间线.oncommand = function(id,event){
+	
+	winform.btn打开时间线.disabled = true;
+	
 	//winform.show(false)
 	frmMask.show(true);
 	winform.btn打开时间线.disabledText = {'\uF254';'\uF251';'\uF252';'\uF253';'\uF250';text='打开中...'}
@@ -97,11 +101,19 @@ winform.btn打开时间线.oncommand = function(id,event){
 	winform.btn打开时间线.disabledText = null;
 	frmMask.show(false);
 	//winform.close();
+	
+	win.delay(1000);
+	winform.btn打开时间线.disabled = false;
+	
+	winform.close();
 }
 
 updateCombobox(winform);
 
 winform.btn创建时间线.oncommand = function(id,event){
+	
+	winform.btn创建时间线.disabled = true;
+	
 	if(winform.txt时间线标题.text != ""){
 		try{
 			if( not ..dbTimeline.existsTable(winform.txt时间线标题.text) ){ 
@@ -130,6 +142,8 @@ winform.btn创建时间线.oncommand = function(id,event){
 	}
 	updateCombobox(winform);
 	
+	win.delay(1000);
+	winform.btn创建时间线.disabled = false;
 }
 
 
