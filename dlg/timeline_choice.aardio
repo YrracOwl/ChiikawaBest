@@ -13,6 +13,8 @@ winform.add(
 )
 /*}}*/
 
+import fsys;
+
 import win.ui.tooltip; 
 //下面创建一个手动跟踪模式的提示控件
 var balloonTipCtrl = win.ui.tooltip.tracking(winform,false);
@@ -164,16 +166,15 @@ win.ui.simpleWindow(winform,,,,).skin(
 winform.btn删除时间线.oncommand = function(id,event){
 	var confirmed = win.msgboxTest("确认删除时间线："""+winform.选择时间线.selText+"""吗？","确认删除");
 	if(confirmed){
-		try{
-			..dbTimeline.exec("DROP TABLE ??",{winform.选择时间线.selText})
-			..logWarn(">>>已删除Base数据库Timeline中: ",winform.选择时间线.selText)
-			..dbBase.exec("DELETE FROM ?? WHERE name=?;",{ "timeline",winform.选择时间线.selText} )
-			..logWarn(">>>已删除Timeline数据库中的表：",winform.选择时间线.selText)	
-		}
-		catch(e){
-			..logErr(">>>删除失败：", winform.选择时间线.selText)
-			..logErr(e)
-		}
+		
+		var deleteTime = time(,"%Y年%m月%d日%H时%M分%S秒"); 
+		var backupPath = fsys.createDir(dbDirBackUp + "/" + tostring(deleteTime) + "-删除【" + winform.选择时间线.selText + "】前备份",true);
+		fsys.copy(..dbDir,backupPath)
+		
+		..dbTimeline.exec("DROP TABLE ??",{winform.选择时间线.selText})
+		..logWarn(">>>已删除Base数据库Timeline中: ",winform.选择时间线.selText)
+		..dbBase.exec("DELETE FROM ?? WHERE name=?;",{ "timeline",winform.选择时间线.selText} )
+		..logWarn(">>>已删除Timeline数据库中的表：",winform.选择时间线.selText)
 	}
 	else {
 		..logWarn(">>>取消删除")

@@ -37,6 +37,8 @@ winform.内容plus.setCueBannerText("请输入内容，默认为还没想好");
 
 winform.时间plus.focusOnClick = false;
 
+winform.lastTime = "";
+
 winform.添加提醒项.skin({
 	background={
 		active=0xFFD3E0BC;
@@ -209,7 +211,7 @@ var task  = timeUpdate.create("每秒执行",function(){
 } )
 
 //每秒更新时间plus中的内容
-task.interval = {  
+task.interval = {
    second = 1;
 }
 var thrdListboxUpdate = function(winform,database){
@@ -258,15 +260,15 @@ wb_tl.external = {
     		winform.删除plus.disabled = false;
     		winform.取消plus.disabled = false;
     		winform.tiktokChecker(winform);
-/*
-    		winform.datetimepick.disabled = true;
     		winform.勾选plus.disabled = true;
+/*
+    		winform.datetimepick.disabled = true;	
     		winform.时间plus.editable = false;
 			winform.时间plus.background = null;
 */
-	
     		var result = ..dbTimeline.stepQuery("SELECT * FROM ??",{time = timeSel, winform.当前主题.text} );
     		winform.datetimepick.time = time(result.time);
+    		winform.lastTime = result.time;
     		winform.时间plus.text = string.split(result.time,'-')[2];
     		winform.标题plus.text = result.title;
     		winform.内容plus.text = result.content;
@@ -277,6 +279,7 @@ wb_tl.external = {
 	};
 
 	flush = function(){
+		winform.lastTime = "";
 		winform.标题plus.text = "";
 		winform.内容plus.text = "";
 		winform.时间plus.text = tostring(time(__,'%H:%M:%S'));
@@ -392,6 +395,7 @@ winform.tiktokChecker = function(winform){
 }
 
 winform.addUIReset = function(winform){
+	winform.lastTime = "";
 	winform.标题plus.text = "";
 	winform.内容plus.text = "";
 	winform.时间plus.text = tostring(time(__,'%H:%M:%S'));
@@ -423,9 +427,10 @@ win.ui.simpleWindow(winform,,,,).skin(
 	color = { 
 		hover = 0xff666666;
 		active = 0xffffffff; 
-		default = 0xFF7BA5BF; 
+		default = 0xFF7BA5BF;
 	}
 )
+
 
 winform.添加plus.oncommand = function(id,event){
 	winform.添加plus.disabled = true;
@@ -433,31 +438,65 @@ winform.添加plus.oncommand = function(id,event){
 	var timeFormat = string.split(winform.时间plus.text,':');
 	if(tonumber(timeFormat[1]) && tonumber(timeFormat[2]) && tonumber(timeFormat[3])){
 		if(tonumber(timeFormat[1])<24 && tonumber(timeFormat[2])<60 && tonumber(timeFormat[3])<60){
-				var tl_time = winform.datetimepick.text + '-' + winform.时间plus.text; 
-				var tl_title = winform.时间plus.text; 
-				var tl_content = "还没想好"; 
-				if(winform.标题plus.text != ""){
-					tl_title = winform.标题plus.text;
+			var tl_time = winform.datetimepick.text + '-' + winform.时间plus.text; 
+			var tl_title = winform.时间plus.text; 
+			var tl_content = "还没想好"; 
+			if(winform.标题plus.text != ""){
+				tl_title = winform.标题plus.text;
+			}
+			if(winform.内容plus.text != ""){
+				tl_content = winform.内容plus.text;
+			}
+			
+			//如果在新增或修改的时候出现了时间相同的，确认是否想要退出
+			var resultCheck = ..dbTimeline.stepQuery("SELECT * FROM ??",{time = tl_time, winform.当前主题.text} );
+			if(resultCheck){
+				if(winform.lastTime == ""){
+					var confirmed = win.msgboxTest("确认是否覆盖"+ '\n    ' + tl_time + '\n        ' + resultCheck.title,"确认覆盖");
+					if(!confirmed){
+						win.delay(1000);
+						winform.添加plus.disabled = false;
+						return;
+					}
 				}
-				if(winform.内容plus.text != ""){
-					tl_content = winform.内容plus.text;
+				elseif(winform.lastTime != tl_time){
+					var resultLastTime = ..dbTimeline.stepQuery("SELECT * FROM ??",{time = winform.lastTime, winform.当前主题.text} );
+					var confirmed = win.msgboxTest("确认是否删除"+ '\n    '+ winform.lastTime + '\n        ' + resultLastTime.title + '\n并覆盖' + '\n    ' + tl_time + '\n        ' + resultCheck.title,"确认删除并覆盖");
+					if(!confirmed){
+						win.delay(1000);
+						winform.添加plus.disabled = false;
+						return;
+					}
 				}
-				var cmd = ..dbTimeline.prepare("REPLACE INTO ?? VALUES ( @time,@title,@content);",{winform.当前主题.text});
-				cmd.step(
-					time = tl_time;
-					title = tl_title;
-					content = tl_content;
-				)
-				..logMsg(">>>写入成功：",winform.当前主题.text)
-				
-				if(winform.勾选plus.disabled){
-					wb_tl.xcall("updateContent",{tostring(tl_time);tostring(tl_title);tostring(tl_content)})
-				}
-				else {
-					winform.listboxUpdate(winform);
-					winform.timelineWebUpdate(winform);
-				}
-				winform.addUIReset(winform);
+			}
+			
+			//覆盖或者更新time代表的内容
+			var cmd = ..dbTimeline.prepare("REPLACE INTO ?? VALUES ( @time,@title,@content);",{winform.当前主题.text});
+			cmd.step(
+				time = tl_time;
+				title = tl_title;
+				content = tl_content;
+			)
+			..logMsg(">>>写入成功：",winform.当前主题.text,tl_time);
+			
+			//修改了时间，需要删除
+			if(winform.lastTime != "" && winform.lastTime != tl_time){
+				..dbTimeline.exec("DELETE FROM ?? WHERE time=?;",{ winform.当前主题.text, winform.lastTime} )
+				..logWarn(">>>已删除项",winform.当前主题.text,"中的：",winform.lastTime)
+				winform.lastTime = "";
+				win.delay(100);
+			}
+			
+			//winform.lastTime且相等存在代表 没修改时间，仅进行了编辑操作，所以针对web存在的内容进行更新
+			if(winform.lastTime == tl_time){
+				wb_tl.xcall("updateContent",{tostring(tl_time);tostring(tl_title);tostring(tl_content)})
+			}
+			//修改了时间，或者纯粹新增，均不会触发
+			else {
+				winform.listboxUpdate(winform);
+				winform.timelineWebUpdate(winform);
+			}
+			winform.addUIReset(winform);
 		}
 		else {
 			var x,y,cx,cy = winform.时间plus.getPos(true);
@@ -479,15 +518,16 @@ winform.listbox.oncommand = function(id,event){
     	winform.删除plus.disabled = false;
     	winform.取消plus.disabled = false;
     	winform.tiktokChecker(winform);
+    	winform.勾选plus.disabled = true;
 /*
     	winform.datetimepick.disabled = true;
-    	winform.勾选plus.disabled = true;
     	winform.时间plus.editable = false;
 		winform.时间plus.background = null;
 */
 
     	var result = ..dbTimeline.stepQuery("SELECT * FROM ??",{time = winform.listbox.selText, winform.当前主题.text} );
     	winform.datetimepick.time = time(result.time);
+    	winform.lastTime = result.time;
     	winform.时间plus.text = string.split(result.time,'-')[2];
     	winform.标题plus.text = result.title;
     	winform.内容plus.text = result.content;

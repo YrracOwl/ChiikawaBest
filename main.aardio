@@ -80,9 +80,14 @@ wbHistoryDir = wbUserDataDir+"\EBWebView\Default\";
 
 
 //设置：数据库设置
+dbDirBackUp = io.appData(appName+"databaseBackups");
 dbDir = io.appData(appName+"database");
 if(not io.exist(dbDir)){
 	io.createDir(dbDir);
+}
+
+if(not io.exist(dbDirBackUp)){
+	io.createDir(dbDirBackUp);
 }
 
 //Base数据库路径
