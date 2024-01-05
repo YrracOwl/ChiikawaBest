@@ -3,17 +3,18 @@ import fonts.fontAwesome;
 import win.ui;
 import win.ui.atom;
 /*DSG{{*/
-var winform = win.form(text="添加闹钟";right=303;bottom=256;border="none";clipch=1;max=false)
+var winform = win.form(text="添加闹钟";right=303;bottom=294;border="none";clipch=1;max=false)
 winform.add(
-alarmState={cls="plus";left=7;top=209;right=295;bottom=250;align="left";font=LOGFONT(italic=255;h=-13);multiline=1;valign="top";wrap=1;z=11};
-combobox={cls="combobox";left=7;top=163;right=119;bottom=187;edge=1;font=LOGFONT(h=-13);items={};mode="dropdown";z=10};
+alarmState={cls="plus";left=7;top=244;right=295;bottom=285;align="left";font=LOGFONT(italic=255;h=-13);multiline=1;valign="top";wrap=1;z=11};
+combobox={cls="combobox";left=96;top=160;right=208;bottom=184;edge=1;font=LOGFONT(h=-13);items={};mode="dropdown";z=10};
 datetimepick={cls="datetimepick";left=28;top=55;right=276;bottom=79;dl=1;dt=1;edge=1;font=LOGFONT(h=-13);z=1};
 edithh={cls="edit";text="1";left=66;top=89;right=108;bottom=114;db=1;dl=1;edge=1;font=LOGFONT(h=-13);multiline=1;z=2};
 editmm={cls="edit";text="1";left=129;top=89;right=171;bottom=114;db=1;dl=1;edge=1;font=LOGFONT(h=-13);multiline=1;z=4};
 editss={cls="edit";text="1";left=190;top=89;right=232;bottom=114;db=1;dl=1;edge=1;font=LOGFONT(h=-13);multiline=1;z=8};
-plusBtn={cls="plus";text="添加闹钟(Ctrl+G)";left=148;top=159;right=296;bottom=189;align="left";bgcolor=-5197169;border={radius=22};font=LOGFONT(h=-13);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=3}};iconText='\uF274';notify=1;textPadding={left=30};z=7};
+plusBtn={cls="plus";text="添加闹钟(Ctrl+G)";left=148;top=194;right=296;bottom=224;align="left";bgcolor=11580047;border={radius=22};font=LOGFONT(h=-13);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=3}};iconText='\uF274';notify=1;textPadding={left=30};z=7};
 plusContent={cls="plus";left=28;top=122;right=276;bottom=154;bgcolor=16777215;border={bottom=1;color=-6908266};editable=1;font=LOGFONT(h=-13);textPadding={top=6;bottom=2};z=6};
-plusSplit={cls="plus";text="__________________________________________________________";left=7;top=191;right=295;bottom=210;align="left";autohscroll=false;autovscroll=false;font=LOGFONT(h=-11);valign="top";z=16};
+plusDel={cls="plus";text="显示闹钟";left=13;top=195;right=111;bottom=225;align="left";bgcolor=1587666;border={radius=22};font=LOGFONT(h=-13);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=3}};iconText='\uF002';notify=1;textPadding={left=30};z=17};
+plusSplit={cls="plus";text="__________________________________________________________";left=7;top=226;right=295;bottom=245;align="left";autohscroll=false;autovscroll=false;font=LOGFONT(h=-11);valign="top";z=16};
 ["plus分"]={cls="plus";text="分";left=173;top=89;right=189;bottom=114;font=LOGFONT(h=-13);z=14};
 ["plus时"]={cls="plus";text="时";left=111;top=89;right=127;bottom=114;font=LOGFONT(h=-13);z=13};
 ["plus秒"]={cls="plus";text="秒";left=236;top=89;right=252;bottom=114;font=LOGFONT(h=-13);z=15};
@@ -52,11 +53,11 @@ winform.combobox.selIndex = 5;
 import quarks;
 //计划任务导入
 import win.taskScheduler;
-var taskScheduler = win.taskScheduler( winform );
+alarm_taskScheduler = win.taskScheduler( winform );
 //winform.datetimepick.setFormat("''HH':'mm':'ss, dddd, MMMdd日', 'yyyy")
 winform.datetimepick.setFormat("          yyyy年MM月dd日dddd")
 
-var timeShowClock = taskScheduler.create("timeShowClock",function(){
+var timeShowClock = alarm_taskScheduler.create("timeShowClock",function(){
     var timeNowSeconds = time(,"%H:%M:%S");
     winform.timeNow.text = "当前时间 " + tostring(timeNowSeconds);
 });
@@ -65,7 +66,7 @@ timeShowClock.interval = {
 	second = 1;
 };
 
-taskScheduler.start();
+alarm_taskScheduler.start();
 
 var taskTable = {};
 var scheduleTable = {};
@@ -100,7 +101,7 @@ if(..dbAlarmClock.existsTable("default")){
 			tm.format = "%S";
 			var Sstr = tostring(tm);
 			var AlarmContent = v;
-			scheduleTable[k] = taskScheduler.create(k,function(AlarmContent,k){
+			scheduleTable[k] = alarm_taskScheduler.create(k,function(AlarmContent,k){
 				var frmChild = ..mainForm.loadForm("\dlg\alarms.aardio");
 				frmChild.updateContent(AlarmContent,k);
 
@@ -295,7 +296,7 @@ winform.plusBtn.oncommand = function(id,event){
 	
 	var AlarmContent = taskTable[tempTime];
 	..logMsg("添加闹钟：",tempTime,AlarmContent)
-	scheduleTable[tempTime] = taskScheduler.create(tempTime,function(AlarmContent,tempTime){
+	scheduleTable[tempTime] = alarm_taskScheduler.create(tempTime,function(AlarmContent,tempTime){
 		var frmChild = ..mainForm.loadForm("\dlg\alarms.aardio");
 		frmChild.updateContent(AlarmContent,tempTime);
 				
@@ -351,6 +352,19 @@ import win.ui.accelerator;
 win.ui.accelerator({
 	{ ctrl = true; vkey = 'G'#; oncommand = winform.plusBtn.oncommand }  
 },winform);
+
+winform.plusDel.skin(
+	background = { 
+		hover = "/res/images/btn-hover.png";
+		focus = "/res/images/btn-focus.jpg";
+		active = "/res/images/btn-active.png";
+		disabled = "/res/images/btn-disabled.png"; 
+	}
+)
+winform.plusDel.oncommand = function(id,event){
+	var frmChild = winform.loadForm("\dlg\alarm_list.aardio");
+	frmChild.show();
+}
 
 //winform.show();
 win.loopMessage();
