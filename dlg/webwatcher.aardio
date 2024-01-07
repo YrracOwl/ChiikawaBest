@@ -8,7 +8,8 @@ html_watcher={cls="custom";text="自定义控件";left=16;top=64;right=584;botto
 停止监控={cls="button";text="停止监控";left=520;top=720;right=592;bottom=744;db=1;dr=1;z=10};
 刷新页面={cls="button";text="刷新页面";left=104;top=32;right=176;bottom=56;dl=1;dt=1;z=5};
 开始监控={cls="button";text="开始监控";left=8;top=720;right=80;bottom=744;db=1;dl=1;z=9};
-添加闹钟={cls="button";text="添加闹钟";left=520;top=32;right=592;bottom=56;dl=1;dr=1;dt=1;z=1};
+添加闹钟={cls="button";text="添加闹钟";left=520;top=32;right=592;bottom=56;dr=1;dt=1;z=1};
+设置={cls="button";text="设置";left=464;top=32;right=512;bottom=56;dr=1;dt=1;z=13};
 返回={cls="button";text="返回";left=8;top=32;right=48;bottom=56;dl=1;dt=1;z=3};
 选择文件={cls="button";text="选择文件";left=520;top=688;right=592;bottom=712;db=1;dr=1;z=11};
 选择窗口={cls="button";text="选择窗口";left=8;top=688;right=80;bottom=712;db=1;dl=1;z=7};
@@ -289,6 +290,11 @@ winform.checkbox.oncommand = function(id,event){
 		win.setTopmost(winform.hwnd,false)
 	}
 	
+}
+
+winform.设置.oncommand = function(id,event){
+	var frmChild = winform.loadForm("\dlg\html_crawler_setting.aardio");
+	frmChild.show();
 }
 
 //winform.show();
