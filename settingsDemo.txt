@@ -1,0 +1,6 @@
+{
+rt2innocence={file_path="\html_crawler\rt2innocence.net.html";url="http://rt2innocence.net/archives/";query_table={parent="content";tagName="table"}};
+yuhang1={file_path="\html_crawler\yuhang.ch.html";url="https://yuhang.ch/";query_table={parent="main";tagName="li"}};
+jx3Announce={query_table={parent="div";className="article_list"};url="https://jx3.xoyo.com/announce/"};
+jx3Latest={query_table={parent="div";className="article_list"};url="https://jx3.xoyo.com/allnews/"};
+}
