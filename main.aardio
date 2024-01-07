@@ -175,8 +175,10 @@ mainForm.trayCreate = function(){
 	mainForm.popmenu.add('退出',function(id){
 		mainForm.onClose = null;
 		mainForm.onClose = function(hwnd,message,wParam,lParam){
+			webwatcher.onClose = null;
+			webwatcher.close();
 			cleanHistory();
-    		fadeHide();			
+    		fadeHide();	
 		}
 		mainForm.close();
 	})
