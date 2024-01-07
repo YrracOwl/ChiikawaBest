@@ -152,8 +152,7 @@ mainForm.trayCreate = function(){
 	
 	mainForm.popmenu.add();//分隔线
 	mainForm.popmenu.add("网页监控",function(){
-		var webwatcher1 = mainForm.loadForm("\dlg\webwatcher.aardio");
-		webwatcher1.show();
+		webwatcher.show();
 	})
 	mainForm.popmenu.add("时间线",function(){
 		var timeline1 = mainForm.loadForm("\dlg\timeline_choice.aardio");
@@ -227,6 +226,15 @@ mainForm.onMinimize = function(lParam){
     //mainForm.popmenu.setString(1,"显示")
     return true;//阻击默认消息传递，取消最小化过程
 }
+
+//////////////////////////////////////////////////////////////////////
+//计划任务
+//////////////////////////////////////////////////////////////////////
+
+//计划任务导入
+import win.taskScheduler;
+webWatcher_taskScheduler = win.taskScheduler(mainForm);
+
 
 //////////////////////////////////////////////////////////////////////
 //自定义函数
@@ -354,6 +362,9 @@ thrdWriteDBFunc = function(db_path,str_prepare,str_step){
 //全局闹钟
 alarmForm = mainForm.loadForm("\dlg\add_alarm.aardio");
 
+//全局网页监控
+webwatcher = mainForm.loadForm("\dlg\webwatcher.aardio");
+webwatcherPrcsCntShot = 0;
 
 //////////////////////////////////////////////////////////////////////
 //创建托盘图标

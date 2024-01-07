@@ -1,0 +1,38 @@
+import win.ui;
+/*DSG{{*/
+var winform = win.form(text="aardio form";right=351;bottom=279)
+winform.add(
+plus={cls="plus";left=16;top=16;right=336;bottom=264;font=LOGFONT(h=-13);multiline=1;wrap=1;z=1}
+)
+/*}}*/
+
+import winex;
+import mouse;
+import mouse.hook;
+
+var mouseHooker = mouse.hook();
+mouseHooker.proc = function(msg,x,y,mouseData,injected,flags,timeStamp,extraInfo){
+	if( injected ) return;	 
+    select(msg) {
+    	case 0x201/*_WM_LBUTTONDOWN*/{
+    	    var mousePosX, mousePosY= mouse.getPos();
+    	    var pointWin  = winex.fromPoint(mousePosX, mousePosY);
+    	    
+    	    winform.mousePosWindow = pointWin;
+    	    import win;
+    	    import process.cmdline;
+    	    var tid,pid = win.getThreadProcessId(pointWin);
+    	    var prcsInfo = process.cmdline(pid);
+    	    winform.edit进程匹配.text = prcsInfo;
+    	};
+    	case 0x202/*_WM_LBUTTONUP*/ {
+    		mouseHooker = null;
+    	}
+    };
+};
+
+
+
+winform.show();
+win.loopMessage();
+return winform;
