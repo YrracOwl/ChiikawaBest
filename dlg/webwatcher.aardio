@@ -292,9 +292,9 @@ winform.checkbox.oncommand = function(id,event){
 	
 }
 
-winform.设置.oncommand = function(id,event){
-	var frmChild = winform.loadForm("\dlg\html_crawler_setting.aardio");
-	frmChild.show();
+winform.设置.oncommand = function(id,event){	
+	var frmChild = winform.loadForm("\dlg\settings.aardio");
+	frmChild.show();	
 }
 
 //winform.show();
