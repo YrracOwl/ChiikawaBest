@@ -36,7 +36,7 @@ body {
 .timeline {
   margin: 4em auto;
   position: relative;
-  max-width: 60em;
+  max-width: 90em;
 }
 .timeline:before {
   background-color: #31322c;
@@ -55,17 +55,17 @@ body {
 
 @media only screen {
 	.timeline-event:hover .timeline-event-icon {
-  	-moz-transform: rotate(-45deg);
-  	-ms-transform: rotate(-45deg);
-  	-webkit-transform: rotate(-45deg);
-  	transform: rotate(-45deg);
-  	background-color: #801dae;
+  		-moz-transform: rotate(-45deg);
+  		-ms-transform: rotate(-45deg);
+  		-webkit-transform: rotate(-45deg);
+  		transform: rotate(-45deg);
+  		background-color: #801dae;
 	}
 	
 	.timeline-event:hover .timeline-event-thumbnail {
-  	-moz-box-shadow: inset 40em 0 0 0 #801dae;
-  	-webkit-box-shadow: inset 40em 0 0 0 #801dae;
-  	box-shadow: inset 40em 0 0 0 #801dae;
+  		-moz-box-shadow: inset 40em 0 0 0 #801dae;
+  		-webkit-box-shadow: inset 40em 0 0 0 #801dae;
+  		box-shadow: inset 40em 0 0 0 #801dae;
 	}
 }
 
@@ -141,6 +141,46 @@ body {
 li::marker {
   content: '';
 }
+
+.timeline-event-disable {
+	position: relative;
+}
+.timeline-event-disable:hover .timeline-event-icon-disable {
+
+}
+
+.timeline-event-disable:hover .timeline-event-thumbnail-disable {
+
+}
+
+.timeline-event-icon-disable {
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  background-color: #31322c;
+  outline: 10px solid white;
+  display: block;
+  margin: 0.5em 0.5em 0.5em -0.5em;
+  position: absolute;
+  top: 0;
+  left: 2em;
+  width: 1em;
+  height: 1em;
+}
+
+.timeline-event-thumbnail-disable {
+  color: white;
+  font-size: 0.75em;
+  background-color: #31322c;
+  -moz-box-shadow: inset 0 0 0 0em #bf242a;
+  -webkit-box-shadow: inset 0 0 0 0em #bf242a;
+  box-shadow: inset 0 0 0 0em #bf242a;
+  display: inline-block;
+  margin-bottom: 0.5em;
+  padding: 0.25em 1em 0.2em 1em;
+}
+
 </style>
 **/; 
 var content_body = /**
@@ -230,6 +270,10 @@ var content_js = /**
 		return liEle; 
 	};
 	
+	 function setTitle(title){
+		document.title = title;
+	}
+	
 	function dblFunc() {
 	    let currentLi = event.currentTarget;//取出当前元素
 	    let timeIndex = currentLi.getAttribute("id");
@@ -237,6 +281,51 @@ var content_js = /**
 	    //console.log(event);
 	    aardio.modifyList(timeIndex);
 	};
+	
+	
+	function download() {
+		var content = document.documentElement.outerHTML;
+    	var blob = new Blob([content], {type: 'text/html'});
+    	var url = window.URL.createObjectURL(blob);
+    	var a = document.createElement('a');
+	
+    	a.style = "display: none";
+    	a.href = url;
+    	a.download = document.title+".html";
+    	document.body.appendChild(a);
+    	a.click();
+	
+    	setTimeout(function () {
+        	document.body.removeChild(a);
+        	window.URL.revokeObjectURL(url);
+    	}, 5);
+	};
+	
+	function Wider(){
+		var timelineEle = document.querySelector(".timeline"); 
+		timelineEle.style.maxWidth = '110em';
+	};
+
+	function Middle(){
+		var timelineEle = document.querySelector(".timeline"); 
+		timelineEle.style.maxWidth = '90em';
+	};
+	
+	function Smaller(){
+		var timelineEle = document.querySelector(".timeline"); 
+		timelineEle.style.maxWidth = '70em';
+	};
+	
+	function changeClass(className,oldClass,newClass)
+	{
+		var objectNodes = document.querySelectorAll(className);
+		if(objectNodes){
+			objectNodes.forEach((object) => {
+				var regExp = new RegExp('(?:^|\\s)' + oldClass + '(?!\\S)', 'g');
+    			object.className = object.className.replace( regExp , newClass );
+			});			
+		};
+	}
 	
 	var currentMouseEle = document.querySelectorAll(":hover"); 
 	
@@ -258,7 +347,7 @@ var content_js = /**
   			menus1.style.padding = "6px 3px";
   			menus1.style.fontSize = "large";
   			menus1.style.fontWeight = "600";
-  			menus1.style.backdropFilter = "blur(5px)";
+  			menus1.style.backdropFilter = "blur(3px)";
   			menus1.style.boxShadow = "6px 6px 3px 3px rgba(122, 123, 120, .3)";
   			menus1.style.color = "#b93a26";
 		}
@@ -374,10 +463,56 @@ var content_js = /**
       			},
     		},
     		{
+      			name: "关闭动画",
+      			onClick: function (e) {
+      			    hideMenu(e);
+        			changeClass(".timeline-event","timeline-event","timeline-event-disable");
+        			changeClass(".timeline-event-icon","timeline-event-icon","timeline-event-icon-disable");
+        			changeClass(".timeline-event-thumbnail","timeline-event-thumbnail","timeline-event-thumbnail-disable");
+      			},
+    		},
+    		{
+      			name: "打开动画",
+      			onClick: function (e) {
+      			    hideMenu(e);
+        			changeClass(".timeline-event-disable","timeline-event-disable","timeline-event");
+        			changeClass(".timeline-event-icon-disable","timeline-event-icon-disable","timeline-event-icon");
+        			changeClass(".timeline-event-thumbnail-disable","timeline-event-thumbnail-disable","timeline-event-thumbnail");
+      			},
+    		},
+    		{
+      			name: "显示范围：宽",
+      			onClick: function (e) {
+      			    hideMenu(e);
+        			Wider();
+      			},
+    		},
+    		{
+      			name: "显示范围：中",
+      			onClick: function (e) {
+      			    hideMenu(e);
+        			Middle();
+      			},
+    		},
+    		{
+      			name: "显示范围：窄",
+      			onClick: function (e) {
+      			    hideMenu(e);
+        			Smaller();
+      			},
+    		},
+    		{
       			name: "导出为pdf",
       			onClick: function (e) {
       			    hideMenu(e);
         			window.print();
+      			},
+    		},
+    		{
+      			name: "保存为html",
+      			onClick: function (e) {
+      			    hideMenu(e);
+					download();
       			},
     		},
   		],
@@ -392,10 +527,56 @@ var content_js = /**
       			},
     		},
     		{
+      			name: "关闭动画",
+      			onClick: function (e) {
+      			    hideMenu(e);
+        			changeClass(".timeline-event","timeline-event","timeline-event-disable");
+        			changeClass(".timeline-event-icon","timeline-event-icon","timeline-event-icon-disable");
+        			changeClass(".timeline-event-thumbnail","timeline-event-thumbnail","timeline-event-thumbnail-disable");
+      			},
+    		},
+    		{
+      			name: "打开动画",
+      			onClick: function (e) {
+      			    hideMenu(e);
+        			changeClass(".timeline-event-disable","timeline-event-disable","timeline-event");
+        			changeClass(".timeline-event-icon-disable","timeline-event-icon-disable","timeline-event-icon");
+        			changeClass(".timeline-event-thumbnail-disable","timeline-event-thumbnail-disable","timeline-event-thumbnail");
+      			},
+    		},
+    		{
+      			name: "显示范围：宽",
+      			onClick: function (e) {
+      			    hideMenu(e);
+        			Wider();
+      			},
+    		},
+    		{
+      			name: "显示范围：中",
+      			onClick: function (e) {
+      			    hideMenu(e);
+        			Middle();
+      			},
+    		},
+    		{
+      			name: "显示范围：窄",
+      			onClick: function (e) {
+      			    hideMenu(e);
+        			Smaller();
+      			},
+    		},
+    		{
       			name: "导出为pdf",
       			onClick: function (e) {
       			    hideMenu(e);
         			window.print();
+      			},
+    		},
+    		{
+      			name: "保存为html",
+      			onClick: function (e) {
+      			    hideMenu(e);
+					download();
       			},
     		},
   		],

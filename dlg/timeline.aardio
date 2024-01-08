@@ -250,22 +250,22 @@ var thrdTimelineUpdate = function(winform,database,wb_tl){
 thread.set("thrdListboxUpdate", thrdListboxUpdate);
 thread.set("thrdTimelineUpdate", thrdTimelineUpdate);
 
+import win.ui.mask;
+var frmMask = win.ui.mask(winform.win时间线,true)
+
 wb_tl.external = {
 	modifyList = function(timeSel){
+		
 		if(winform.listbox.count<1){
 			return ; 
 		}
 		else {
+			frmMask.show(true);
 			winform.勾选plus.checked = false;
     		winform.删除plus.disabled = false;
     		winform.取消plus.disabled = false;
     		winform.tiktokChecker(winform);
     		winform.勾选plus.disabled = true;
-/*
-    		winform.datetimepick.disabled = true;	
-    		winform.时间plus.editable = false;
-			winform.时间plus.background = null;
-*/
     		var result = ..dbTimeline.stepQuery("SELECT * FROM ??",{time = timeSel, winform.当前主题.text} );
     		winform.datetimepick.time = time(result.time);
     		winform.lastTime = result.time;
@@ -275,6 +275,8 @@ wb_tl.external = {
     		//手动显示提示
     		var x,y,cx,cy = winform.添加plus.getPos(true);
     		balloonTipCtrl.setText("点击<添加>保存，否则不修改").trackPopup(true,x+cx*3/4,y+cy );
+    		win.delay(333)
+    		frmMask.show(false);
 		}
 	};
 
@@ -309,6 +311,7 @@ wb_tl.html = /**
 <html>
 <head>
     <meta charset="utf-8">
+    <title>待定</title>
     <?= content_css?>
     <?= content_js?>
 </head>
@@ -339,6 +342,7 @@ winform.勾选plus.oncommand = function(id,event){
 winform.childWinUpdate = function(tlTitle){
 	currentTimeLine = tlTitle;
 	winform.当前主题.text = currentTimeLine;
+	wb_tl.xcall("setTitle",winform.当前主题.text)
 }
 
 winform.listboxUpdate = function(winform){
