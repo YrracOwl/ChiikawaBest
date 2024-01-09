@@ -9,6 +9,7 @@
 	import table;
 	import fsys.file;
 	import win;
+	import io;
 	
 	var html_head = /**
 	<!doctype html>
