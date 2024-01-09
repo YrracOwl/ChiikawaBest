@@ -40,6 +40,10 @@ if( !_STUDIO_INVOKED ){
 	mainForm.appVersion = tostring(versionInfo.productVersion["major"]) + '.' +tostring(versionInfo.productVersion["minor"]) + '.' +tostring(versionInfo.productVersion["build"]) + '.' +tostring(versionInfo.productVersion["revision"]);
 	mainForm.copyright = versionInfo.copyright;
 }
+
+//fsys的删除库
+import fsys.remove;
+
 //process库导入
 import process;
 
@@ -228,6 +232,13 @@ mainForm.trayCreate = function(){
 			},mainForm
 		)
 	})
+	mainForm.popmenu.add("强制更新...",function(){
+		thread.invoke( 
+			function(mainForm){
+				mainForm.forceAppUpdate();
+			},mainForm
+		)
+	})
 	
 	mainForm.popmenu.add();//分隔线
 	mainForm.popmenu.add('退出',function(id){
@@ -324,6 +335,12 @@ mainForm.appUpdate = function(){
 		mainForm.close();
 	}
 };
+
+mainForm.forceAppUpdate = function(){
+	fsys.remove(updateFilePath);
+	mainForm.appUpdate();
+}
+
 
 //log函数
 logForm = mainForm.loadForm("\dlg\log.aardio");

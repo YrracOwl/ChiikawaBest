@@ -1,8 +1,8 @@
 import win.ui;
 /*DSG{{*/
-var winform = win.form(text="版本信息";right=349;bottom=219;border="none";clipch=1)
+var winform = win.form(text="版本信息";right=349;bottom=183;border="none";clipch=1)
 winform.add(
-plus={cls="plus";left=8;top=24;right=344;bottom=208;align="left";color=8081426;db=1;dl=1;dr=1;dt=1;font=LOGFONT(h=-13);link=1;valign="top";z=1}
+plus={cls="plus";left=8;top=24;right=344;bottom=176;align="left";color=8081426;db=1;dl=1;dr=1;dt=1;font=LOGFONT(h=-13);link=1;valign="top";z=1}
 )
 /*}}*/
 
