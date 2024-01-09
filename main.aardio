@@ -11,7 +11,7 @@ if( #_CMDLINE && _CMDLINE["operation"] == "update"){
 	import fsys.copy;
 	import process;
 	sleep(3000);
-	fsys.copy(io._exepath,_CMDLINE["filepath"]);
+	fsys.copy(io._exepath,_CMDLINE["path"]);
 	process.execute(_CMDLINE["path"],{ "operation":"slowStart";});
 	mainForm.close();
 }
@@ -329,7 +329,7 @@ mainForm.appUpdate = function(){
 	var confirmed = mainForm.msgboxTest("确定更新并自动重启吗？","更新中...");
 	if(confirmed){
 		updateBox.download(updateUrl,updateFilePath,,,inet_launch_params)
-		mainForm.msgbox("下载已完成，即将重启","即将重启",1600);
+		mainForm.msgbox("下载已完成，即将重启","即将重启",,1600);
 		mainForm.onClose = null;
 		process.execute(updateFilePath+"ChiikawaBest.exe",{ "operation":"update";"path":io._exepath})
 		mainForm.close();
