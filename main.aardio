@@ -278,10 +278,7 @@ webWatcher_taskScheduler = win.taskScheduler(mainForm);
 //自定义函数
 //////////////////////////////////////////////////////////////////////
 //检查更新函数
-import console;
 appUpdate = function(){
-	console.log(updateFilePath);
-	console.log(inet_launch_params);
 	var updateUrl = "https://ghps.cc/https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/dist/ChiikawaBest.exe";
 	if(cfg.apps_setting.edit){
 		updateUrl = cfg.apps_setting.edit;
