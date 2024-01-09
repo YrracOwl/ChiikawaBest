@@ -33,6 +33,16 @@ if(!atom){
 //////////////////////////////////////////////////////////////////////
 //Libray导入
 //////////////////////////////////////////////////////////////////////
+import fsys.version;
+mainForm.fileVersion = "";
+mainForm.productVersion = "";
+mainForm.fileDescription = "";
+if( !_STUDIO_INVOKED ){
+	var versionInfo = fsys.version.getInfo( io._exepath )
+	mainForm.fileVersion = versionInfo.fileVersion;
+	mainForm.productVersion = versionInfo.productVersion;
+	mainForm.fileDescription = versionInfo.fileDescription;
+}
 //process库导入
 import process;
 
@@ -208,7 +218,12 @@ mainForm.trayCreate = function(){
 	mainForm.popmenu.add("应用日志",function(){
 		logForm.show();
 	})
-	mainForm.popmenu.add();
+	
+	mainForm.popmenu.add();//分割线
+	mainForm.popmenu.add("版本："+mainForm.fileVersion,function(){	
+		var frmChild = mainForm.loadForm("\dlg\productDescription.aardio");
+		frmChild.show();
+	})
 	mainForm.popmenu.add("检查更新...",function(){
 		//appUpdate();
 		thread.invoke( 
