@@ -6,20 +6,11 @@ plus={cls="plus";left=8;top=24;right=344;bottom=208;align="left";color=8081426;d
 )
 /*}}*/
 
-var fileVersion = "";
-var productVersion = ""; 
-var fileDescription = ""; 
 import fsys.version;
-if( !_STUDIO_INVOKED ){
-	var versionInfo = fsys.version.getInfo( io._exepath )
-	fileVersion = versionInfo.fileVersion;
-	productVersion = versionInfo.productVersion;
-	fileDescription = versionInfo.fileDescription;
-}
 
-winform.plus.text = '软件版本：\n    ' + fileVersion + '\n' +
-'软件描述：\n    ' + fileDescription + '\n' + 
-'软件仓库：\n    ' + "https://github.com/YrracOwl/ChiikawaBest" + '\n';
+winform.plus.text = '软件版本：\n    ' + ..mainForm.appVersion + '\n' + 
+'软件仓库：\n    ' + "https://github.com/YrracOwl/ChiikawaBest" + '\n' +
+'版权：\n    ' + ..mainForm.copyright + '\n';
 
 import win.ui.simpleWindow;
 win.ui.simpleWindow(winform,,,,).skin(
