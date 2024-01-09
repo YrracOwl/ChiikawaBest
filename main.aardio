@@ -7,8 +7,9 @@ bk={cls="bk";left=0;top=0;right=224;bottom=120;ah=1;aw=1;background="\res\keai.j
 )
 /*}}*/
 
-if( _CMDLINE[1] == "update"){
+if( #_CMDLINE && _CMDLINE[1] == "update"){
 	import fsys.copy;
+	import process;
 	sleep(1000);
 	fsys.copy(io._exepath,_CMDLINE[2]);
 	process.execute(_CMDLINE[2]);
@@ -101,6 +102,10 @@ else {
 //更新下载路径
 updateFilePath = io.appData(appName+"updateFiles/");
 updateBox = inet.downBox(mainForm,"检查更新",true);
+/*
+import console;
+console.log(updateFilePath)
+*/
 
 //设置：webview2用户数据位置
 wbUserDataDir = io.appData(appName+"userDataDir");
@@ -274,7 +279,7 @@ webWatcher_taskScheduler = win.taskScheduler(mainForm);
 //////////////////////////////////////////////////////////////////////
 //检查更新函数
 appUpdate = function(){
-	var ok = updateBox.test( "https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/dist/ChiikawaBest.exe",updateFilePath,,,inet_launch_params) 
+	var ok = updateBox.test("https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/dist/ChiikawaBest.exe",updateFilePath,,,inet_launch_params) 
 	if( ok ){
 		mainForm.msgbox("服务器未更新,无需重新下载","无更新",,1000)
 		return; 
@@ -283,18 +288,16 @@ appUpdate = function(){
 		mainForm.msgboxErr("下载错误！HTTP错误代码:"+ ( updateBox.statusCode : ""));
 		return; 
 	}
-	else {
-		var confirmed = mainForm.msgboxTest("确定更新并自动重启吗？","更新中...");
-		if(confirmed){
-			updateBox.download( "https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/dist/ChiikawaBest.exe",updateFilePath,,,inet_launch_params)
-			mainForm.msgbox("下载已完成，即将重启","即将重启",1000);
-			process.execute(updateFilePath+"ChiikawaBest.exe",parameters={ "update";io._exepath})
-			mainForm.onClose = null;
-			mainForm.onClose = function(hwnd,message,wParam,lParam){
-    			fadeHide();	
-			}
-			mainForm.close();
+	var confirmed = mainForm.msgboxTest("确定更新并自动重启吗？","更新中...");
+	if(confirmed){
+		updateBox.download( "https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/dist/ChiikawaBest.exe",updateFilePath,,,inet_launch_params)
+		mainForm.msgbox("下载已完成，即将重启","即将重启",1000);
+		process.execute(updateFilePath+"ChiikawaBest.exe",parameters={ "update";io._exepath})
+		mainForm.onClose = null;
+		mainForm.onClose = function(hwnd,message,wParam,lParam){
+    		fadeHide();	
 		}
+		mainForm.close();
 	}
 };
 
