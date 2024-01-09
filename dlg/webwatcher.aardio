@@ -124,7 +124,7 @@ winform.配置选择.onOk = function(){
 	thread.invoke( 
 		function(winform,init_thrdTable,cfg_chosen){
 			import quarks;
-			var data_html_crawler,path_html_crawler,host_html_crawler = quarks.html_crawler(cfg_chosen,..inet_launch_params);
+			var data_html_crawler,path_html_crawler,host_html_crawler = quarks.html_crawler(cfg_chosen,..inet_launch_params,..appName);
 			init_thrdTable.path_html_crawler = path_html_crawler;
 			init_thrdTable.host_html_crawler = host_html_crawler;
 			init_thrdTable.flag_html_crawler = true;

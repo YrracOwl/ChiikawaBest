@@ -225,14 +225,14 @@ mainForm.trayCreate = function(){
 		var frmChild = mainForm.loadForm("\dlg\productDescription.aardio");
 		frmChild.show();
 	})
-	mainForm.popmenu.add("检查更新...",function(){
+	mainForm.popmenu.add("检查更新",function(){
 		thread.invoke( 
 			function(mainForm){
 				mainForm.appUpdate();
 			},mainForm
 		)
 	})
-	mainForm.popmenu.add("强制更新...",function(){
+	mainForm.popmenu.add("强制更新",function(){
 		thread.invoke( 
 			function(mainForm){
 				mainForm.forceAppUpdate();

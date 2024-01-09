@@ -37,7 +37,7 @@
 	
 	//函数2：网页爬取，并返回提取出的元素节点组成的html
 	// query_table里可以使用{parent=id;tagName="a";className="class";}这种方式来确定属性
-	html_crawler = function(cfg_table,inet_launch_params){
+	html_crawler = function(cfg_table,inet_launch_params,appName){
 		var url = cfg_table.url;
 		var query_table = cfg_table.query_table;  
 		var http = inet.http(,inet_launch_params,,); 
@@ -71,9 +71,11 @@
 				contents_read = string.concat(contents_read,ele.outerHTML)
 			}
 			contents_read = string.concat(html_head,contents_read,html_tail);
-			string.save(string.concat("/html_crawler/",turl.host,".html"), contents_read);
+			
+			htmlPath = string.concat(io.appData(appName),"html_crawler/",turl.host,".html");
+			string.save(htmlPath, contents_read);
 
-			return contents_read,string.concat("/html_crawler/",turl.host,".html"),turl.host; 
+			return contents_read,htmlPath,turl.host; 
 		}
 		else {
 			return false; 
