@@ -7,20 +7,22 @@ bk={cls="bk";left=0;top=0;right=224;bottom=120;ah=1;aw=1;background="\res\keai.j
 )
 /*}}*/
 
-if( #_CMDLINE && _CMDLINE["operation"] == "update"){
-	import fsys.copy;
-	import process;
-	sleep(3000);
-	fsys.copy(io._exepath,_CMDLINE["path"]);
-	import console;
-	console.dump(_CMDLINE);
-	process.execute(_CMDLINE["path"],{ "operation":"slowStart";});
-	mainForm.close();
-}
-elseif(#_CMDLINE && _CMDLINE["operation"] == "slowStart"){
-	import console;
-	console.log("slowStart Mode")
-	sleep(6000);
+if(#_CMDLINE){
+	import string.list;
+	arg = string.list( _CMDLINE ,";");
+	
+	if(arg.operation == "update"){
+		import fsys.copy;
+		import process;
+		sleep(3000);
+		
+		fsys.copy(io._exepath,arg.path);
+		process.execute(arg.path,'operation=slowStart');
+		mainForm.close();
+	}
+	elseif(arg.operation == "slowStart"){
+		sleep(6000);
+	}
 }
 
 
@@ -336,7 +338,7 @@ mainForm.appUpdate = function(){
 		mainForm.msgbox("下载已完成，即将重启","即将重启",,1600);
 		mainForm.onClose = null;
 		var currentPath = io._exepath;
-		process.execute(updateFilePath+"ChiikawaBest.exe",{ "operation":"update";"path":currentPath})
+		process.execute(updateFilePath+"ChiikawaBest.exe",'operation=update;path='+currentPath);
 		mainForm.close();
 	}
 };
