@@ -2,7 +2,7 @@ import win.ui;
 /*DSG{{*/
 var winform = win.form(text="设置";right=591;bottom=303;border="none";clipch=1)
 winform.add(
-button={cls="button";text="重启以更新";left=242;top=280;right=354;bottom=304;db=1;z=2};
+button={cls="button";text="重启以生效";left=242;top=280;right=354;bottom=304;db=1;z=2};
 tab={cls="tab";left=8;top=16;right=584;bottom=280;ah=1;aw=1;db=1;dl=1;dr=1;dt=1;edge=1;z=1}
 )
 /*}}*/

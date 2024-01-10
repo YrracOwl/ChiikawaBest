@@ -233,16 +233,16 @@ mainForm.trayCreate = function(){
 		var frmChild = mainForm.loadForm("\dlg\productDescription.aardio");
 		frmChild.show();
 	})
-	mainForm.popmenu.add(mainForm.updateStatusText,function(){
-		if(mainForm.updateStatus){
-			thread.invoke( 
-				function(mainForm){
-					mainForm.checkUpdate();
-				},mainForm
-			)
-		}
-	})
+	if(mainForm.updateStatus){//检查更新
+		mainForm.popmenu.add(mainForm.updateStatusText,function(){
+			mainForm.checkUpdate();
+		});
+	}else {
+		mainForm.popmenu.add(mainForm.updateStatusText,function(){
+		});
+	};
 	
+
 	mainForm.popmenu.add();//分隔线
 	mainForm.popmenu.add('退出',function(id){
 		mainForm.onClose = null;
@@ -337,18 +337,23 @@ mainForm.updateStart = function(){
 mainForm.checkUpdate = function(){
 	mainForm.updateStatus = false;
 	mainForm.updateStatusText = "检测更新中...";
-	var updateUrl = "https://ghps.cc/https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/dist/ChiikawaBest.exe";
+	var updateUrl = "https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/dist/ChiikawaBest.exe";
 	if(cfg.apps_setting.edit){
 		updateUrl = cfg.apps_setting.edit;
 	};
+	
 	var ok = thread.invokeAndWait(
-		function(mainForm,updateUrl,updateFilePath,inet_launch_params){
+		function(updateUrl,updateFilePath,inet_launch_params){
 			import win;
 			import inet.downBox;
-			updateBox = inet.downBox(mainForm,"检查更新",true);
+			updateBox = inet.downBox(win.getDesktop(),"检查更新",true);
 			var ok = updateBox.test(updateUrl,updateFilePath,,,inet_launch_params);
-		},mainForm,updateUrl,updateFilePath,inet_launch_params
+			return ok; 
+		},updateUrl,updateFilePath,inet_launch_params
 	);
+	
+	//var ok = updateBox.test(updateUrl,updateFilePath,,,inet_launch_params);
+	
 	if(ok){
 		var wannaForceUpdate = mainForm.msgboxTest("服务器无更新，是否强制拉取更新并重启","检测更新");
 		if(wannaForceUpdate){
