@@ -315,7 +315,7 @@ webWatcher_taskScheduler = win.taskScheduler(mainForm);
 //////////////////////////////////////////////////////////////////////
 
 //检查更新函数
-mainForm.updateStart = function(){
+mainForm.updateStart = function(updateUrl){
 	var confirmed = mainForm.msgboxTest("确定更新并自动重启吗？","更新中...");
 	if(confirmed){
 		updateBox.download(updateUrl,updateFilePath,,,inet_launch_params)
@@ -342,7 +342,7 @@ mainForm.checkUpdate = function(){
 		var wannaForceUpdate = mainForm.msgboxTest("服务器无更新，是否强制拉取更新并重启","检测更新");
 		if(wannaForceUpdate){
 			fsys.remove(updateFilePath);
-			mainForm.updateStart();
+			mainForm.updateStart(updateUrl);
 		}
 		else {
 			mainForm.updateStatus = true;
@@ -356,7 +356,7 @@ mainForm.checkUpdate = function(){
 		mainForm.updateStatusText = "检测更新";
 		return; 
 	}
-	mainForm.updateStart();
+	mainForm.updateStart(updateUrl);
 }
 
 
