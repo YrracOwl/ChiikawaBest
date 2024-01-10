@@ -237,7 +237,7 @@ mainForm.trayCreate = function(){
 		if(mainForm.updateStatus){
 			thread.invoke( 
 				function(mainForm){
-					mainForm.updateStart();
+					mainForm.checkUpdate();
 				},mainForm
 			)
 		}
