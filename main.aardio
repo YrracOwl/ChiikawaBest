@@ -14,7 +14,7 @@ if(#_CMDLINE){
 	if(arg.operation == "update"){
 		import fsys;
 		import process;
-		sleep(1000);
+		sleep(100);
 		
 		fsys.copy(io._exepath,arg.path);
 		process.execute(arg.path,'operation=slowStart');
@@ -22,7 +22,7 @@ if(#_CMDLINE){
 		return ; 
 	}
 	elseif(arg.operation == "slowStart"){
-		sleep(3000);
+		sleep(2000);
 	}
 }
 
