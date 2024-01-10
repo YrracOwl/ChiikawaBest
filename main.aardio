@@ -18,10 +18,11 @@ if(#_CMDLINE){
 		
 		fsys.copy(io._exepath,arg.path);
 		process.execute(arg.path,'operation=slowStart');
-		mainForm.close();
+		win.quitMessage();
+		return ; 
 	}
 	elseif(arg.operation == "slowStart"){
-		sleep(6000);
+		sleep(3000);
 	}
 }
 
