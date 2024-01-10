@@ -341,17 +341,19 @@ mainForm.checkUpdate = function(){
 	if(cfg.apps_setting.edit){
 		updateUrl = cfg.apps_setting.edit;
 	};
-	var ok = updateBox.test(updateUrl,updateFilePath,,,inet_launch_params);
+	var ok = thread.invokeAndWait(
+		function(mainForm,updateUrl,updateFilePath,inet_launch_params){
+			import win;
+			import inet.downBox;
+			updateBox = inet.downBox(mainForm,"检查更新",true);
+			var ok = updateBox.test(updateUrl,updateFilePath,,,inet_launch_params);
+		},mainForm,updateUrl,updateFilePath,inet_launch_params
+	);
 	if(ok){
 		var wannaForceUpdate = mainForm.msgboxTest("服务器无更新，是否强制拉取更新并重启","检测更新");
 		if(wannaForceUpdate){
-			thread.invoke( 
-				function(mainForm,updateFilePath){
-					import fsys.remove;
-					fsys.remove(updateFilePath);
-					mainForm.updateStart();
-				},mainForm,updateFilePath
-			)
+			fsys.remove(updateFilePath);
+			mainForm.updateStart();
 		}
 		else {
 			mainForm.updateStatus = true;
