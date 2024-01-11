@@ -8,13 +8,6 @@ tab={cls="tab";left=8;top=16;right=584;bottom=280;ah=1;aw=1;db=1;dl=1;dr=1;dt=1;
 )
 /*}}*/
 
-var atom,hwnd/*冲突窗口的句柄,该函数会自动激活此窗口*/ = winform.atom("37D260E2-706D-46E6-A016-6FAFD8D27FF3.settings");
-if(!atom){
-	/*为窗口设置原子值可以避免一个程序重复运行多个实例*/
-	win.setForeground(hwnd);
-	return;
-}
-
 var frmWin1 = winform.tab.loadForm("\dlg\apps_setting.aardio")
 var frmWin2 = winform.tab.loadForm("\dlg\proxy_setting.aardio")
 var frmWin3 = winform.tab.loadForm("\dlg\html_crawler_setting.aardio")

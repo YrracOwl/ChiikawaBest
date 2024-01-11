@@ -13,13 +13,6 @@ winform.add(
 )
 /*}}*/
 
-var atom,hwnd/*冲突窗口的句柄,该函数会自动激活此窗口*/ = winform.atom("2B31E250-5A0B-478C-B373-DE23820BEA2F.timelineChoice");
-if(!atom){
-	/*为窗口设置原子值可以避免一个程序重复运行多个实例*/
-	win.setForeground(hwnd)
-	return;
-}
-
 import fsys;
 
 import win.ui.tooltip; 
