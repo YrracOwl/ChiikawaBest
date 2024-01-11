@@ -1,4 +1,5 @@
 import win.ui;
+import win.ui.atom;
 /*DSG{{*/
 var winform = win.form(text="设置";right=591;bottom=303;border="none";clipch=1)
 winform.add(
@@ -6,6 +7,12 @@ button={cls="button";text="重启以生效";left=242;top=280;right=354;bottom=30
 tab={cls="tab";left=8;top=16;right=584;bottom=280;ah=1;aw=1;db=1;dl=1;dr=1;dt=1;edge=1;z=1}
 )
 /*}}*/
+
+var atom,hwnd/*冲突窗口的句柄,该函数会自动激活此窗口*/ = winform.atom("0F4EFE21-EBCB-4D3F-AA44-A36A58EB382B");
+if(!atom){
+	/*为窗口设置原子值可以避免一个程序重复运行多个实例*/
+	win.quitMessage();	return;
+}
 
 var frmWin1 = winform.tab.loadForm("\dlg\apps_setting.aardio")
 var frmWin2 = winform.tab.loadForm("\dlg\proxy_setting.aardio")

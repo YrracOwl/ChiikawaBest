@@ -24,7 +24,7 @@ spinss={cls="spin";left=214;top=94;right=234;bottom=119;db=1;dl=1;font=LOGFONT(h
 )
 /*}}*/
 
-var atom,hwnd/*冲突窗口的句柄,该函数会自动激活此窗口*/ = alarmSetWinform.atom("BA886D45-C828-4ECB-B520-66FC5263545F");
+var atom,hwnd/*冲突窗口的句柄,该函数会自动激活此窗口*/ = alarmSetWinform.atom("BA886D45-C828-4ECB-B520-66FC5263545F.addAlarm");
 if(!atom){
 	/*为窗口设置原子值可以避免一个程序重复运行多个实例*/
 	win.show(hwnd,true);
