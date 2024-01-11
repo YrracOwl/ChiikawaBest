@@ -3,8 +3,8 @@ import fonts.fontAwesome;
 import win.ui;
 import win.ui.atom;
 /*DSG{{*/
-var winform = win.form(text="添加闹钟";right=303;bottom=280;border="none";clipch=1;max=false)
-winform.add(
+var alarmSetWinform = win.form(text="添加闹钟";right=303;bottom=280;border="none";clipch=1;max=false)
+alarmSetWinform.add(
 checkbox={cls="checkbox";text="快捷定时";left=64;top=139;right=144;bottom=158;font=LOGFONT(h=-13);z=16};
 datetimepick={cls="datetimepick";left=28;top=60;right=276;bottom=84;dl=1;dt=1;edge=1;font=LOGFONT(h=-13);z=1};
 edithh={cls="edit";text="1";left=66;top=94;right=108;bottom=119;db=1;dl=1;edge=1;font=LOGFONT(h=-13);multiline=1;z=2};
@@ -20,11 +20,11 @@ spinhh={cls="spin";left=88;top=94;right=108;bottom=119;db=1;dl=1;font=LOGFONT(h=
 spinmm={cls="spin";left=151;top=94;right=171;bottom=119;db=1;dl=1;font=LOGFONT(h=-13);z=5};
 spinss={cls="spin";left=214;top=94;right=234;bottom=119;db=1;dl=1;font=LOGFONT(h=-13);z=9};
 快捷定时={cls="combobox";left=148;top=136;right=260;bottom=160;edge=1;font=LOGFONT(h=-13);items={};mode="dropdown";z=15};
-显示位置={cls="combobox";left=96;top=28;right=208;bottom=52;edge=1;font=LOGFONT(h=-13);items={};mode="dropdown";z=10}
+显示位置={cls="combobox";left=104;top=32;right=216;bottom=56;edge=1;font=LOGFONT(h=-13);items={};mode="dropdown";z=10}
 )
 /*}}*/
 
-var atom,hwnd/*冲突窗口的句柄,该函数会自动激活此窗口*/ = winform.atom("BA886D45-C828-4ECB-B520-66FC5263545F");
+var atom,hwnd/*冲突窗口的句柄,该函数会自动激活此窗口*/ = alarmSetWinform.atom("BA886D45-C828-4ECB-B520-66FC5263545F");
 if(!atom){
 	/*为窗口设置原子值可以避免一个程序重复运行多个实例*/
 	win.show(hwnd,true);
@@ -32,7 +32,7 @@ if(!atom){
 	return;
 }
 
-winform.plusBtn.skin({
+alarmSetWinform.plusBtn.skin({
 	background={
 		default=0x668FB2B0;
 		disabled=0xFFCCCCCC;
@@ -44,21 +44,21 @@ winform.plusBtn.skin({
 	}
 })
 
-winform.plusContent.setCueBannerText("请输入闹钟标题");
+alarmSetWinform.plusContent.setCueBannerText("请输入闹钟标题");
 
-winform.显示位置.items = {"左上角显示";"左下角显示";"中上显示";"居中显示";"右上角显示";"右下角显示";}
+alarmSetWinform.显示位置.items = {"左上角显示";"左下角显示";"中上显示";"居中显示";"右上角显示";"右下角显示";}
 if(not ..cfg.alarmSettings.显示位置){
-	winform.显示位置.selIndex = 3;
+	alarmSetWinform.显示位置.selIndex = 3;
 }
 
-winform.快捷定时.items = {"1分钟后";"10分钟后";"30分钟后";"1小时后";"2小时后";"6小时后";"12小时后";"1天后";"1周后";}
-winform.快捷定时.selIndex = null;
-winform.快捷定时.disabled = true;
+alarmSetWinform.快捷定时.items = {"1分钟后";"10分钟后";"30分钟后";"1小时后";"2小时后";"6小时后";"12小时后";"1天后";"1周后";}
+alarmSetWinform.快捷定时.selIndex = null;
+alarmSetWinform.快捷定时.disabled = true;
 
-winform.checkbox.checked = false;
+alarmSetWinform.checkbox.checked = false;
 
 import win.ui.statusbar;
-var statusbar = win.ui.statusbar( winform );
+var statusbar = win.ui.statusbar( alarmSetWinform );
 statusbar.setMinHeight(30);//设置最小高度（含上下边框宽度）
 statusbar.addItem("当前时间 " + tostring(time(,"%H:%M:%S")) , 110/*宽度*/);
 statusbar.addItem("请添加闹钟", /*宽度*/);
@@ -66,17 +66,16 @@ statusbar.addItem("请添加闹钟", /*宽度*/);
 import quarks;
 //计划任务导入
 import win.taskScheduler;
-alarm_taskScheduler = win.taskScheduler( winform );
-//winform.datetimepick.setFormat("''HH':'mm':'ss, dddd, MMMdd日', 'yyyy")
-winform.datetimepick.setFormat("          yyyy年MM月dd日dddd")
+alarm_taskScheduler = win.taskScheduler( alarmSetWinform );
+alarmSetWinform.datetimepick.setFormat("          yyyy年MM月dd日dddd")
 
 var timeShowClock = alarm_taskScheduler.create("timeShowClock",function(){
     var timeNowSeconds = time(,"%H:%M:%S");
     statusbar.setText("当前时间 " + tostring(timeNowSeconds),1/*第几个分块*/)
-    if(winform.checkbox.checked){
-    	winform.spinhh.pos = tostring(time(__,'%H'));
-		winform.spinmm.pos = tostring(time(__,'%M'));
-		winform.spinss.pos = tostring(time(__,'%S'));	
+    if(alarmSetWinform.checkbox.checked){
+    	alarmSetWinform.spinhh.pos = tostring(time(__,'%H'));
+		alarmSetWinform.spinmm.pos = tostring(time(__,'%M'));
+		alarmSetWinform.spinss.pos = tostring(time(__,'%S'));	
     }
 });
 
@@ -112,16 +111,18 @@ if(..dbAlarmClock.existsTable("default")){
 
 				win.setParent(frmChild.hwnd,win.getDesktop());
 				
-				winform.enableDpiScaling("init");
-				var alarmClockX, alarmClockY = winform.showPos(winform.显示位置.selText, frmChild.width, frmChild.height);		
+				alarmSetWinform.enableDpiScaling("init");
+				var alarmClockX, alarmClockY = alarmSetWinform.showPos(alarmSetWinform.显示位置.selText, frmChild.width, frmChild.height);		
 				win.setPos(frmChild.hwnd, alarmClockX, alarmClockY);
+
+				var foregroundHwnd = win.getForeground();
 				frmChild.show();
 				
 				win.setTopmost(frmChild.hwnd);
-				win.setForeground(frmChild.hwnd);
+				win.setForeground(foregroundHwnd);
 				frmChild.redrawBackground();
 				win.flash(frmChild.hwnd,32);
-				
+
 			},AlarmContent,k);
 			
 			scheduleTable[k].time = { 
@@ -137,14 +138,14 @@ if(..dbAlarmClock.existsTable("default")){
 	
 }
 
-winform.onClose = function(hwnd,message,wParam,lParam){
-    winform.show(false);
+alarmSetWinform.onClose = function(hwnd,message,wParam,lParam){
+    alarmSetWinform.show(false);
     return true; 
 }
 
 
 import win.ui.simpleWindow;
-win.ui.simpleWindow(winform,,,,).skin(
+win.ui.simpleWindow(alarmSetWinform,,,,).skin(
 	background = { 
 		hover = 0xff99ffcc;
 		active = 0xffff6666; 
@@ -157,13 +158,13 @@ win.ui.simpleWindow(winform,,,,).skin(
 	}
 )
 
-winform.spinhh.buddy = winform.edithh; 
-winform.spinhh.setRange(0,23); //一定要设置数值的上下限
-winform.spinhh.pos = tostring(time(__,'%H'));//设置数值
-winform.spinhh.inc = 1;//设置每次点击箭头的增减量（步长）
+alarmSetWinform.spinhh.buddy = alarmSetWinform.edithh; 
+alarmSetWinform.spinhh.setRange(0,23); //一定要设置数值的上下限
+alarmSetWinform.spinhh.pos = tostring(time(__,'%H'));//设置数值
+alarmSetWinform.spinhh.inc = 1;//设置每次点击箭头的增减量（步长）
 
 //处理spin事件通知,将要改变值之前触发
-winform.spinhh.onnotify = function(id,code,ptr){ 
+alarmSetWinform.spinhh.onnotify = function(id,code,ptr){ 
 	if(code==0xFFFFFD2E/*_UDN_DELTAPOS*/){
 		var nmUpDown = ..raw.convert(ptr, {
 			struct hdr = ::NMHDR();
@@ -173,13 +174,13 @@ winform.spinhh.onnotify = function(id,code,ptr){
 	} 
 }
 
-winform.spinmm.buddy = winform.editmm; 
-winform.spinmm.setRange(0,59); //一定要设置数值的上下限
-winform.spinmm.pos = tostring(time(__,'%M'));//设置数值
-winform.spinmm.inc = 1;//设置每次点击箭头的增减量（步长）
+alarmSetWinform.spinmm.buddy = alarmSetWinform.editmm; 
+alarmSetWinform.spinmm.setRange(0,59); //一定要设置数值的上下限
+alarmSetWinform.spinmm.pos = tostring(time(__,'%M'));//设置数值
+alarmSetWinform.spinmm.inc = 1;//设置每次点击箭头的增减量（步长）
 
 //处理spin事件通知,将要改变值之前触发
-winform.spinmm.onnotify = function(id,code,ptr){ 
+alarmSetWinform.spinmm.onnotify = function(id,code,ptr){ 
 	if(code==0xFFFFFD2E/*_UDN_DELTAPOS*/){
 		var nmUpDown = ..raw.convert(ptr, {
 			struct hdr = ::NMHDR();
@@ -189,13 +190,13 @@ winform.spinmm.onnotify = function(id,code,ptr){
 	} 
 }
 
-winform.spinss.buddy = winform.editss; 
-winform.spinss.setRange(0,59); //一定要设置数值的上下限
-winform.spinss.pos = tostring(time(__,'%S'));//设置数值
-winform.spinss.inc = 1;//设置每次点击箭头的增减量（步长）
+alarmSetWinform.spinss.buddy = alarmSetWinform.editss; 
+alarmSetWinform.spinss.setRange(0,59); //一定要设置数值的上下限
+alarmSetWinform.spinss.pos = tostring(time(__,'%S'));//设置数值
+alarmSetWinform.spinss.inc = 1;//设置每次点击箭头的增减量（步长）
 
 //处理spin事件通知,将要改变值之前触发
-winform.spinss.onnotify = function(id,code,ptr){ 
+alarmSetWinform.spinss.onnotify = function(id,code,ptr){ 
 	if(code==0xFFFFFD2E/*_UDN_DELTAPOS*/){
 		var nmUpDown = ..raw.convert(ptr, {
 			struct hdr = ::NMHDR();
@@ -205,7 +206,7 @@ winform.spinss.onnotify = function(id,code,ptr){
 	} 
 }
 
-winform.showPos = function(posStr, frmChildWidth, frmChildHeight){
+alarmSetWinform.showPos = function(posStr, frmChildWidth, frmChildHeight){
 	
 	var alarmWidth, alarmHeight = frmChildWidth, frmChildHeight;
 	
@@ -262,8 +263,8 @@ winform.showPos = function(posStr, frmChildWidth, frmChildHeight){
 	return alarmPosX, alarmPosY; 
 }
 
-winform.timeJump = function(tm,selJumpTime){
-	if(winform.checkbox.checked){
+alarmSetWinform.timeJump = function(tm,selJumpTime){
+	if(alarmSetWinform.checkbox.checked){
 		select(selJumpTime) {
 			case "1分钟后" {
 				tm = tm.addminute(1);
@@ -302,21 +303,21 @@ winform.timeJump = function(tm,selJumpTime){
 
 
 
-winform.plusBtn.oncommand = function(id,event){
-	winform.plusBtn.disabled = true;
+alarmSetWinform.plusBtn.oncommand = function(id,event){
+	alarmSetWinform.plusBtn.disabled = true;
 	
-	var tempTime = tostring(time(winform.datetimepick.time,"%Y年%m月%d日")) + "  "+ winform.edithh.text + ":" + winform.editmm.text + ":" + winform.editss.text;
+	var tempTime = tostring(time(alarmSetWinform.datetimepick.time,"%Y年%m月%d日")) + "  "+ alarmSetWinform.edithh.text + ":" + alarmSetWinform.editmm.text + ":" + alarmSetWinform.editss.text;
 	
 	//从字符串创建时间值
 	var tm = time(tempTime,"%Y年%m月%d日%H时%M分%S秒");
-	tm = winform.timeJump(tm,winform.快捷定时.selText);
+	tm = alarmSetWinform.timeJump(tm,alarmSetWinform.快捷定时.selText);
 	tempTime = tostring(tm);
 
-	if(winform.plusContent.text == ""){
+	if(alarmSetWinform.plusContent.text == ""){
 		taskTable[tempTime] = "闹钟来了";
 	}
 	else {
-		taskTable[tempTime] = winform.plusContent.text;
+		taskTable[tempTime] = alarmSetWinform.plusContent.text;
 	}
 	
 	var cmd = ..dbAlarmClock.prepare("REPLACE INTO [default] VALUES ( @time,@content);");
@@ -339,13 +340,15 @@ winform.plusBtn.oncommand = function(id,event){
 
 		win.setParent(frmChild.hwnd,win.getDesktop());
 
-		winform.enableDpiScaling("init");
-		var alarmClockX, alarmClockY = winform.showPos(winform.显示位置.selText, frmChild.width, frmChild.height);
+		alarmSetWinform.enableDpiScaling("init");
+		var alarmClockX, alarmClockY = alarmSetWinform.showPos(alarmSetWinform.显示位置.selText, frmChild.width, frmChild.height);
 		win.setPos(frmChild.hwnd, alarmClockX, alarmClockY);
+		
+		var foregroundHwnd = win.getForeground();
 		frmChild.show();
 		
 		win.setTopmost(frmChild.hwnd);
-		win.setForeground(frmChild.hwnd);
+		win.setForeground(foregroundHwnd);
 		frmChild.redrawBackground();
 		win.flash(frmChild.hwnd,32);
 		
@@ -359,10 +362,10 @@ winform.plusBtn.oncommand = function(id,event){
     	month = mstr ;
 	};
 	
-	winform.spinhh.pos = tostring(time(__,'%H'));
-	winform.spinmm.pos = tostring(time(__,'%M'));
-	winform.spinss.pos = tostring(time(__,'%S'));
-	winform.plusContent.text = "";
+	alarmSetWinform.spinhh.pos = tostring(time(__,'%H'));
+	alarmSetWinform.spinmm.pos = tostring(time(__,'%M'));
+	alarmSetWinform.spinss.pos = tostring(time(__,'%S'));
+	alarmSetWinform.plusContent.text = "";
 	
 	tm.format = "%m月%d日%H:%M:%S";
 	var tmstr = tostring(tm);
@@ -370,16 +373,16 @@ winform.plusBtn.oncommand = function(id,event){
 	statusbar.setText('闹钟：' + tmstr + '已添加',2 /*第几个分块*/)
 	
 	win.delay(1000)
-	winform.plusBtn.disabled = false;
+	alarmSetWinform.plusBtn.disabled = false;
 
 };
 
-winform.wndproc = function(hwnd,message,wParam,lParam){
+alarmSetWinform.wndproc = function(hwnd,message,wParam,lParam){
 	select( message ) { 
 		case 0x18/*_WM_SHOWWINDOW*/{
-			winform.spinhh.pos = tostring(time(__,'%H'));
-			winform.spinmm.pos = tostring(time(__,'%M'));
-			winform.spinss.pos = tostring(time(__,'%S'));
+			alarmSetWinform.spinhh.pos = tostring(time(__,'%H'));
+			alarmSetWinform.spinmm.pos = tostring(time(__,'%M'));
+			alarmSetWinform.spinss.pos = tostring(time(__,'%S'));
 		}
 		else{
 
@@ -390,10 +393,10 @@ winform.wndproc = function(hwnd,message,wParam,lParam){
 
 import win.ui.accelerator;
 win.ui.accelerator({
-	{ ctrl = true; vkey = 'G'#; oncommand = winform.plusBtn.oncommand }  
-},winform);
+	{ ctrl = true; vkey = 'G'#; oncommand = alarmSetWinform.plusBtn.oncommand }  
+},alarmSetWinform);
 
-winform.plusDel.skin(
+alarmSetWinform.plusDel.skin(
 	background = { 
 		hover = "/res/images/btn-hover.png";
 		focus = "/res/images/btn-focus.jpg";
@@ -401,42 +404,42 @@ winform.plusDel.skin(
 		disabled = "/res/images/btn-disabled.png"; 
 	}
 )
-winform.plusDel.oncommand = function(id,event){
-	var frmChild = winform.loadForm("\dlg\alarm_list.aardio");
+alarmSetWinform.plusDel.oncommand = function(id,event){
+	var frmChild = alarmSetWinform.loadForm("\dlg\alarm_list.aardio");
 	frmChild.show();
 }
 
-winform.bindConfig( ..cfg.alarmSettings,{
+alarmSetWinform.bindConfig( ..cfg.alarmSettings,{
 	combobox = {
 		["显示位置"] = "selIndex";
 	}
 } );
 
-winform.checkbox.oncommand = function(id,event){
-	if(not winform.checkbox.checked){
-		winform.快捷定时.selIndex = null;
-		winform.快捷定时.disabled = true;
-		winform.datetimepick.disabled = false;
-		winform.spinhh.disabled = false;
-		winform.edithh.disabled = false;
-		winform.spinmm.disabled = false;
-		winform.editmm.disabled = false;
-		winform.spinss.disabled = false;
-		winform.editss.disabled = false;
+alarmSetWinform.checkbox.oncommand = function(id,event){
+	if(not alarmSetWinform.checkbox.checked){
+		alarmSetWinform.快捷定时.selIndex = null;
+		alarmSetWinform.快捷定时.disabled = true;
+		alarmSetWinform.datetimepick.disabled = false;
+		alarmSetWinform.spinhh.disabled = false;
+		alarmSetWinform.edithh.disabled = false;
+		alarmSetWinform.spinmm.disabled = false;
+		alarmSetWinform.editmm.disabled = false;
+		alarmSetWinform.spinss.disabled = false;
+		alarmSetWinform.editss.disabled = false;
 	}
 	else {
-		winform.快捷定时.selIndex = 1;
-		winform.快捷定时.disabled = false;
-		winform.datetimepick.disabled = true;
-		winform.spinhh.disabled = true;
-		winform.edithh.disabled = true;
-		winform.spinmm.disabled = true;
-		winform.editmm.disabled = true;
-		winform.spinss.disabled = true;
-		winform.editss.disabled = true;
+		alarmSetWinform.快捷定时.selIndex = 1;
+		alarmSetWinform.快捷定时.disabled = false;
+		alarmSetWinform.datetimepick.disabled = true;
+		alarmSetWinform.spinhh.disabled = true;
+		alarmSetWinform.edithh.disabled = true;
+		alarmSetWinform.spinmm.disabled = true;
+		alarmSetWinform.editmm.disabled = true;
+		alarmSetWinform.spinss.disabled = true;
+		alarmSetWinform.editss.disabled = true;
 	}
 }
 
-//winform.show();
+//alarmSetWinform.show();
 win.loopMessage();
-return winform;
+return alarmSetWinform;

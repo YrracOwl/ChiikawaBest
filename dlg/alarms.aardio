@@ -1,17 +1,45 @@
 import win.ui;
 /*DSG{{*/
-var winform = win.form(text="闹钟";right=295;bottom=151;border="thin";max=false;min=false)
+var winform = win.form(text="闹钟";right=295;bottom=159;border="thin";max=false;min=false)
 winform.add(
-plusContent={cls="plus";left=8;top=72;right=288;bottom=144;db=1;dl=1;dr=1;dt=1;font=LOGFONT(h=-16;weight=700);multiline=1;valign="top";wrap=1;z=1};
+btnD10={cls="button";text="推迟10分钟";left=32;top=128;right=130;bottom=155;font=LOGFONT(h=-13);z=3};
+btnD30={cls="button";text="推迟30分钟";left=168;top=128;right=266;bottom=155;font=LOGFONT(h=-13);z=4};
+plusContent={cls="plus";left=8;top=72;right=288;bottom=120;db=1;dl=1;dr=1;dt=1;font=LOGFONT(h=-16;weight=700);multiline=1;valign="top";wrap=1;z=1};
 plusTime={cls="plus";left=8;top=32;right=288;bottom=72;dl=1;dr=1;dt=1;font=LOGFONT(h=-13);z=2}
 )
 /*}}*/
 
+var timeFormatted = null;
 winform.updateContent = function(contentStr,timeStr){
-	
-	var timeFormatted = time(timeStr,"%Y年%m月%d日%H时%M分%S秒"); 
+	timeFormatted = time(timeStr,"%Y年%m月%d日%H时%M分%S秒");
 	winform.plusContent.text = tostring(contentStr);
-	winform.plusTime.text = timeFormatted;
+	winform.plusTime.text = tostring(timeFormatted);
+}
+
+winform.btnD10.oncommand = function(id,event){
+	timeFormatted = timeFormatted.addminute(10);
+	var taskGot = ..alarm_taskScheduler.get(winform.plusTime.text);
+	taskGot.time = {
+    	second =  timeFormatted.second ;
+    	minute = timeFormatted.minute ; 
+    	hour = timeFormatted.hour ;
+    	day = timeFormatted.day ;
+    	month = timeFormatted.month ;
+	};
+	winform.close();
+}
+
+winform.btnD30.oncommand = function(id,event){
+	timeFormatted = timeFormatted.addminute(30);
+	var taskGot = ..alarm_taskScheduler.get(winform.plusTime.text);
+	taskGot.time = {
+    	second =  timeFormatted.second ;
+    	minute = timeFormatted.minute ; 
+    	hour = timeFormatted.hour ;
+    	day = timeFormatted.day ;
+    	month = timeFormatted.month ;
+	};
+	winform.close();
 }
 
 //winform.show();
