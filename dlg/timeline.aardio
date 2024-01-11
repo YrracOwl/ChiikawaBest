@@ -351,7 +351,7 @@ winform.listboxUpdate = function(winform){
 	..logMsg(">>>更新时间线的listbox");
 	for rowid, time, title, content in ..dbTimeline.each("SELECT rowid,* FROM ??",{winform.当前主题.text}) {
 		table.push(list_items,time);
-		..logMsg(time,rowid,title,content)
+		..logMsg(time,rowid,title)
 	}
 	table.sort(list_items);
 	winform.listbox.clear();

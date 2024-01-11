@@ -106,20 +106,18 @@ if(..dbAlarmClock.existsTable("default")){
 			
 			var AlarmContent = v;
 			scheduleTable[k] = alarm_taskScheduler.create(k,function(AlarmContent,k){
-				var frmChild = ..mainForm.loadForm("\dlg\alarms.aardio");
+				var frmChild = win.loadForm("\dlg\alarms.aardio",,win.getDesktop());
 				frmChild.updateContent(AlarmContent,k);
-
-				win.setParent(frmChild.hwnd,win.getDesktop());
 				
 				alarmSetWinform.enableDpiScaling("init");
 				var alarmClockX, alarmClockY = alarmSetWinform.showPos(alarmSetWinform.显示位置.selText, frmChild.width, frmChild.height);		
 				win.setPos(frmChild.hwnd, alarmClockX, alarmClockY);
 
 				var foregroundHwnd = win.getForeground();
-				frmChild.show();
 				
 				win.setTopmost(frmChild.hwnd);
 				win.setForeground(foregroundHwnd);
+				frmChild.show();
 				frmChild.redrawBackground();
 				win.flash(frmChild.hwnd,32);
 
@@ -335,20 +333,18 @@ alarmSetWinform.plusBtn.oncommand = function(id,event){
 	var AlarmContent = taskTable[tempTime];
 	..logMsg("添加闹钟：",tempTime,AlarmContent)
 	scheduleTable[tempTime] = alarm_taskScheduler.create(tempTime,function(AlarmContent,tempTime){
-		var frmChild = ..mainForm.loadForm("\dlg\alarms.aardio");
+		var frmChild = win.loadForm("\dlg\alarms.aardio",,win.getDesktop());
 		frmChild.updateContent(AlarmContent,tempTime);
-
-		win.setParent(frmChild.hwnd,win.getDesktop());
-
+			
 		alarmSetWinform.enableDpiScaling("init");
 		var alarmClockX, alarmClockY = alarmSetWinform.showPos(alarmSetWinform.显示位置.selText, frmChild.width, frmChild.height);
 		win.setPos(frmChild.hwnd, alarmClockX, alarmClockY);
 		
 		var foregroundHwnd = win.getForeground();
-		frmChild.show();
 		
 		win.setTopmost(frmChild.hwnd);
 		win.setForeground(foregroundHwnd);
+		frmChild.show();
 		frmChild.redrawBackground();
 		win.flash(frmChild.hwnd,32);
 		

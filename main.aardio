@@ -203,7 +203,7 @@ mainForm.trayCreate = function(){
 	
 	mainForm.popmenu.add();//分隔线
 	mainForm.popmenu.add("设置",function(){
-		var settings1 = mainForm.loadForm("\dlg\settings.aardio");
+		var settings1 = win.loadForm("\dlg\settings.aardio",,win.getDesktop());
 		settings1.show();
 	})
 	
@@ -212,7 +212,7 @@ mainForm.trayCreate = function(){
 		webwatcher.show();
 	})
 	mainForm.popmenu.add("时间线",function(){
-		var timeline1 = mainForm.loadForm("\dlg\timeline_choice.aardio");
+		var timeline1 = win.loadForm("\dlg\timeline_choice.aardio",,win.getDesktop());
 		timeline1.show();
 	})
 	mainForm.popmenu.add("闹钟",function(){
@@ -230,7 +230,7 @@ mainForm.trayCreate = function(){
 	
 	mainForm.popmenu.add();//分割线
 	mainForm.popmenu.add("版本："+mainForm.appVersion,function(){	
-		var frmChild = mainForm.loadForm("\dlg\productDescription.aardio");
+		var frmChild = win.loadForm("\dlg\productDescription.aardio",,win.getDesktop());
 		frmChild.show();
 	})
 	if(mainForm.updateStatus){//检查更新
@@ -372,7 +372,7 @@ mainForm.checkUpdate = function(){
 
 
 //log函数
-logForm = mainForm.loadForm("\dlg\log.aardio");
+logForm = win.loadForm("\dlg\log.aardio",,win.getDesktop());
 logForm.show(false);
 
 logMsg = function(...){
@@ -491,10 +491,10 @@ thrdWriteDBFunc = function(db_path,str_prepare,str_step){
 } 
 
 //全局闹钟
-alarmForm = mainForm.loadForm("\dlg\add_alarm.aardio");
+alarmForm = win.loadForm("\dlg\add_alarm.aardio",,win.getDesktop());
 
 //全局网页监控
-webwatcher = mainForm.loadForm("\dlg\webwatcher.aardio");
+webwatcher = win.loadForm("\dlg\webwatcher.aardio",,win.getDesktop());
 webwatcherPrcsCntShot = 0;
 
 //////////////////////////////////////////////////////////////////////

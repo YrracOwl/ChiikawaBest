@@ -94,7 +94,7 @@ winform.btn打开时间线.oncommand = function(id,event){
 	frmMask.show(true);
 	winform.btn打开时间线.disabledText = {'\uF254';'\uF251';'\uF252';'\uF253';'\uF250';text='打开中...'}
 	
-	var timelineChild = ..mainForm.loadForm("\dlg\timeline.aardio");
+	var timelineChild = win.loadForm("\dlg\timeline.aardio",,win.getDesktop());
 	
 	timelineChild.childWinUpdate(winform.选择时间线.selText);
 	timelineChild.listboxUpdate(timelineChild);
