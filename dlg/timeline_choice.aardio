@@ -13,6 +13,14 @@ winform.add(
 )
 /*}}*/
 
+var atom,hwnd/*冲突窗口的句柄,该函数会自动激活此窗口*/ = winform.atom("请在这里输入唯一标识字符串，建议使用[工具->GUID]生成器生成");
+if(!atom){
+	/*为窗口设置原子值可以避免一个程序重复运行多个实例*/
+	win.setForeground(hwnd);
+	win.quitMessage();
+	return;
+}
+
 import fsys;
 
 import win.ui.tooltip; 
