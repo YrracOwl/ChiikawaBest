@@ -62,6 +62,9 @@ import gdi;
 //sqlite导入
 import sqlite;
 
+//右下角提示库
+//import win.util.popup;
+
 //托盘库
 import win.ui.menu;
 import win.util.tray;
@@ -363,13 +366,40 @@ mainForm.checkUpdate = function(){
 		}
 	}
 	elseif( ok === null){
-		mainForm.msgboxErr("下载错误！HTTP错误代码:"+ ( updateBox.statusCode : ""));
+		mainForm.msgboxErr("下载错误，请检查有无代理！HTTP错误代码:"+ ( updateBox.statusCode : ""));
 		return; 
 	}
 	mainForm.updateStart();
 }
 
-
+mainForm.initialCheckUpdate = function(){
+	mainForm.updateStatus = false;
+	var updateUrl = "https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/dist/ChiikawaBest.exe";
+	if(cfg.apps_setting.edit){
+		updateUrl = cfg.apps_setting.edit;
+	};
+	
+	var ok = thread.invokeAndWait(
+		function(updateUrl,updateFilePath,inet_launch_params){
+			import win;
+			import inet.downBox;
+			updateBox = inet.downBox(win.getDesktop(),"检查更新",true);
+			var ok = updateBox.test(updateUrl,updateFilePath,,,inet_launch_params);
+			return ok; 
+		},updateUrl,updateFilePath,inet_launch_params
+	);
+	
+	mainForm.updateStatus = true;
+	
+	if(ok){
+		return;
+	}
+	elseif( ok === null){
+		mainForm.msgboxErr("下载错误，请检查有无代理！HTTP错误代码:"+ ( updateBox.statusCode : ""));
+		return; 
+	}
+	mainForm.updateStart();
+}
 
 //log函数
 logForm = mainForm.loadForm("\dlg\log.aardio");
@@ -503,6 +533,10 @@ webwatcherPrcsCntShot = 0;
 
 mainForm.tray = win.util.tray(mainForm) //创建托盘图标
 mainForm.tray.tip = "右键打开菜单" //设置鼠标提示
+
+if(cfg.apps_setting.启动检测更新){
+	mainForm.initialCheckUpdate();
+}
 
 //主窗口是否显示
 if(cfg.apps_setting.启动到托盘){

@@ -17,6 +17,7 @@ winform.updateContent = function(contentStr,timeStr){
 }
 
 winform.btnD10.oncommand = function(id,event){
+	timeFormatted = time(,"%Y年%m月%d日%H时%M分%S秒");
 	timeFormatted = timeFormatted.addminute(10);
 	var taskGot = ..alarm_taskScheduler.get(winform.plusTime.text);
 	taskGot.time = {
@@ -30,6 +31,7 @@ winform.btnD10.oncommand = function(id,event){
 }
 
 winform.btnD30.oncommand = function(id,event){
+	timeFormatted = time(,"%Y年%m月%d日%H时%M分%S秒");
 	timeFormatted = timeFormatted.addminute(30);
 	var taskGot = ..alarm_taskScheduler.get(winform.plusTime.text);
 	taskGot.time = {
