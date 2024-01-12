@@ -375,6 +375,7 @@ mainForm.checkUpdate = function(){
 mainForm.initialCheckUpdate = function(){
 	mainForm.updateStatus = false;
 	var updateUrl = "https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/dist/ChiikawaBest.exe";
+	
 	if(cfg.apps_setting.edit){
 		updateUrl = cfg.apps_setting.edit;
 	};
@@ -392,10 +393,12 @@ mainForm.initialCheckUpdate = function(){
 	mainForm.updateStatus = true;
 	
 	if(ok){
+		mainForm.tray.pop("应用己是最新...","ChiikawaBest",,1200);
 		return;
 	}
 	elseif( ok === null){
-		mainForm.msgboxErr("下载错误，请检查有无代理！HTTP错误代码:"+ ( updateBox.statusCode : ""));
+		mainForm.tray.pop("下载错误，请检查有无代理！","ChiikawaBest",,1200);
+		//mainForm.msgboxErr("下载错误，请检查有无代理！HTTP错误代码:"+ ( updateBox.statusCode : ""));
 		return; 
 	}
 	mainForm.updateStart();
@@ -535,13 +538,13 @@ mainForm.tray = win.util.tray(mainForm) //创建托盘图标
 mainForm.tray.tip = "右键打开菜单" //设置鼠标提示
 
 if(cfg.apps_setting.启动时检测更新){
-	mainForm.tray.pop("正在检测更新...","ChiikawaBest",,3000);
+	mainForm.tray.pop("正在检测更新...","ChiikawaBest",,1200);
 	mainForm.initialCheckUpdate();
 }
 
 //主窗口是否显示
 if(cfg.apps_setting.启动到托盘){
-	mainForm.tray.pop("应用已启动，右击托盘获取更多菜单","ChiikawaBest",,3000);
+	mainForm.tray.pop("应用已启动，右击托盘获取更多菜单","ChiikawaBest",,1200);
 }
 else {
 	mainForm.show();
