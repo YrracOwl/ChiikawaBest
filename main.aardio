@@ -534,7 +534,8 @@ webwatcherPrcsCntShot = 0;
 mainForm.tray = win.util.tray(mainForm) //创建托盘图标
 mainForm.tray.tip = "右键打开菜单" //设置鼠标提示
 
-if(cfg.apps_setting.启动检测更新){
+if(cfg.apps_setting.启动时检测更新){
+	mainForm.tray.pop("正在检测更新...","ChiikawaBest",,3000);
 	mainForm.initialCheckUpdate();
 }
 
