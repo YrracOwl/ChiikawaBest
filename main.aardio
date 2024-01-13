@@ -161,6 +161,10 @@ dbTimeline = sqlite(dbTimelinePath);
 dbAlarmClockPath = dbDir+"/alarmClock.db";
 dbAlarmClock = sqlite(dbAlarmClockPath);
 
+//AppNotes数据库路径
+dbAppNotesPath = dbDir+"/appNotes.db";
+dbAppNotes = sqlite(dbAppNotesPath);
+
 if( not dbTimeline.existsTable("default") ){ 
 	dbTimeline.exec( "CREATE TABLE [default] (time PRIMARY KEY, title, content);"); 
 }
@@ -176,6 +180,10 @@ if( not dbBase.existsTable("timeline") ){
 
 if( not dbAlarmClock.existsTable("default")){
 	dbAlarmClock.exec( "CREATE TABLE [default] (time PRIMARY KEY, content);"); 
+}
+
+if( not dbAppNotes.existsTable("appNotesDefault")){
+	dbAppNotes.exec( "CREATE TABLE [appNotesDefault] (name PRIMARY KEY, content);")
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -319,7 +327,7 @@ webWatcher_taskScheduler = win.taskScheduler(mainForm);
 
 //检查更新函数
 mainForm.updateStart = function(){
-	var updateUrl = "https://ghps.cc/https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/dist/ChiikawaBest.exe";
+	var updateUrl = "https://ghps.cc/https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/release/ChiikawaBest.exe";
 	if(cfg.apps_setting.edit){
 		updateUrl = cfg.apps_setting.edit;
 	};
@@ -338,7 +346,7 @@ mainForm.updateStart = function(){
 
 mainForm.checkUpdate = function(){
 	mainForm.updateStatus = false;
-	var updateUrl = "https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/dist/ChiikawaBest.exe";
+	var updateUrl = "https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/release/ChiikawaBest.exe";
 	if(cfg.apps_setting.edit){
 		updateUrl = cfg.apps_setting.edit;
 	};

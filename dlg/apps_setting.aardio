@@ -2,11 +2,12 @@ import win.ui;
 /*DSG{{*/
 var winform = win.form(text="应用设置";right=447;bottom=207;clipch=1)
 winform.add(
-edit={cls="edit";text="https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/dist/ChiikawaBest.exe";left=8;top=112;right=440;bottom=134;border=1;dl=1;dr=1;dt=1;z=3};
-static={cls="static";text="更新链接：";left=8;top=88;right=80;bottom=104;dl=1;dt=1;transparent=1;z=4};
+edit={cls="edit";text="https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/release/ChiikawaBest.exe";left=8;top=136;right=440;bottom=158;border=1;dl=1;dr=1;dt=1;z=3};
+static={cls="static";text="更新链接：";left=8;top=112;right=80;bottom=128;dl=1;dt=1;transparent=1;z=4};
 关闭时清空记录={cls="checkbox";text="关闭时清空记录";left=8;top=8;right=144;bottom=32;dl=1;dt=1;z=1};
 启动到托盘={cls="checkbox";text="启动时最小化到托盘";left=8;top=32;right=144;bottom=56;dl=1;dt=1;z=2};
-启动时检测更新={cls="checkbox";text="启动时检测更新";left=8;top=56;right=144;bottom=80;dl=1;dt=1;z=5}
+启动时检测更新={cls="checkbox";text="启动时检测更新";left=8;top=56;right=144;bottom=80;dl=1;dt=1;z=5};
+启动时监控应用={cls="checkbox";text="启动时监控应用";left=8;top=80;right=144;bottom=104;dl=1;dt=1;z=6}
 )
 /*}}*/
 
@@ -15,6 +16,7 @@ winform.bindConfig( ..cfg.apps_setting,{
 		["关闭时清空记录"] = "checked";
 		["启动到托盘"] = "checked";
 		["启动时检测更新"] = "checked";
+		["启动时监控应用"] = "checked";
 	};
 	edit = "text";
 	

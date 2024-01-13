@@ -358,6 +358,7 @@ alarmSetWinform.plusBtn.oncommand = function(id,event){
     	month = mstr ;
 	};
 	
+	alarmSetWinform.datetimepick.time = time.now();
 	alarmSetWinform.spinhh.pos = tostring(time(__,'%H'));
 	alarmSetWinform.spinmm.pos = tostring(time(__,'%M'));
 	alarmSetWinform.spinss.pos = tostring(time(__,'%S'));

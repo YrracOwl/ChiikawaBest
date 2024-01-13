@@ -1,0 +1,72 @@
+import win.ui;
+/*DSG{{*/
+var appNotesWin = win.form(text="笔记";right=489;bottom=489;border="none")
+appNotesWin.add(
+exeNamePlus={cls="plus";left=0;top=0;right=488;bottom=40;dl=1;dr=1;dt=1;font=LOGFONT(h=-13;weight=700);z=2};
+plus={cls="plus";left=9;top=40;right=504;bottom=480;align="left";autohscroll=false;db=1;dl=1;dr=1;dt=1;font=LOGFONT(h=-13);link=1;multiline=1;notify=1;valign="top";vscroll=1;wrap=1;z=1}
+)
+/*}}*/
+
+import win.ui.simpleWindow;
+win.ui.simpleWindow(appNotesWin,,,,).skin(
+	background = { 
+		hover = 0xff99ffcc;
+		active = 0xffff6666; 
+		default = 0x00000000; 
+	}
+	color = { 
+		hover = 0xff666666;
+		active = 0xffffffff; 
+		default = 0xFF7BA5BF; 
+	}
+);
+
+appNotesWin.exeName = "SHIFT";
+
+appNotesWin.updateNote = function(exeName){
+	appNotesWin.exeName = exeName;
+	appNotesWin.exeNamePlus.text = exeName;
+	var result = ..dbAppNotes.stepQuery("SELECT * FROM [appNotesDefault]",{ name = appNotesWin.exeName})
+	if(not result){
+		var cmd =  ..dbAppNotes.prepare("REPLACE INTO [appNotesDefault] VALUES (@name,@content);" );
+		cmd.step(  
+			name = appNotesWin.exeName;
+			content = "";
+		);
+		appNotesWin.plus.text = "";
+	}
+	else {
+		appNotesWin.plus.text = result.content;
+	}
+}
+
+appNotesWin.onClose = function(hwnd,message,wParam,lParam){
+	if(appNotesWin.plus.editable){
+		var cmd =  ..dbAppNotes.prepare("REPLACE INTO [appNotesDefault] VALUES (@name,@content);" );
+		cmd.step(
+			name = appNotesWin.exeName;
+			content = appNotesWin.plus.text;
+		);
+	}
+	appNotesWin.parent.childAppNoteHwnd = null;
+}
+
+appNotesWin.plus.wndproc = function(hwnd,message,wParam,lParam){
+	select(message) {
+		case 0x201/*_WM_LBUTTONDOWN*/{
+			if(!appNotesWin.plus.editable){
+				appNotesWin.plus.editable = true;
+				appNotesWin.plus.foreground = 0xFFFFFFFF;
+			}
+		}
+		else {
+		}
+	}
+	//无返回值则继续调用默认回调函数
+}
+
+
+
+appNotesWin.show();
+win.loopMessage();
+return appNotesWin;

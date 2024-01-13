@@ -35,6 +35,8 @@
 		<file name="prcs_list.aardio" path="dlg\prcs_list.aardio" comment="dlg\prcs_list.aardio"/>
 		<file name="mouseWin.aardio" path="dlg\mouseWin.aardio" comment="dlg\mouseWin.aardio"/>
 		<file name="productDescription.aardio" path="dlg\productDescription.aardio" comment="dlg\productDescription.aardio"/>
+		<file name="note_for_app.aardio" path="dlg\note_for_app.aardio" comment="dlg\note_for_app.aardio"/>
+		<file name="release.aardio" path="dlg\release.aardio" comment="dlg\release.aardio"/>
 	</folder>
 	<folder name="html_crawler" path="html_crawler" comment="html_crawler" local="false" embed="false" ignored="false">
 		<file name="halo.carrywho.com.html" path="html_crawler\halo.carrywho.com.html" comment="html_crawler\halo.carrywho.com.html"/>

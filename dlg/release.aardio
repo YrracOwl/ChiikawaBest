@@ -1,0 +1,15 @@
+import fsys;
+import fsys.version;
+import fsys.remove;
+var releasePath = io.localpath("/release")
+fsys.remove(releasePath);
+fsys.createDir(releasePath);
+
+fsys.copy("/dist/ChiikawaBest.exe","/release/ChiikawaBest.exe");
+var distFilePath = io.localpath("/dist/ChiikawaBest.exe");
+var versionInfo = fsys.version.getInfo(distFilePath)
+var appVersion = tostring(versionInfo.productVersion["major"]) + '.' +tostring(versionInfo.productVersion["minor"]) + '.' +tostring(versionInfo.productVersion["build"]) + '.' +tostring(versionInfo.productVersion["revision"]);
+string.save("/release/"+tostring(appVersion),appVersion);
+
+import console;
+console.logPause("dist 2 release!")
