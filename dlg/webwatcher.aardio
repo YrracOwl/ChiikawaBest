@@ -1,19 +1,20 @@
 import win.ui;
 /*DSG{{*/
-winform = win.form(text="内容监控";right=599;bottom=751;border="none";clipch=1)
+winform = win.form(text="内容监控";right=599;bottom=899;border="none";clipch=1)
 winform.add(
-checkbox={cls="checkbox";text="置顶此窗口";left=88;top=724;right=176;bottom=740;db=1;dl=1;z=12};
-["edit进程匹配"]={cls="edit";left=88;top=688;right=512;bottom=712;border=1;db=1;disabled=1;dl=1;dr=1;z=8};
-html_watcher={cls="custom";text="自定义控件";left=16;top=64;right=584;bottom=680;db=1;dl=1;dr=1;dt=1;z=2};
-停止监控={cls="button";text="停止监控";left=520;top=720;right=592;bottom=744;db=1;dr=1;z=10};
+checkbox={cls="checkbox";text="置顶此窗口";left=504;top=880;right=592;bottom=896;db=1;dr=1;z=12};
+["edit进程匹配"]={cls="edit";left=168;top=840;right=592;bottom=864;border=1;db=1;disabled=1;dl=1;dr=1;z=8};
+html_watcher={cls="custom";text="自定义控件";left=16;top=64;right=592;bottom=832;db=1;dl=1;dr=1;dt=1;z=2};
+停止监控={cls="button";text="停止监控";left=88;top=872;right=160;bottom=896;db=1;dl=1;z=10};
+关闭所有笔记={cls="button";text="关闭所有笔记";left=248;top=872;right=336;bottom=896;db=1;dl=1;z=15};
 刷新页面={cls="button";text="刷新页面";left=104;top=32;right=176;bottom=56;dl=1;dt=1;z=5};
-开始监控={cls="button";text="开始监控";left=8;top=720;right=80;bottom=744;db=1;dl=1;z=9};
-打开笔记={cls="button";text="打开笔记";left=440;top=720;right=512;bottom=744;db=1;disabled=1;dr=1;z=14};
+开始监控={cls="button";text="开始监控";left=8;top=872;right=80;bottom=896;db=1;dl=1;z=9};
+打开笔记={cls="button";text="打开笔记";left=168;top=872;right=240;bottom=896;db=1;disabled=1;dl=1;z=14};
 添加闹钟={cls="button";text="添加闹钟";left=520;top=32;right=592;bottom=56;dr=1;dt=1;z=1};
 设置={cls="button";text="设置";left=464;top=32;right=512;bottom=56;dr=1;dt=1;z=13};
 返回={cls="button";text="返回";left=8;top=32;right=48;bottom=56;dl=1;dt=1;z=3};
-选择文件={cls="button";text="选择文件";left=520;top=688;right=592;bottom=712;db=1;dr=1;z=11};
-选择窗口={cls="button";text="选择窗口";left=8;top=688;right=80;bottom=712;db=1;dl=1;z=7};
+选择文件={cls="button";text="选择文件";left=88;top=840;right=160;bottom=864;db=1;dl=1;z=11};
+选择窗口={cls="button";text="选择窗口";left=8;top=840;right=80;bottom=864;db=1;dl=1;z=7};
 配置选择={cls="combobox";left=184;top=32;right=432;bottom=56;aw=1;border=1;clip=1;dt=1;items={};mode="dropdown";z=6};
 首页={cls="button";text="首页";left=56;top=32;right=96;bottom=56;dl=1;dt=1;z=4}
 )
@@ -42,9 +43,15 @@ import fsys.dlg;
 //界面线程变量
 //////////////////////////////////////////////////////////////////////
 
+//appNote句柄名称表
+var appNoteWinForm = {}; 
+
 //web.view导入
 import web.view;
-var wb = web.view(winform.html_watcher,..wbUserDataDir,..launch_params); 
+var webWatcherLaunchParams = ..launch_params + `  --user-agent="Mozilla/5.0 (Linux; U; Android 7.0; zh-CN; PRO 7-S Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/57.0.2987.108 UCBrowser/11.9.4.974 UWS/2.13.2.46 Mobile Safari/537.36 AliApp(DingTalk/4.6.29) com.alibaba.android.rimet/11388461 Channel/10002068 language/zh-CN"`;
+//webWatcherLaunchParams = webWatcherLaunchParams + `  `;
+//--cast-initial-screen-width
+var wb = web.view(winform.html_watcher,..wbUserDataDir,webWatcherLaunchParams); 
 wb.preloadScript(`
 //禁止超链接默认开新窗口
 window.addEventListener('load',function(){ 
@@ -66,7 +73,8 @@ document.addEventListener('mousedown', function (event) {
 }, true);
 
 //禁止弹窗函数
-window.open =  function(url){ window.location.href = url; } 
+window.open =  function(url){ window.location.href = url; };
+
 `)
 var url_loading = ..wsock.tcp.simpleHttpServer.getUrl("\res\loading.html"); 
 
@@ -89,7 +97,6 @@ var init_thrdTable = thread.table("init_shareVars",true/*清空*/ )
 winform.停止监控.disabled = true;
 winform.开始监控.disabled = true;
 winform.打开笔记.disabled = true;
-winform.childAppNoteHwnd = null;
 
 winform.添加闹钟.oncommand = function(id,event){
 	..alarmForm.show(true);
@@ -166,8 +173,6 @@ if(winform.配置选择.count > 0){
 //生成edit内容
 if(..cfg.web_watcher.edit进程匹配){
 	winform.edit进程匹配.text = ..cfg.web_watcher.edit进程匹配;
-	winform.开始监控.disabled = false;
-	winform.打开笔记.disabled = false;
 }
 
 winform.bindConfig( ..cfg.web_watcher,{
@@ -203,19 +208,22 @@ winform.选择窗口.oncommand = function(id,event){
 		if( injected ) return;	 
     	select(msg) {
     		case 0x201/*_WM_LBUTTONDOWN*/{
+    		    mouseHooker.close();
+    		    balloonTipCtrl.trackPopup(false);
+    		    
     	    	var mousePosX, mousePosY= mouse.getPos();
     	    	var pointWin  = winex.fromPoint(mousePosX, mousePosY);
-    	    	
     	    	winform.mousePosWindow = pointWin;
+    	    	
     	    	import win;
     	    	import process.cmdline;
     	    	var tid,pid = win.getThreadProcessId(pointWin);
     	    	var prcsInfo = process.cmdline(pid);
+    	    	
     	    	winform.edit进程匹配.text = prcsInfo;
-    	    	winform.开始监控.disabled = false;
-    	    	winform.打开笔记.disabled = false;
-    	    	mouseHooker.close();
-    	    	balloonTipCtrl.trackPopup(false);
+				winform.uiReady();
+    	    	winform.停止监控.oncommand();
+    	    	
     		};
     		case 0x202/*_WM_LBUTTONUP*/ {
     		}
@@ -226,6 +234,21 @@ winform.选择窗口.oncommand = function(id,event){
     	};
 	};
 }
+
+winform.uiReady = function(){
+	winform.开始监控.disabled = false;
+	winform.停止监控.disabled = true;
+    winform.打开笔记.disabled = false;
+    winform.关闭所有笔记.disabled = false;
+}
+
+winform.uiNotReady = function(){
+	winform.开始监控.disabled = true;
+	winform.停止监控.disabled = true;
+    winform.打开笔记.disabled = true;
+    winform.关闭所有笔记.disabled = true;
+}
+
 
 winform.getPrcsExeName = function(){
 	var str = winform.edit进程匹配.text;
@@ -248,7 +271,7 @@ winform.getPrcsExeName = function(){
 
 winform.开始监控.oncommand = function(id,event){
 	winform.开始监控.disabledText = {"✶";"✸";"✹";"✺";"✹";"✷";text = "监控中";};
-	var prcsExeName = winform.getPrcsExeName(); 
+	var prcsExeName = winform.getPrcsExeName();
 
 	..webwatcherPrcsCntShot = 0;
 	for processEntry in process.each( prcsExeName ) { 
@@ -268,16 +291,8 @@ winform.开始监控.oncommand = function(id,event){
 			..webwatcher.show();
 			win.setForeground(..webwatcher.hwnd);
 			
-			if(winform.childAppNoteHwnd){
-				win.showForeground(winform.childAppNoteHwnd);
-			}
-			else {
-				var frmChild = winform.loadForm("\dlg\note_for_app.aardio");
-				frmChild.updateNote(prcsExeName);
-				frmChild.show();
-				winform.childAppNoteHwnd = frmChild.hwnd;
-			}
-						
+			winform.打开笔记.oncommand();
+			
 			..webwatcherPrcsCntShot = prcsCnt;
 			winform.配置选择.onOk();
 		}
@@ -292,7 +307,7 @@ winform.开始监控.oncommand = function(id,event){
 }
 
 winform.停止监控.oncommand = function(id,event){
-	..webWatcher_taskScheduler.delete("每2秒检测网页");
+	..webWatcher_taskScheduler.delete("每3秒检测网页");
 	..webWatcher_taskScheduler.stop();
 	winform.停止监控.disabled = true;
 	winform.开始监控.disabledText = null;
@@ -306,9 +321,9 @@ winform.onClose = function(hwnd,message,wParam,lParam){
 winform.选择文件.oncommand = function(id,event){
 	var filePath = fsys.dlg.open("应用程序|*.exe|所有文件|*.*");
 	if(filePath){
+		winform.停止监控.oncommand();
 		winform.edit进程匹配.text = filePath;
-		winform.开始监控.disabled  = false;
-		winform.打开笔记.disabled = false;
+		winform.uiReady();
 	}	
 }
 
@@ -323,26 +338,49 @@ winform.checkbox.oncommand = function(id,event){
 
 winform.设置.oncommand = function(id,event){	
 	var frmChild = winform.loadForm("\dlg\settings.aardio");
-	frmChild.show();	
+	frmChild.show();
 }
 
+
 winform.打开笔记.oncommand = function(id,event){
-	if(winform.childAppNoteHwnd){
-		win.showForeground(winform.childAppNoteHwnd);
+	var prcsExeName = winform.getPrcsExeName();
+	
+	if(appNoteWinForm[prcsExeName]){
+		win.show(appNoteWinForm[prcsExeName].hwnd,true)
 	}
-	else {
-		var prcsExeName = winform.getPrcsExeName(); 
+	else {	
 		var frmChild = winform.loadForm("\dlg\note_for_app.aardio");
 		frmChild.updateNote(prcsExeName);
 		frmChild.show();
-		winform.childAppNoteHwnd = frmChild.hwnd;
-	}
+		appNoteWinForm[prcsExeName] = frmChild;
+	};
+	winform.关闭所有笔记.disabled = false;
 }
+
+//按钮初始化
+if(winform.edit进程匹配.text){
+	winform.uiReady();
+}
+else {
+	winform.uiNotReady();
+}
+
 
 if(..cfg.apps_setting.启动时监控应用){
 	if(not winform.开始监控.disabled){
-		winform.开始监控.oncommand();
+		if(winform.edit进程匹配.text != ""){
+			winform.开始监控.oncommand();
+		}
 	}
+}
+
+winform.关闭所有笔记.oncommand = function(id,event){
+	if(appNoteWinForm){
+		for(k,v in appNoteWinForm){
+			v.forceClose();
+		}
+		appNoteWinForm = {};
+	};
 }
 
 //winform.show();

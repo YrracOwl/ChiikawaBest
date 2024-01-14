@@ -59,10 +59,10 @@
 						var href_modified = ""; 
 						if(href_slice){
 							if(href_slice.host){
-								href_modified = string.concat(href_slice.scheme,"://",href_slice.host,href_slice.path);
+								href_modified = string.concat(href_slice.scheme,"://",href_slice.host,href_slice.path,href_slice.extraInfo);
 							}
 							else {
-								href_modified = string.concat("http://",turl.host,href_slice.path);
+								href_modified = string.concat("http://",turl.host,href_slice.path,href_slice.extraInfo);
 							}
 							ele.getElementsByTagName("a")[j].href = href_modified;
 							ele.getElementsByTagName("a")[j].target = "_self";
