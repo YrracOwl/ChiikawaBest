@@ -252,20 +252,25 @@ winform.uiNotReady = function(){
 
 winform.getPrcsExeName = function(){
 	var str = winform.edit进程匹配.text;
-	var prcsPath = "";
-	
-	var pattern =  //^"
-	var indexX,indexY = string.find( str,  pattern );
-	if(indexX == 1){
-		pattern = //%""
-		prcsPath = string.split(string.match( str, pattern ),'"')[2];
+	if(!str){
+		var prcsPath = "";
+		
+		var pattern =  //^"
+		var indexX,indexY = string.find( str,  pattern );
+		if(indexX == 1){
+			pattern = //%""
+			prcsPath = string.split(string.match( str, pattern ),'"')[2];
+		}
+		else {
+			prcsPath = string.split(str,' ')[1];
+		}
+		var pattern =  "[\a\d]*.exe";
+		prcsExeName = string.match( prcsPath, pattern );
+		return prcsExeName;
 	}
 	else {
-		prcsPath = string.split(str,' ')[1];
+		return null; 
 	}
-	var pattern =  "[\a\d]*.exe";
-	prcsExeName = string.match( prcsPath, pattern );
-	return prcsExeName; 
 }
 
 
