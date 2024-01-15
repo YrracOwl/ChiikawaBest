@@ -238,19 +238,31 @@ var content_js = /**
 	}
 	
 	window.createLi = function(datas){
+		var isAnimated = document.querySelector(".timeline-event");
+		if(isAnimated){
+			var liEleClass = "timeline-event";
+			var labelEleClass = "timeline-event-icon";
+			var timeEleClass = "timeline-event-thumbnail";
+		}
+		else {
+			var liEleClass = "timeline-event-disable";
+			var labelEleClass = "timeline-event-icon-disable";
+			var timeEleClass = "timeline-event-thumbnail-disable";
+		};
+		
 		var liEle = document.createElement("li");
-		liEle.setAttribute("class","timeline-event");
+		liEle.setAttribute("class",liEleClass);
 		liEle.setAttribute("id",datas[0])
 		liEle.setAttribute("ondblclick","dblFunc()")
 		
 		var labelEle = document.createElement("label");
-		labelEle.setAttribute("class","timeline-event-icon");
+		labelEle.setAttribute("class",labelEleClass);
 		
 		var divEle = document.createElement("div");
 		divEle.setAttribute("class","timeline-event-copy");
 		
 		var timeEle = document.createElement("p");
-		timeEle.setAttribute("class","timeline-event-thumbnail");
+		timeEle.setAttribute("class",timeEleClass);
 		//timeEle.setAttribute("ondblclick","dblFunc()")
 
 		timeEle.innerText = datas[0];
