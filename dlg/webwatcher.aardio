@@ -47,12 +47,9 @@ import fsys.dlg;
 var appNoteWinForm = {}; 
 
 //web.view导入
-import web.view;
-var webWatcherLaunchParams = ..launch_params + `  --user-agent="Mozilla/5.0 (Linux; U; Android 7.0; zh-CN; PRO 7-S Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/57.0.2987.108 UCBrowser/11.9.4.974 UWS/2.13.2.46 Mobile Safari/537.36 AliApp(DingTalk/4.6.29) com.alibaba.android.rimet/11388461 Channel/10002068 language/zh-CN"`;
-//webWatcherLaunchParams = webWatcherLaunchParams + `  `;
-//--cast-initial-screen-width
-var wb = web.view(winform.html_watcher,..wbUserDataDir,webWatcherLaunchParams); 
-wb.preloadScript(`
+//import web.view;
+var ww_webview = ..web.view(winform.html_watcher,..wbUserDataDir,..launch_params);
+ww_webview.preloadScript(`
 //禁止超链接默认开新窗口
 window.addEventListener('load',function(){ 
 	let base = document.querySelector('base'); 
@@ -103,16 +100,16 @@ winform.添加闹钟.oncommand = function(id,event){
 }
 
 winform.返回.oncommand = function(id,event){
-	if(wb.location != init_thrdTable.g_wb_location){
-		wb.doScript("window.history.back();");
+	if(ww_webview.location != init_thrdTable.g_wb_location){
+		ww_webview.doScript("window.history.back();");
 	}
 }
 
 winform.首页.oncommand = function(id,event){
 	var url_crwaler = ..wsock.tcp.simpleHttpServer.getUrl(init_thrdTable.path_html_crawler); 
-	wb.go(url_crwaler);
+	ww_webview.go(url_crwaler);
 	if(url_crwaler != url_loading){
-		init_thrdTable.g_wb_location = wb.location;
+		init_thrdTable.g_wb_location = ww_webview.location;
 		winform.返回.disabled = false;
 		winform.首页.disabled = false;
 		winform.刷新页面.disabled = false;
@@ -125,7 +122,7 @@ winform.刷新页面.oncommand = function(id,event){
 
 winform.配置选择.onOk = function(){ 
 	winform.html_watcher.setFocus();
-	wb.go(url_loading);
+	ww_webview.go(url_loading);
 	winform.返回.disabled = true;
 	winform.首页.disabled = true;
 	winform.刷新页面.disabled = true;
@@ -252,7 +249,7 @@ winform.uiNotReady = function(){
 
 winform.getPrcsExeName = function(){
 	var str = winform.edit进程匹配.text;
-	if(!str){
+	if(str){
 		var prcsPath = "";
 		
 		var pattern =  //^"

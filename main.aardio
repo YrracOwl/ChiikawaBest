@@ -62,6 +62,9 @@ import gdi;
 //sqlite导入
 import sqlite;
 
+//web.view库导入
+import web.view;
+
 //右下角提示库
 //import win.util.popup;
 
@@ -110,21 +113,35 @@ namespace wsock.tcp.simpleHttpServer{
 //设置：webview2与inet代理
 if(cfg.proxy_setting){
 	if(cfg.proxy_setting.使用http代理){
-		launch_params = "--proxy-server=http://" + cfg.proxy_setting.地址文本 + ":" + cfg.proxy_setting.端口文本 + "  --accept-lang=zh-CN";
+		d_launch_params = "--proxy-server=http://" + cfg.proxy_setting.地址文本 + ":" + cfg.proxy_setting.端口文本 + "  --accept-lang=zh-CN";
+		m_launch_params = d_launch_params + `  --user-agent="Mozilla/5.0 (Linux; U; Android 7.0; zh-CN; PRO 7-S Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/57.0.2987.108 UCBrowser/11.9.4.974 UWS/2.13.2.46 Mobile Safari/537.36 AliApp(DingTalk/4.6.29) com.alibaba.android.rimet/11388461 Channel/10002068 language/zh-CN"`;
 		inet_launch_params = "HTTP=HTTP://" + cfg.proxy_setting.地址文本 + ":" + cfg.proxy_setting.端口文本;
 	}
 	elseif(cfg.proxy_setting.使用socks5代理){
-		launch_params = "--proxy-server=SOCKS5://" + cfg.proxy_setting.地址文本s + ":" + cfg.proxy_setting.端口文本s + "  --accept-lang=zh-CN";
+		d_launch_params = "--proxy-server=SOCKS5://" + cfg.proxy_setting.地址文本s + ":" + cfg.proxy_setting.端口文本s + "  --accept-lang=zh-CN";
+		m_launch_params = d_launch_params + `  --user-agent="Mozilla/5.0 (Linux; U; Android 7.0; zh-CN; PRO 7-S Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/57.0.2987.108 UCBrowser/11.9.4.974 UWS/2.13.2.46 Mobile Safari/537.36 AliApp(DingTalk/4.6.29) com.alibaba.android.rimet/11388461 Channel/10002068 language/zh-CN"`;
 		inet_launch_params = "SOCKS=" + cfg.proxy_setting.地址文本 + ":" + cfg.proxy_setting.端口文本;
 	}
 	else {
-		launch_params = "--accept-lang=zh-CN";
+		d_launch_params = "--accept-lang=zh-CN";
+		m_launch_params = d_launch_params + `  --user-agent="Mozilla/5.0 (Linux; U; Android 7.0; zh-CN; PRO 7-S Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/57.0.2987.108 UCBrowser/11.9.4.974 UWS/2.13.2.46 Mobile Safari/537.36 AliApp(DingTalk/4.6.29) com.alibaba.android.rimet/11388461 Channel/10002068 language/zh-CN"`;
 		inet_launch_params = " ";
 	}
 }
 else {
-	launch_params = "--accept-lang=zh-CN";
+	d_launch_params = "--accept-lang=zh-CN";
+	m_launch_params = d_launch_params + `  --user-agent="Mozilla/5.0 (Linux; U; Android 7.0; zh-CN; PRO 7-S Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/57.0.2987.108 UCBrowser/11.9.4.974 UWS/2.13.2.46 Mobile Safari/537.36 AliApp(DingTalk/4.6.29) com.alibaba.android.rimet/11388461 Channel/10002068 language/zh-CN"`;
 	inet_launch_params = " ";
+}
+
+if(cfg.apps_setting.模拟移动端渲染 == true){
+	launch_params = m_launch_params;
+}
+elseif(cfg.apps_setting.模拟移动端渲染 == null){
+	launch_params = m_launch_params;
+}
+else {
+	launch_params = d_launch_params;
 }
 
 //更新下载路径
@@ -137,7 +154,9 @@ console.log(updateFilePath)
 
 //设置：webview2用户数据位置
 wbUserDataDir = io.appData(appName+"userDataDir");
-wbHistoryDir = wbUserDataDir+"\EBWebView\Default\"; 
+wbHistoryDir = wbUserDataDir+"\EBWebView\Default\";
+
+
 
 //设置：数据库设置
 dbDirBackUp = io.appData(appName+"databaseBackups");
@@ -220,13 +239,18 @@ mainForm.trayCreate = function(){
 	
 	mainForm.popmenu.add();//分隔线
 	mainForm.popmenu.add("网页监控",function(){
+		if(webwatcher == "notExist"){
+			webwatcher = mainForm.loadForm("\dlg\webwatcher.aardio");
+		}
+		win.setForeground(webwatcher.hwnd);
 		webwatcher.show();
 	})
 	mainForm.popmenu.add("时间线",function(){
-		var timeline1 = mainForm.loadForm("\dlg\timeline_choice.aardio");
-		timeline1.show();
+		win.setForeground(timeline_choice.hwnd);
+		timeline_choice.show();
 	})
 	mainForm.popmenu.add("闹钟",function(){
+		win.setForeground(alarmForm.hwnd);
 		alarmForm.show();
 	})
 	
@@ -236,6 +260,7 @@ mainForm.trayCreate = function(){
 	})
 	
 	mainForm.popmenu.add("应用日志",function(){
+		win.setForeground(logForm.hwnd);
 		logForm.show();
 	})
 	
@@ -258,8 +283,10 @@ mainForm.trayCreate = function(){
 	mainForm.popmenu.add('退出',function(id){
 		mainForm.onClose = null;
 		mainForm.onClose = function(hwnd,message,wParam,lParam){
-			webwatcher.onClose = null;
-			webwatcher.close();
+			if(webwatcher != "notExist"){
+					webwatcher.onClose = null;
+					webwatcher.close();
+			}
 			cleanHistory();
     		fadeHide();	
 		}
@@ -537,8 +564,12 @@ thrdWriteDBFunc = function(db_path,str_prepare,str_step){
 alarmForm = mainForm.loadForm("\dlg\add_alarm.aardio");
 
 //全局网页监控
-webwatcher = mainForm.loadForm("\dlg\webwatcher.aardio");
+//webwatcher = mainForm.loadForm("\dlg\webwatcher.aardio");
+webwatcher = "notExist";
 webwatcherPrcsCntShot = 0;
+
+//全局时间线选择
+timeline_choice = mainForm.loadForm("\dlg\timeline_choice.aardio");
 
 //////////////////////////////////////////////////////////////////////
 //创建托盘图标

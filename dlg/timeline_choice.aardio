@@ -211,6 +211,12 @@ winform.wndproc = function(hwnd,message,wParam,lParam){
 	//无返回值则继续调用默认回调函数
 }
 
-winform.show();
+
+winform.onClose = function(hwnd,message,wParam,lParam){
+    winform.show(false);
+    return false; 
+}
+
+//winform.show();
 win.loopMessage();
 return winform;
