@@ -1,0 +1,6 @@
+import console; 
+var demoStr = "   ";
+var readyOrNot = string.split(demoStr," ");
+
+console.dump(readyOrNot);
+console.pause(true);

@@ -4,7 +4,7 @@ winform = win.form(text="内容监控";right=599;bottom=899;border="none";clipch
 winform.add(
 checkbox={cls="checkbox";text="置顶此窗口";left=504;top=880;right=592;bottom=896;db=1;dr=1;z=12};
 ["edit进程匹配"]={cls="edit";left=168;top=840;right=592;bottom=864;border=1;db=1;disabled=1;dl=1;dr=1;z=8};
-html_watcher={cls="custom";text="自定义控件";left=16;top=64;right=592;bottom=832;db=1;dl=1;dr=1;dt=1;z=2};
+html_watcher={cls="custom";text="自定义控件";left=8;top=64;right=592;bottom=832;db=1;dl=1;dr=1;dt=1;z=2};
 停止监控={cls="button";text="停止监控";left=88;top=872;right=160;bottom=896;db=1;dl=1;z=10};
 关闭所有笔记={cls="button";text="关闭所有笔记";left=248;top=872;right=336;bottom=896;db=1;dl=1;z=15};
 刷新页面={cls="button";text="刷新页面";left=104;top=32;right=176;bottom=56;dl=1;dt=1;z=5};
@@ -358,7 +358,8 @@ winform.打开笔记.oncommand = function(id,event){
 }
 
 //按钮初始化
-if(winform.edit进程匹配.text){
+var readyOrNot = winform.getPrcsExeName();
+if(readyOrNot){
 	winform.uiReady();
 }
 else {
@@ -367,10 +368,8 @@ else {
 
 
 if(..cfg.apps_setting.启动时监控应用){
-	if(not winform.开始监控.disabled){
-		if(winform.edit进程匹配.text != ""){
-			winform.开始监控.oncommand();
-		}
+	if(readyOrNot){
+		winform.开始监控.oncommand();
 	}
 }
 
