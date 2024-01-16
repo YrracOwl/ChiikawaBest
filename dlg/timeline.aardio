@@ -601,7 +601,7 @@ winform.当前主题.skin(
 	}
 )
 
-
+winform.enableDpiScaling();
 winform.show();
 winform.winTimelineShow.setFocus();
 win.loopMessage();

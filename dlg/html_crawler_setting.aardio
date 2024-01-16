@@ -33,6 +33,7 @@ winform.bindConfig( ..cfg.html_crawler,{
 	richedit = "text";
 } );
 
+winform.enableDpiScaling();
 winform.show();
 win.loopMessage();
 return winform;

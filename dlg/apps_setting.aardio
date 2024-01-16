@@ -23,6 +23,7 @@ winform.bindConfig( ..cfg.apps_setting,{
 	edit = "text";
 } );
 
+winform.enableDpiScaling();
 winform.show();
 win.loopMessage();
 return winform;

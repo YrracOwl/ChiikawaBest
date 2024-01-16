@@ -437,6 +437,7 @@ alarmSetWinform.checkbox.oncommand = function(id,event){
 	}
 }
 
+alarmSetWinform.enableDpiScaling();
 //alarmSetWinform.show();
 win.loopMessage();
 return alarmSetWinform;

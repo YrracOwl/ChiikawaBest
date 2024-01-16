@@ -73,6 +73,7 @@ winform.plusDel.oncommand = function(id,event){
 	winform.checklistUpdate();
 }
 
+winform.enableDpiScaling();
 winform.show();
 win.loopMessage();
 return winform;

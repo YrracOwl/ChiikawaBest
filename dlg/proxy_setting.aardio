@@ -63,6 +63,7 @@ winform.bindConfig( ..cfg.proxy_setting,{
 	
 } );
 
+winform.enableDpiScaling();
 winform.show();
 win.loopMessage();
 return winform;

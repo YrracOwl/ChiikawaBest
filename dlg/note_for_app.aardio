@@ -80,7 +80,7 @@ appNotesWin.noteArea.wndproc = function(hwnd,message,wParam,lParam){
 }
 
 
-
+appNotesWin.enableDpiScaling();
 appNotesWin.show();
 win.loopMessage();
 return appNotesWin;

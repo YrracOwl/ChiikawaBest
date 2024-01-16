@@ -32,6 +32,7 @@ winform.button.oncommand = function(id,event){
 	..mainForm.close();
 }
 
+winform.enableDpiScaling();
 winform.show();
 win.loopMessage();
 return winform;
