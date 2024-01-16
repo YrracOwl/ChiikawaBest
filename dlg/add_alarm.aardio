@@ -168,8 +168,9 @@ alarmSetWinform.spinhh.onnotify = function(id,code,ptr){
 			struct hdr = ::NMHDR();
 			int pos; //当前位置
 			int delta; //位置的增减量,单击向上箭头此值为负数
-		} );  
-	} 
+		} );
+		::User32.SendMessage(alarmSetWinform.edithh.hwnd,0x142/*_CB_SETEDITSEL*/,-1,0);
+	}
 }
 
 alarmSetWinform.spinmm.buddy = alarmSetWinform.editmm; 
@@ -184,8 +185,9 @@ alarmSetWinform.spinmm.onnotify = function(id,code,ptr){
 			struct hdr = ::NMHDR();
 			int pos; //当前位置
 			int delta; //位置的增减量,单击向上箭头此值为负数
-		} );  
-	} 
+		} );
+		::User32.SendMessage(alarmSetWinform.editmm.hwnd,0x142/*_CB_SETEDITSEL*/,-1,0);
+	}
 }
 
 alarmSetWinform.spinss.buddy = alarmSetWinform.editss; 
@@ -200,8 +202,9 @@ alarmSetWinform.spinss.onnotify = function(id,code,ptr){
 			struct hdr = ::NMHDR();
 			int pos; //当前位置
 			int delta; //位置的增减量,单击向上箭头此值为负数
-		} );  
-	} 
+		} );
+		::User32.SendMessage(alarmSetWinform.editss.hwnd,0x142/*_CB_SETEDITSEL*/,-1,0);
+	}
 }
 
 alarmSetWinform.showPos = function(posStr, frmChildWidth, frmChildHeight){
@@ -438,6 +441,9 @@ alarmSetWinform.checkbox.oncommand = function(id,event){
 }
 
 alarmSetWinform.enableDpiScaling();
+::User32.SendMessage(alarmSetWinform.显示位置.hwnd,0x142/*_CB_SETEDITSEL*/,-1,0);
+::User32.SendMessage(alarmSetWinform.快捷定时.hwnd,0x142/*_CB_SETEDITSEL*/,-1,0);
 //alarmSetWinform.show();
+
 win.loopMessage();
 return alarmSetWinform;

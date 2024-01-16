@@ -120,7 +120,10 @@ winform.刷新页面.oncommand = function(id,event){
 	winform.配置选择.onOk();
 }
 
-winform.配置选择.onOk = function(){ 
+winform.配置选择.onOk = function(){
+	//取消全选
+	::User32.SendMessage(winform.配置选择.hwnd,0x142/*_CB_SETEDITSEL*/,-1,0)
+	
 	winform.html_watcher.setFocus();
 	ww_webview.go(url_loading);
 	winform.返回.disabled = true;
@@ -165,6 +168,7 @@ if(winform.配置选择.count > 0){
 		winform.配置选择.selIndex = 1;
 	}
 	winform.配置选择.onOk();
+	//取消全选
 }
 
 //生成edit内容
@@ -254,10 +258,7 @@ winform.getPrcsExeName = function(){
 		
 		var pattern =  //^"
 		var indexX,indexY = string.find( str,  pattern );
-		if(indexX == null){
-			return null; 
-		}
-		elseif(indexX == 1){
+		if(indexX == 1){
 			pattern = //%""
 			prcsPath = string.split(string.match( str, pattern ),'"')[2];
 		}
@@ -267,8 +268,13 @@ winform.getPrcsExeName = function(){
 		var pattern =  "[\a\d]*.exe";
 		//import console;
 		//console.dump(str);console.dump(indexX);console.dump(indexY);console.dump(prcsPath);
-		prcsExeName = string.match( prcsPath, pattern );
-		return prcsExeName;
+		if(prcsPath == null){
+			return null; 
+		}
+		else {
+			prcsExeName = string.match( prcsPath, pattern );
+			return prcsExeName;
+		}
 	}
 	else {
 		return null; 
@@ -355,7 +361,10 @@ winform.打开笔记.oncommand = function(id,event){
 	if(appNoteWinForm[prcsExeName]){
 		win.show(appNoteWinForm[prcsExeName].hwnd,true)
 	}
-	else {	
+	elseif(prcsExeName == null){
+		return ; 
+	}
+	else {
 		var frmChild = winform.loadForm("\dlg\note_for_app.aardio");
 		frmChild.updateNote(prcsExeName);
 		frmChild.show();
@@ -390,6 +399,8 @@ winform.关闭所有笔记.oncommand = function(id,event){
 }
 
 winform.enableDpiScaling();
+::User32.SendMessage(winform.配置选择.hwnd,0x142/*_CB_SETEDITSEL*/,-1,0);
+
 //winform.show();
 win.loopMessage();
 return winform;

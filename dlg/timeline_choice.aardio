@@ -113,7 +113,6 @@ winform.btn打开时间线.oncommand = function(id,event){
 updateCombobox(winform);
 
 winform.btn创建时间线.oncommand = function(id,event){
-	
 	winform.btn创建时间线.disabled = true;
 	
 	if(winform.txt时间线标题.text != ""){
@@ -218,6 +217,8 @@ winform.onClose = function(hwnd,message,wParam,lParam){
 }
 
 winform.enableDpiScaling();
+::User32.SendMessage(winform.选择时间线.hwnd,0x142/*_CB_SETEDITSEL*/,-1,0);
+
 //winform.show();
 win.loopMessage();
 return winform;
