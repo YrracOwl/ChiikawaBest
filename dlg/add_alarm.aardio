@@ -73,6 +73,7 @@ var timeShowClock = alarm_taskScheduler.create("timeShowClock",function(){
     var timeNowSeconds = time(,"%H:%M:%S");
     statusbar.setText("当前时间 " + tostring(timeNowSeconds),1/*第几个分块*/)
     if(alarmSetWinform.checkbox.checked){
+        alarmSetWinform.datetimepick.time = time.now();
     	alarmSetWinform.spinhh.pos = tostring(time(__,'%H'));
 		alarmSetWinform.spinmm.pos = tostring(time(__,'%M'));
 		alarmSetWinform.spinss.pos = tostring(time(__,'%S'));	
@@ -380,6 +381,7 @@ alarmSetWinform.plusBtn.oncommand = function(id,event){
 alarmSetWinform.wndproc = function(hwnd,message,wParam,lParam){
 	select( message ) { 
 		case 0x18/*_WM_SHOWWINDOW*/{
+			alarmSetWinform.datetimepick.time = time.now();
 			alarmSetWinform.spinhh.pos = tostring(time(__,'%H'));
 			alarmSetWinform.spinmm.pos = tostring(time(__,'%M'));
 			alarmSetWinform.spinss.pos = tostring(time(__,'%S'));

@@ -125,13 +125,13 @@ if(cfg.proxy_setting){
 	else {
 		d_launch_params = "--accept-lang=zh-CN";
 		m_launch_params = d_launch_params + `  --user-agent="Mozilla/5.0 (Linux; U; Android 7.0; zh-CN; PRO 7-S Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/57.0.2987.108 UCBrowser/11.9.4.974 UWS/2.13.2.46 Mobile Safari/537.36 AliApp(DingTalk/4.6.29) com.alibaba.android.rimet/11388461 Channel/10002068 language/zh-CN"`;
-		inet_launch_params = " ";
+		inet_launch_params = "";
 	}
 }
 else {
 	d_launch_params = "--accept-lang=zh-CN";
 	m_launch_params = d_launch_params + `  --user-agent="Mozilla/5.0 (Linux; U; Android 7.0; zh-CN; PRO 7-S Build/NRD90M) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/57.0.2987.108 UCBrowser/11.9.4.974 UWS/2.13.2.46 Mobile Safari/537.36 AliApp(DingTalk/4.6.29) com.alibaba.android.rimet/11388461 Channel/10002068 language/zh-CN"`;
-	inet_launch_params = " ";
+	inet_launch_params = "";
 }
 
 if(cfg.apps_setting.模拟移动端渲染 == true){
@@ -353,20 +353,27 @@ webWatcher_taskScheduler = win.taskScheduler(mainForm);
 //////////////////////////////////////////////////////////////////////
 
 //var updateUrl = "https://codeberg.org/YrracOwl/CKWBest/raw/branch/master/ChiikawaBest.exe";
-var updateUrl = "https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/release/ChiikawaBest.exe";
+var updateUrlbase = "https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/release/ChiikawaBest.exe";
 var updateUrlMirror1 = "https://github.moeyy.xyz/https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/release/ChiikawaBest.exe";
 var updateUrlMirror2 = "https://git.886.be/https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/release/ChiikawaBest.exe";
 var updateUrlMirror3 = "https://ghps.cc/https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/release/ChiikawaBest.exe";
+var updateUrlMirrors = {updateUrlbase;updateUrlMirror1;updateUrlMirror2;updateUrlMirror3};
 
+mainForm.updateUrl = updateUrlbase;
+mainForm.updateCheckOver = false;
+mainForm.updateOk = null;
 
 //检查更新函数
 mainForm.updateStart = function(){
+/*
 	if(cfg.apps_setting.edit){
 		updateUrl = cfg.apps_setting.edit;
 	};
+*/
+	
 	var confirmed = mainForm.msgboxTest("确定更新并自动重启吗？","更新中...");
 	if(confirmed){
-		updateBox.download(updateUrl,updateFilePath,,,inet_launch_params)
+		updateBox.download(mainForm.updateUrl,updateFilePath,,,inet_launch_params)
 		mainForm.msgbox("下载已完成，即将重启","即将重启",,1600);
 		mainForm.onClose = null;
 		var currentPath = io._exepath;
@@ -379,9 +386,42 @@ mainForm.updateStart = function(){
 
 mainForm.checkUpdate = function(){
 	mainForm.updateStatus = false;
-	if(cfg.apps_setting.edit){
-		updateUrl = cfg.apps_setting.edit;
-	};
+	var updateTestThrd = {};
+	for(k,v in updateUrlMirrors){
+		var updateUrl = v;
+		updateTestThrd[k] = thread.create(
+			function(updateUrl,updateFilePath,inet_launch_params,mainForm){
+				import win;
+				import inet.downBox;
+				updateBox = inet.downBox(win.getDesktop(),"检查更新",true);
+				var ok = updateBox.test(updateUrl,updateFilePath,,,inet_launch_params);
+				if(ok != null){
+					mainForm.updateOk = ok;
+					mainForm.updateUrl = updateUrl;
+					mainForm.updateCheckOver = true;
+				}
+				else {
+					mainForm.updateOk = ok;
+					mainForm.updateUrl = updateUrl;
+					mainForm.updateCheckOver = true;
+				}
+			},updateUrl,updateFilePath,inet_launch_params,mainForm
+		);
+	}
+	
+	thread.invokeAndWait( 
+		function(mainForm){
+			while(!mainForm.updateCheckOver){
+			}
+		},mainForm
+	)
+	for(k,v in updateTestThrd){
+		thread.suspend(updateTestThrd[k]);
+		raw.closehandle(updateTestThrd[k]);
+	}
+	
+/*
+	updateUrl = mainForm.updateUrl;
 	
 	var ok = thread.invokeAndWait(
 		function(updateUrl,updateFilePath,inet_launch_params){
@@ -392,10 +432,11 @@ mainForm.checkUpdate = function(){
 			return ok; 
 		},updateUrl,updateFilePath,inet_launch_params
 	);
+*/
 	
 	mainForm.updateStatus = true;
 	
-	if(ok){
+	if(mainForm.updateOk){
 		var wannaForceUpdate = mainForm.msgboxTest("服务器无更新，是否强制拉取更新并重启","检测更新");
 		if(wannaForceUpdate){
 			fsys.remove(updateFilePath);
@@ -405,7 +446,7 @@ mainForm.checkUpdate = function(){
 			return; 
 		}
 	}
-	elseif( ok === null){
+	elseif( mainForm.updateOk === null){
 		mainForm.msgboxErr("下载错误，请检查有无代理！HTTP错误代码:"+ ( updateBox.statusCode : ""));
 		return; 
 	}
@@ -414,9 +455,44 @@ mainForm.checkUpdate = function(){
 
 mainForm.initialCheckUpdate = function(){
 	mainForm.updateStatus = false;
-	if(cfg.apps_setting.edit){
-		updateUrl = cfg.apps_setting.edit;
-	};
+	
+	var updateTestThrd = {};
+	for(k,v in updateUrlMirrors){
+		var updateUrl = v;
+		updateTestThrd[k] = thread.create(
+			function(updateUrl,updateFilePath,inet_launch_params,mainForm){
+				import win;
+				import inet.downBox;
+				updateBox = inet.downBox(win.getDesktop(),"检查更新",true);
+				var ok = updateBox.test(updateUrl,updateFilePath,,,inet_launch_params);
+				if(ok != null){
+					mainForm.updateOk = ok;
+					mainForm.updateUrl = updateUrl;
+					mainForm.updateCheckOver = true;
+				}
+				else {
+					mainForm.updateOk = ok;
+					mainForm.updateUrl = updateUrl;
+					mainForm.updateCheckOver = true;
+				}
+			},updateUrl,updateFilePath,inet_launch_params,mainForm
+		);
+	}
+	
+	thread.invokeAndWait( 
+		function(mainForm){
+			while(!mainForm.updateCheckOver){
+			}
+		},mainForm
+	)
+	
+	for(k,v in updateTestThrd){
+		thread.suspend(updateTestThrd[k]);
+		raw.closehandle(updateTestThrd[k]);
+	}
+	
+/*
+	updateUrl = mainForm.updateUrl;
 	
 	var ok = thread.invokeAndWait(
 		function(updateUrl,updateFilePath,inet_launch_params){
@@ -427,14 +503,15 @@ mainForm.initialCheckUpdate = function(){
 			return ok; 
 		},updateUrl,updateFilePath,inet_launch_params
 	);
+*/
 	
 	mainForm.updateStatus = true;
 	
-	if(ok){
+	if(mainForm.updateOk){
 		mainForm.tray.pop("应用己是最新...","ChiikawaBest",,1200);
 		return;
 	}
-	elseif( ok === null){
+	elseif( mainForm.updateOk === null){
 		mainForm.tray.pop("下载错误，请检查有无代理！","ChiikawaBest",,1200);
 		//mainForm.msgboxErr("下载错误，请检查有无代理！HTTP错误代码:"+ ( updateBox.statusCode : ""));
 		return; 
