@@ -352,9 +352,15 @@ webWatcher_taskScheduler = win.taskScheduler(mainForm);
 //自定义函数
 //////////////////////////////////////////////////////////////////////
 
+//var updateUrl = "https://codeberg.org/YrracOwl/CKWBest/raw/branch/master/ChiikawaBest.exe";
+var updateUrl = "https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/release/ChiikawaBest.exe";
+var updateUrlMirror1 = "https://github.moeyy.xyz/https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/release/ChiikawaBest.exe";
+var updateUrlMirror2 = "https://git.886.be/https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/release/ChiikawaBest.exe";
+var updateUrlMirror3 = "https://ghps.cc/https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/release/ChiikawaBest.exe";
+
+
 //检查更新函数
 mainForm.updateStart = function(){
-	var updateUrl = "https://codeberg.org/YrracOwl/CKWBest/raw/branch/master/ChiikawaBest.exe";
 	if(cfg.apps_setting.edit){
 		updateUrl = cfg.apps_setting.edit;
 	};
@@ -373,7 +379,6 @@ mainForm.updateStart = function(){
 
 mainForm.checkUpdate = function(){
 	mainForm.updateStatus = false;
-	var updateUrl = "https://codeberg.org/YrracOwl/CKWBest/raw/branch/master/ChiikawaBest.exe";
 	if(cfg.apps_setting.edit){
 		updateUrl = cfg.apps_setting.edit;
 	};
@@ -409,8 +414,6 @@ mainForm.checkUpdate = function(){
 
 mainForm.initialCheckUpdate = function(){
 	mainForm.updateStatus = false;
-	var updateUrl = "https://codeberg.org/YrracOwl/CKWBest/raw/branch/master/ChiikawaBest.exe";
-	
 	if(cfg.apps_setting.edit){
 		updateUrl = cfg.apps_setting.edit;
 	};
