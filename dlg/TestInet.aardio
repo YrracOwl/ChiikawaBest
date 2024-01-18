@@ -1,5 +1,5 @@
-inet_launch_params_http = "HTTP=HTTP://127.0.0.1:20200";
-inet_launch_params_socks = "SOCKS5=SOCKS5://127.0.0.1:20199";
+inet_launch_params_http = "HTTP=HTTP://127.0.0.1:20221";
+inet_launch_params_socks = "SOCKS5=SOCKS5://127.0.0.1:20220";
 inet_launch_params_none = "";
 
 import web.rest.github;
@@ -7,6 +7,7 @@ import web.rest.client;
 import console;
 
 console.log(">>>Test Github")
+var client = web.rest.client(,inet_launch_params_http);
 
 console.dump(web.rest.github.latestRelease("YrracOwl/ChiikawaBest"))
 

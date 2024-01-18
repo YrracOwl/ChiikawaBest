@@ -385,6 +385,10 @@ mainForm.checkUpdate = function(){
 	
 	//var LatestRelease = web.rest.github.latestRelease("YrracOwl/ChiikawaBest");
 	var LatestReleaseUrlPath = web.rest.github.latestRelease("YrracOwl/ChiikawaBest","ChiikawaBest.exe");
+	if(LatestReleaseUrlPath == null){
+		mainForm.msgboxErr("当前无法访问Github，请稍后再试");
+		return; 
+	}
 	var updateUrlMirrors = {};
 	for(k,v in updateUrlPrefix){
 		updateUrlMirrors[k] = updateUrlPrefix[k] + LatestReleaseUrlPath;
@@ -448,6 +452,10 @@ mainForm.initialCheckUpdate = function(){
 	
 	//var LatestRelease = web.rest.github.latestRelease("YrracOwl/ChiikawaBest");
 	var LatestReleaseUrlPath = web.rest.github.latestRelease("YrracOwl/ChiikawaBest","ChiikawaBest.exe");
+	if(LatestReleaseUrlPath == null){
+		mainForm.msgboxErr("当前无法访问Github，请稍后再试");
+		return; 
+	}
 	var updateUrlMirrors = {};
 	for(k,v in updateUrlPrefix){
 		updateUrlMirrors[k] = updateUrlPrefix[k] + LatestReleaseUrlPath;
