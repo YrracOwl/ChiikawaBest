@@ -662,9 +662,19 @@ if(cfg.apps_setting.启动时检测更新){
 }
 
 //主窗口是否显示
+if(!cfg.apps_setting.启动次数){
+	cfg.apps_setting.启动次数 = 1;
+	var checkFirstLaunch = 1; 
+}
 mainForm.enableDpiScaling();
 if(cfg.apps_setting.启动到托盘){
-	mainForm.tray.pop("应用已启动，右击托盘获取更多菜单","ChiikawaBest",,1200);
+	if(checkFirstLaunch){
+		mainForm.tray.pop("应用已启动，右击托盘获取更多菜单","ChiikawaBest",,1200);
+	}
+	elseif(cfg.apps_setting.启动次数 < 6){
+		mainForm.tray.pop("应用已启动，右击托盘获取更多菜单","ChiikawaBest",,1200);
+		cfg.apps_setting.启动次数 = cfg.apps_setting.启动次数 + 1;
+	}
 }
 else {
 	mainForm.show();
