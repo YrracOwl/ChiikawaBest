@@ -65,6 +65,9 @@ import sqlite;
 //web.view库导入
 import web.view;
 
+//web.rest.github导入
+import web.rest.github;
+
 //右下角提示库
 //import win.util.popup;
 
@@ -352,12 +355,11 @@ webWatcher_taskScheduler = win.taskScheduler(mainForm);
 //自定义函数
 //////////////////////////////////////////////////////////////////////
 
-//var updateUrl = "https://codeberg.org/YrracOwl/CKWBest/raw/branch/master/ChiikawaBest.exe";
-var updateUrlbase = "https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/release/ChiikawaBest.exe";
-var updateUrlMirror1 = "https://github.moeyy.xyz/https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/release/ChiikawaBest.exe";
-var updateUrlMirror2 = "https://git.886.be/https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/release/ChiikawaBest.exe";
-var updateUrlMirror3 = "https://ghps.cc/https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/release/ChiikawaBest.exe";
-var updateUrlMirrors = {updateUrlbase;updateUrlMirror1;updateUrlMirror2;updateUrlMirror3};
+var updateUrlbase = "https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/dist/ChiikawaBest.exe";
+var updateUrlPrefix1 = "https://github.moeyy.xyz/";
+var updateUrlPrefix2 = "https://git.886.be/";
+var updateUrlPrefix3 = "https://ghps.cc/";
+var updateUrlPrefix = {updateUrlPrefix1;updateUrlPrefix2;updateUrlPrefix3};
 
 mainForm.updateUrl = updateUrlbase;
 mainForm.updateCheckOver = false;
@@ -365,12 +367,6 @@ mainForm.updateOk = null;
 
 //检查更新函数
 mainForm.updateStart = function(){
-/*
-	if(cfg.apps_setting.edit){
-		updateUrl = cfg.apps_setting.edit;
-	};
-*/
-	
 	var confirmed = mainForm.msgboxTest("确定更新并自动重启吗？","更新中...");
 	if(confirmed){
 		updateBox.download(mainForm.updateUrl,updateFilePath,,,inet_launch_params)
@@ -386,6 +382,14 @@ mainForm.updateStart = function(){
 
 mainForm.checkUpdate = function(){
 	mainForm.updateStatus = false;
+	
+	//var LatestRelease = web.rest.github.latestRelease("YrracOwl/ChiikawaBest");
+	var LatestReleaseUrlPath = web.rest.github.latestRelease("YrracOwl/ChiikawaBest","ChiikawaBest.exe");
+	var updateUrlMirrors = {};
+	for(k,v in updateUrlPrefix){
+		updateUrlMirrors[k] = updateUrlPrefix[k] + LatestReleaseUrlPath;
+	}
+	
 	var updateTestThrd = {};
 	for(k,v in updateUrlMirrors){
 		var updateUrl = v;
@@ -419,20 +423,6 @@ mainForm.checkUpdate = function(){
 		thread.suspend(updateTestThrd[k]);
 		raw.closehandle(updateTestThrd[k]);
 	}
-	
-/*
-	updateUrl = mainForm.updateUrl;
-	
-	var ok = thread.invokeAndWait(
-		function(updateUrl,updateFilePath,inet_launch_params){
-			import win;
-			import inet.downBox;
-			updateBox = inet.downBox(win.getDesktop(),"检查更新",true);
-			var ok = updateBox.test(updateUrl,updateFilePath,,,inet_launch_params);
-			return ok; 
-		},updateUrl,updateFilePath,inet_launch_params
-	);
-*/
 	
 	mainForm.updateStatus = true;
 	
@@ -456,6 +446,13 @@ mainForm.checkUpdate = function(){
 mainForm.initialCheckUpdate = function(){
 	mainForm.updateStatus = false;
 	
+	//var LatestRelease = web.rest.github.latestRelease("YrracOwl/ChiikawaBest");
+	var LatestReleaseUrlPath = web.rest.github.latestRelease("YrracOwl/ChiikawaBest","ChiikawaBest.exe");
+	var updateUrlMirrors = {};
+	for(k,v in updateUrlPrefix){
+		updateUrlMirrors[k] = updateUrlPrefix[k] + LatestReleaseUrlPath;
+	}
+	
 	var updateTestThrd = {};
 	for(k,v in updateUrlMirrors){
 		var updateUrl = v;
@@ -490,21 +487,7 @@ mainForm.initialCheckUpdate = function(){
 		thread.suspend(updateTestThrd[k]);
 		raw.closehandle(updateTestThrd[k]);
 	}
-	
-/*
-	updateUrl = mainForm.updateUrl;
-	
-	var ok = thread.invokeAndWait(
-		function(updateUrl,updateFilePath,inet_launch_params){
-			import win;
-			import inet.downBox;
-			updateBox = inet.downBox(win.getDesktop(),"检查更新",true);
-			var ok = updateBox.test(updateUrl,updateFilePath,,,inet_launch_params);
-			return ok; 
-		},updateUrl,updateFilePath,inet_launch_params
-	);
-*/
-	
+
 	mainForm.updateStatus = true;
 	
 	if(mainForm.updateOk){
@@ -597,8 +580,24 @@ fadeHide = function(){
     win.quitMessage();
 }
 
+mainForm.cleanHistoryWhenClose = false;
 //清除用户webview2数据
 cleanHistory = function(){
+	if(mainForm.cleanHistoryWhenClose){
+    	if(io.exist(wbHistoryDir + "Visited Links")){
+    	    mainForm.msgbox("3秒后即将清理历史记录","注意",0,3000)
+    		if(io.remove(wbHistoryDir + "Visited Links") and io.remove(wbHistoryDir + "History") and io.remove(wbHistoryDir + "History-journal")){
+    			mainForm.msgbox("清理成功！即将自动退出！", "恭喜！",0,1200)
+    		}
+    		else {
+    			mainForm.msgbox("清理失败！请手动清理！即将自动退出！", "注意！",0,2000)
+    		}
+    	}
+		else {
+			mainForm.msgbox("没有历史记录！即将自动退出！","恭喜！",0,1000)
+		}
+	}
+/*
 	if(cfg.apps_setting){
     	if(cfg.apps_setting.关闭时清空记录){
     	    if(io.exist(wbHistoryDir + "Visited Links")){
@@ -616,6 +615,7 @@ cleanHistory = function(){
 			
     	}
 	}
+*/
 }
 
 //多线程写数据库函数
@@ -669,11 +669,14 @@ if(!cfg.apps_setting.启动次数){
 mainForm.enableDpiScaling();
 if(cfg.apps_setting.启动到托盘){
 	if(checkFirstLaunch){
-		mainForm.tray.pop("应用已启动，右击托盘获取更多菜单","ChiikawaBest",,1200);
+		mainForm.tray.pop("应用已启动，右击托盘获取更多菜单","ChiikawaBest");
 	}
 	elseif(cfg.apps_setting.启动次数 < 6){
-		mainForm.tray.pop("应用已启动，右击托盘获取更多菜单","ChiikawaBest",,1200);
+		mainForm.tray.pop("应用已启动，右击托盘获取更多菜单","ChiikawaBest");
 		cfg.apps_setting.启动次数 = cfg.apps_setting.启动次数 + 1;
+	}
+	else {
+		mainForm.tray.pop("应用已启动","ChiikawaBest");
 	}
 }
 else {

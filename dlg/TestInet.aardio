@@ -7,19 +7,17 @@ import web.rest.client;
 import console;
 
 console.log(">>>Test Github")
-//console.dump(RestGithub)
-console.dump(web.rest.github.latestRelease("YrracOwl/ChiikawaBest","ChiikawaBest.exe"))
-var urlPath = web.rest.github.latestRelease("YrracOwl/ChiikawaBest","ChiikawaBest.exe")
 
-var RestGithub = web.rest.client("Mozilla/5.0","HTTP=HTTP://127.0.0.1:20200","localhost,127.0.0.*");
-var GithubResponse = RestGithub.get("https://www.google.com");
+console.dump(web.rest.github.latestRelease("YrracOwl/ChiikawaBest"))
+
+var urlPath = web.rest.github.latestRelease("YrracOwl/ChiikawaBest","ChiikawaBest.exe")
+console.dump(urlPath)
 
 /*
-import inet.downBox;
-var downloadBox = inet.downBox();
-var ok = downloadBox.test(urlPath,"D:\aardio\project\ChiikawaBest\testDownload\",,"Mozila/5.0",inet_launch_params_http)
+var RestGithub = web.rest.client("Mozilla/5.0","HTTP=HTTP://127.0.0.1:20200","localhost,127.0.0.*");
+var GithubResponse = RestGithub.get("https://www.google.com");
+console.dump(GithubResponse);
 */
 
 
-console.dump(GithubResponse);
-console.pause()
+console.pause();
