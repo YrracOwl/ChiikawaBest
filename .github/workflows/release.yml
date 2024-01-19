@@ -2,6 +2,10 @@ on:
   push:
     paths:
       - 'release/**.exe'
+    tags-ignore:
+       - 0.*
+       - 1.*
+       - 2.*
 jobs:
   copy-to-release:
     name: copy release to release
