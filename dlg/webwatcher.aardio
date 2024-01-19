@@ -367,7 +367,7 @@ winform.打开笔记.oncommand = function(id,event){
 		return ; 
 	}
 	else {
-		var frmChild = winform.loadForm("\dlg\note_for_app.aardio");
+		var frmChild = ..mainForm.loadForm("\dlg\note_for_app.aardio");
 		frmChild.updateNote(prcsExeName);
 		frmChild.show();
 		appNoteWinForm[prcsExeName] = frmChild;
