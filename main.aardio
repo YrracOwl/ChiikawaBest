@@ -657,6 +657,7 @@ webwatcherPrcsCntShot = 0;
 //全局时间线选择
 timeline_choice = mainForm.loadForm("\dlg\timeline_choice.aardio");
 
+
 //////////////////////////////////////////////////////////////////////
 //创建托盘图标
 //////////////////////////////////////////////////////////////////////
@@ -689,6 +690,10 @@ if(cfg.apps_setting.启动到托盘){
 }
 else {
 	mainForm.show();
+}
+
+if(cfg.apps_setting.启动时监控应用){
+	webwatcher = mainForm.loadForm("\dlg\webwatcher.aardio");
 }
 
 return win.loopMessage();

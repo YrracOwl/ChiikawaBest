@@ -283,6 +283,7 @@ winform.getPrcsExeName = function(){
 
 
 winform.开始监控.oncommand = function(id,event){
+	winform.开始监控.disabled = true;
 	winform.开始监控.disabledText = {"✶";"✸";"✹";"✺";"✹";"✷";text = "监控中";};
 	var prcsExeName = winform.getPrcsExeName();
 
@@ -324,6 +325,7 @@ winform.停止监控.oncommand = function(id,event){
 	..webWatcher_taskScheduler.stop();
 	winform.停止监控.disabled = true;
 	winform.开始监控.disabledText = null;
+	winform.开始监控.disabled = false;
 }
 
 winform.onClose = function(hwnd,message,wParam,lParam){
