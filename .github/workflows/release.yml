@@ -9,13 +9,6 @@ jobs:
     steps:
       - name: Check Out
         uses: actions/checkout@v4
-        
-      - name: Create The Release
-        uses: YrracOwl/create-the-release@master
-        with:
-          args: ./release/ChiikawaBest.exe application/x-msdownload
-        env:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
 
       - name: Upload to release
         uses: YrracOwl/upload-to-release@master
