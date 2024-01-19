@@ -11,7 +11,7 @@ jobs:
         uses: actions/checkout@v4
         
       - name: Upload to release
-        uses: JasonEtco/upload-to-release@master
+        uses: YrracOwl/upload-to-release@master
         with:
           args: ./release/ChiikawaBest.exe application/x-msdownload
         env:
