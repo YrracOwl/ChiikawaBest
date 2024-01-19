@@ -13,6 +13,6 @@ jobs:
       - name: Upload to release
         uses: YrracOwl/upload-to-release@master
         with:
-          args: ./release/ChiikawaBest.exe application/x-msdownload
+          args: ./release/ChiikawaBest.exe
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
