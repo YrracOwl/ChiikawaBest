@@ -7,9 +7,12 @@ jobs:
     name: copy release to release
     runs-on: ubuntu-latest
     steps:
+      - name: Check Out
+        uses: actions/checkout@v4
+        
       - name: Upload to release
         uses: JasonEtco/upload-to-release@master
         with:
-          args: release/ChiikawaBest.exe application/x-msdownload
+          args: ./release/ChiikawaBest.exe application/x-msdownload
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
