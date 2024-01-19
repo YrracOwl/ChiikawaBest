@@ -1,0 +1,15 @@
+on:
+  push:
+    paths:
+      - 'release/**.exe'
+jobs:
+  copy-to-release:
+    name: copy release to release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Upload to release
+        uses: JasonEtco/upload-to-release@master
+        with:
+          args: release/ChiikawaBest.exe application/x-msdownload
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
