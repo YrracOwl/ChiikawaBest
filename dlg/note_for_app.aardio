@@ -1,9 +1,11 @@
 import win.ui;
 /*DSG{{*/
-var appNotesWin = win.form(text="笔记";right=489;bottom=489;border="none")
+var appNotesWin = win.form(text="笔记";right=489;bottom=503;border="none")
 appNotesWin.add(
+checkbox={cls="checkbox";text="置顶此窗口";left=8;top=483;right=96;bottom=499;db=1;dl=1;z=3};
 exeNamePlus={cls="plus";left=0;top=0;right=488;bottom=40;dl=1;dr=1;dt=1;font=LOGFONT(h=-13;weight=700);z=1};
-noteArea={cls="richedit";left=8;top=32;right=480;bottom=480;autohscroll=false;bgcolor=15790320;db=1;dl=1;dr=1;dt=1;font=LOGFONT(h=-13);link=1;multiline=1;readonly=1;vscroll=1;wrap=1;z=2}
+noteArea={cls="richedit";left=8;top=32;right=480;bottom=480;autohscroll=false;bgcolor=15790320;db=1;dl=1;dr=1;dt=1;font=LOGFONT(h=-13);link=1;multiline=1;readonly=1;vscroll=1;wrap=1;z=2};
+保存={cls="button";text="保存";left=400;top=480;right=480;bottom=502;db=1;dr=1;z=4}
 )
 /*}}*/
 
@@ -48,12 +50,11 @@ appNotesWin.onClose = function(hwnd,message,wParam,lParam){
 
 appNotesWin.saveDate = function(){
 	if(!appNotesWin.noteArea.readonly){
-		var cmd =  ..dbAppNotes.prepare("REPLACE INTO [appNotesDefault] VALUES (@name,@content);" );
-		cmd.step(
-			name = appNotesWin.exeName;
-			content = appNotesWin.noteArea.text;
-		);
-	};
+		var ok = appNotesWin.msgboxTest("是否保存笔记？","保存笔记");
+		if(ok){
+			appNotesWin.保存.oncommand();
+		}
+	}
 }
 
 appNotesWin.forceClose = function(){
@@ -71,7 +72,7 @@ appNotesWin.noteArea.wndproc = function(hwnd,message,wParam,lParam){
 			}
 		}
 		case 8/*_WM_KILLFOCUS*/ {
-			appNotesWin.saveDate();
+			//appNotesWin.saveDate();
 		}
 		else {
 		}
@@ -79,6 +80,30 @@ appNotesWin.noteArea.wndproc = function(hwnd,message,wParam,lParam){
 	//无返回值则继续调用默认回调函数
 }
 
+appNotesWin.checkbox.oncommand = function(id,event){
+	if(appNotesWin.checkbox.checked){
+		win.setTopmost(appNotesWin.hwnd)
+	}
+	else {
+		win.setTopmost(appNotesWin.hwnd,false)
+	};
+}
+
+appNotesWin.bindConfig( ..cfg.appnotes,{
+	checkbox = "checked";
+} );
+
+if(..cfg.appnotes.checkbox){
+	appNotesWin.checkbox.oncommand();
+}
+
+appNotesWin.保存.oncommand = function(id,event){
+	var cmd =  ..dbAppNotes.prepare("REPLACE INTO [appNotesDefault] VALUES (@name,@content);" );
+	cmd.step(
+		name = appNotesWin.exeName;
+		content = appNotesWin.noteArea.text;
+	);
+}
 
 appNotesWin.enableDpiScaling();
 appNotesWin.show();
