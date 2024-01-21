@@ -387,6 +387,7 @@ mainForm.checkUpdate = function(){
 	var LatestReleaseUrlPath = web.rest.github.latestRelease("YrracOwl/ChiikawaBest","ChiikawaBest.exe");
 	if(LatestReleaseUrlPath == null){
 		mainForm.msgboxErr("当前无法访问Github，请稍后再试");
+		mainForm.updateStatus = true;
 		return; 
 	}
 	var updateUrlMirrors = {};
@@ -435,6 +436,7 @@ mainForm.checkUpdate = function(){
 		if(wannaForceUpdate){
 			fsys.remove(updateFilePath);
 			mainForm.updateStart();
+			mainForm.updateStatus = true;
 		}
 		else {
 			return; 
