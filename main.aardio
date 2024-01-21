@@ -272,7 +272,7 @@ mainForm.trayCreate = function(){
 		var frmChild = mainForm.loadForm("\dlg\productDescription.aardio");
 		frmChild.show();
 	})
-	mainForm.popmenu.add("关于软件"+mainForm.appVersion,function(){	
+	mainForm.popmenu.add("关于软件",function(){	
 		process("explorer.exe","https://github.com/YrracOwl/ChiikawaBest")
 	})
 	if(mainForm.updateStatus){//检查更新
