@@ -272,6 +272,9 @@ mainForm.trayCreate = function(){
 		var frmChild = mainForm.loadForm("\dlg\productDescription.aardio");
 		frmChild.show();
 	})
+	mainForm.popmenu.add("关于软件"+mainForm.appVersion,function(){	
+		process("explorer.exe","https://github.com/YrracOwl/ChiikawaBest")
+	})
 	if(mainForm.updateStatus){//检查更新
 		mainForm.popmenu.add("检测更新",function(){
 			mainForm.checkUpdate();
@@ -280,7 +283,6 @@ mainForm.trayCreate = function(){
 	else {
 		mainForm.popmenu.add("检测更新中...",function(){});
 	};
-	
 
 	mainForm.popmenu.add();//分隔线
 	mainForm.popmenu.add('退出',function(id){
