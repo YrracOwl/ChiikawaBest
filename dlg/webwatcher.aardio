@@ -361,7 +361,7 @@ winform.打开笔记.oncommand = function(id,event){
 	var prcsExeName = winform.getPrcsExeName();
 	
 	if(appNoteWinForm[prcsExeName]){
-		win.show(appNoteWinForm[prcsExeName].hwnd,true)
+		win.showForeground(appNoteWinForm[prcsExeName].hwnd)
 	}
 	elseif(prcsExeName == null){
 		return ; 
@@ -394,6 +394,7 @@ if(..cfg.apps_setting.启动时监控应用){
 winform.关闭所有笔记.oncommand = function(id,event){
 	if(appNoteWinForm){
 		for(k,v in appNoteWinForm){
+			v.show(true)
 			v.forceClose();
 		}
 		appNoteWinForm = {};

@@ -8,6 +8,8 @@ noteArea={cls="richedit";left=8;top=32;right=480;bottom=480;autohscroll=false;bg
 保存={cls="button";text="保存";left=400;top=480;right=480;bottom=502;db=1;dr=1;z=4}
 )
 /*}}*/
+import win.util.savePosition;
+win.util.savePosition(appNotesWin);
 
 import win.ui.simpleWindow;
 win.ui.simpleWindow(appNotesWin,,,,).skin(
@@ -43,8 +45,8 @@ appNotesWin.updateNote = function(exeName){
 }
 
 appNotesWin.onClose = function(hwnd,message,wParam,lParam){
+	//appNotesWin.saveDate();
 	appNotesWin.show(false);
-	appNotesWin.saveDate();
 	return false; 
 }
 
@@ -58,8 +60,8 @@ appNotesWin.saveDate = function(){
 }
 
 appNotesWin.forceClose = function(){
-	appNotesWin.onClose = null;
 	appNotesWin.saveDate();
+	appNotesWin.onClose = null;
 	appNotesWin.close();
 }
 
@@ -72,7 +74,7 @@ appNotesWin.noteArea.wndproc = function(hwnd,message,wParam,lParam){
 			}
 		}
 		case 8/*_WM_KILLFOCUS*/ {
-			//appNotesWin.saveDate();
+			appNotesWin.saveDate();
 		}
 		else {
 		}
@@ -103,7 +105,9 @@ appNotesWin.保存.oncommand = function(id,event){
 		name = appNotesWin.exeName;
 		content = appNotesWin.noteArea.text;
 	);
+	appNotesWin.noteArea.readonly = true;
 }
+
 
 appNotesWin.enableDpiScaling();
 appNotesWin.show();
