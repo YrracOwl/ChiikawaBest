@@ -125,33 +125,35 @@ winform.配置选择.onOk = function(){
 	::User32.SendMessage(winform.配置选择.hwnd,0x142/*_CB_SETEDITSEL*/,-1,0)
 	
 	winform.html_watcher.setFocus();
-	ww_webview.go(url_loading);
-	winform.返回.disabled = true;
-	winform.首页.disabled = true;
-	winform.刷新页面.disabled = true;
+	if(list_cfg != null){
+		ww_webview.go(url_loading);
+		winform.返回.disabled = true;
+		winform.首页.disabled = true;
+		winform.刷新页面.disabled = true;
 	
-	var cfg_chosen = list_cfg[winform.配置选择.selText];
-	thread.invoke( 
-		function(winform,init_thrdTable,cfg_chosen){
-			import quarks;
-			var data_html_crawler,path_html_crawler,host_html_crawler = quarks.html_crawler(cfg_chosen,..inet_launch_params);
-			init_thrdTable.path_html_crawler = path_html_crawler;
-			init_thrdTable.host_html_crawler = host_html_crawler;
-			init_thrdTable.flag_html_crawler = true;
-		},winform,init_thrdTable,cfg_chosen,..inet_launch_params
-	)
-	
-	thread.invoke( 
-		function(winform,init_thrdTable){
-			while(1){
-				if(init_thrdTable.flag_html_crawler){
-					winform.首页.oncommand()
-					init_thrdTable.flag_html_crawler = null;
-					return ;
+		var cfg_chosen = list_cfg[winform.配置选择.selText];
+		thread.invoke( 
+			function(winform,init_thrdTable,cfg_chosen){
+				import quarks;
+				var data_html_crawler,path_html_crawler,host_html_crawler = quarks.html_crawler(cfg_chosen,..inet_launch_params);
+				init_thrdTable.path_html_crawler = path_html_crawler;
+				init_thrdTable.host_html_crawler = host_html_crawler;
+				init_thrdTable.flag_html_crawler = true;
+			},winform,init_thrdTable,cfg_chosen,..inet_launch_params
+		)
+		
+		thread.invoke( 
+			function(winform,init_thrdTable){
+				while(1){
+					if(init_thrdTable.flag_html_crawler){
+						winform.首页.oncommand()
+						init_thrdTable.flag_html_crawler = null;
+						return ;
+					}
 				}
-			}
-		},winform,init_thrdTable
-	)
+			},winform,init_thrdTable
+		)
+	}
 }
 
 //生成list内容
@@ -165,7 +167,7 @@ if(winform.配置选择.count > 0){
 		winform.配置选择.selIndex = ..cfg.web_watcher.配置选择;
 	}
 	else {
-		winform.配置选择.selIndex = 1;
+		winform.配置选择.selIndex = winform.配置选择.count;
 	}
 	winform.配置选择.onOk();
 	//取消全选

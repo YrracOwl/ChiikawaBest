@@ -23,7 +23,6 @@ winTimelineShow={cls="custom";text="winTimelineShow";left=280;top=64;right=1280;
 /*}}*/
 
 import win.ui.tooltip;
-import console;
 
 //下面创建一个手动跟踪模式的提示控件
 var balloonTipCtrl = win.ui.tooltip.tracking(winform,false);
@@ -493,7 +492,7 @@ winform.添加plus.oncommand = function(id,event){
 			
 			//winform.lastTime且相等存在代表 没修改时间，仅进行了编辑操作，所以针对web存在的内容进行更新
 			if(winform.lastTime == tl_time){
-				tl_webview.xcall("updateContent",{tostring(tl_time);tostring(tl_title);tostring(tl_content)})
+				tl_webview.xcall("updateContent",{tostring(tl_time);tostring(tl_title);tostring(tl_content)});
 			}
 			//修改了时间，或者纯粹新增，均不会触发
 			else {

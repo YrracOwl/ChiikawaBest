@@ -594,6 +594,17 @@ var content_js = /**
   		],
 	});
 	
+	document.onkeydown = function (e) {
+    	var key = e.keyCode;
+    	//便于说明，下面代码使用多个if，应用时可使用"||"合并
+    	if (key == 116) {
+        	//禁用F5刷新
+        	return false;
+    	} else if(event.ctrlKey && key==82){
+        	//禁用ctrl+R刷新
+        	return false;
+    	}
+	};
 </script>
 **/;
 
