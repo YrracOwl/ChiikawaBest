@@ -39,7 +39,7 @@
 		<file name="release.aardio" path="dlg\release.aardio" comment="dlg\release.aardio"/>
 		<file name="stringSplitTest.aardio" path="dlg\stringSplitTest.aardio" comment="dlg\stringSplitTest.aardio"/>
 		<file name="TestInet.aardio" path="dlg\TestInet.aardio" comment="dlg\TestInet.aardio"/>
-		<file name="TestGlassWin.aardio" path="dlg\TestGlassWin.aardio" comment="dlg\TestGlassWin.aardio"/>
+		<file name="watchWin.aardio" path="dlg\watchWin.aardio" comment="dlg\TestGlassWin.aardio"/>
 	</folder>
 	<folder name="html_crawler" path="html_crawler" comment="html_crawler" local="false" embed="false" ignored="false">
 		<file name="halo.carrywho.com.html" path="html_crawler\halo.carrywho.com.html" comment="html_crawler\halo.carrywho.com.html"/>

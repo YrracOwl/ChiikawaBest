@@ -662,6 +662,31 @@ webwatcherPrcsCntShot = 0;
 timeline_choice = mainForm.loadForm("\dlg\timeline_choice.aardio");
 
 
+//数据库是否需要更新
+//字段判断
+mainForm.haveDBImgField = function(timeline_name){
+	var isOk = dbTimeline.exec("select * from sqlite_master where name=?? and sql like '%time%';",{timeline_name});
+	if(isOk){
+		logWarn("返回值为true，拥有image字段")
+	}
+	else {
+		logErr("返回值为false，无image字段");
+	}
+	return isOk; 
+}
+
+mainForm.createDBImgField = function(timeline_name){
+	dbTimeline.exec("ALTER TABLE ? ADD COLUMN image blob;",{timeline_name});
+	var isDone = mainForm.haveDBImgField(timeline_name);
+	if(isDone){
+		win.msgboxTest("新增image字段成功！","新增成功",win.getDesktop());
+	}
+	else {
+		win.msgboxErr("新增image字段失败！","新增失败",win.getDesktop());
+	}
+}
+
+
 //////////////////////////////////////////////////////////////////////
 //创建托盘图标
 //////////////////////////////////////////////////////////////////////

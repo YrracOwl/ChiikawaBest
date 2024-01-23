@@ -1,0 +1,75 @@
+import win.ui;
+/*DSG{{*/
+var winform = win.form(text="watchWin";right=399;bottom=399;border="none";clipch=1)
+winform.add(
+plusPreview={cls="plus";left=2;top=28;right=398;bottom=398;bgcolor=16777215;db=1;dl=1;dr=1;dt=1;z=1};
+保存={cls="plus";text="保存";left=168;top=8;right=218;bottom=24;dl=1;dt=1;font=LOGFONT(h=-13);notify=1;z=5};
+反色={cls="plus";text="反色";left=56;top=8;right=106;bottom=24;dl=1;dt=1;font=LOGFONT(h=-13);notify=1;z=3};
+复制={cls="plus";text="复制";left=112;top=8;right=162;bottom=24;dl=1;dt=1;font=LOGFONT(h=-13);notify=1;z=4};
+截图={cls="plus";text="截图";left=0;top=8;right=50;bottom=24;dl=1;dt=1;font=LOGFONT(h=-13);notify=1;z=2}
+)
+/*}}*/
+
+import win.region.hole;
+var watchWin = win.region.hole(winform.plusPreview);
+
+import win.ui.simpleWindow3;
+win.ui.simpleWindow(winform,,,,).skin(
+	background = { 
+		hover = 0xff99ffcc;
+		active = 0xffff6666; 
+		default = 0x00000000; 
+	}
+	color = { 
+		hover = 0xff666666;
+		active = 0xffffffff; 
+		default = 0xFF7BA5BF; 
+	}
+)
+
+winform.截图.skin(
+	background = { 
+		hover = "/res/images/btn-hover.png";
+		focus = "/res/images/btn-focus.jpg";
+		active = "/res/images/btn-active.png";
+		disabled = "/res/images/btn-disabled.png"; 
+	}
+)
+
+winform.uiShow = function(){
+	winform.截图.text = "重截";
+	winform.反色.show(true);
+	winform.复制.show(true);
+	winform.保存.show(true);
+	watchWin.enable(false);
+	
+	winform.redrawBackground();
+}
+winform.uiHide = function(){
+	winform.截图.text = "截图";
+	winform.反色.show(false);
+	winform.复制.show(false);
+	winform.保存.show(false);
+	watchWin.enable(true);
+	
+	winform.redrawBackground();
+}
+
+winform.uiHide();
+
+winform.watchWinEn = true;
+winform.截图.oncommand = function(id,event){
+	if(winform.watchWinEn){
+		winform.watchWinEn = false;
+		winform.uiShow();
+	}
+	else {
+		winform.watchWinEn = true;
+		winform.uiHide();
+	}
+}
+
+
+winform.show();
+win.loopMessage();
+return winform;
