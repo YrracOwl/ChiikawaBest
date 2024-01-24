@@ -2,7 +2,7 @@ import fonts.fontAwesome;
 
 import fsys.stream;
 import gdip.bitmap;
-import crypt;
+import crypt.bin;
 
 import win.ui;
 /*DSG{{*/
@@ -280,8 +280,10 @@ var thrdTimelineUpdate = function(winform,database,tl_webview){
 };
 */
 
+/*
 thread.set("thrdListboxUpdate", thrdListboxUpdate);
 thread.set("thrdTimelineUpdate", thrdTimelineUpdate);
+*/
 
 import win.ui.mask;
 var frmMask = win.ui.mask(winform.winTimelineShow,true)
@@ -306,13 +308,10 @@ tl_webview.external = {
     		winform.标题plus.text = result.title;
     		winform.内容plus.text = result.content;
     		if(result.image != "null" && result.image != null){
-    			var stream = fsys.stream();
-    			var streamData = crypt.decodeBin(result.image,,0x40000001/*_CRYPT_STRING_BASE64*/);
-    			stream.write(result.image);
-    			
-    			winform.图片预览.foreground = stream;
-    			import console;console.dump(streamData);
-    			stream.close();
+    			var strRecover = crypt.bin.decodeBase64(result.image,#result.image);
+    			//winform.图片预览.foreground = strRecover;
+    			winform.图片预览.setForeground(strRecover);
+    			winform.图片预览.text = null;
     		}
     		//手动显示提示
     		var x,y,cx,cy = winform.添加plus.getPos(true);
@@ -428,7 +427,9 @@ winform.timelineWebUpdate = function(winform){
 			var result = ..dbTimeline.stepQuery("SELECT * FROM ??",{time = winform.listbox.items[i], winform.当前主题.text} )
 			var imgUrl = null;
 			if(result.image != null){
-				imgUrl = result.image;
+				//imgUrl = string.format('data:image/jpg;base64,%s',crypt.encodeBin( result.image,,0x40000001/*_CRYPT_STRING_BASE64*/) );
+				var strRecover = crypt.bin.decodeBase64(result.image,#result.image);
+				imgUrl = crypt.bin.base64DataUrl(strRecover,'image/jpg');
 			}
 			if(imgUrl == null){
 				imgUrl = "null";
@@ -510,8 +511,7 @@ winform.添加plus.oncommand = function(id,event){
 				var tempBmp = winform.图片预览.getForeground();
 				var stream = fsys.stream(); 
 				tempBmp.saveToStream(stream,"*.jpg",100);
-				tl_img = string.format('data:image/jpg;base64,%s'
-  				  ,crypt.encodeBin( stream.readAll(),,0x40000001/*_CRYPT_STRING_BASE64*/) );
+  				tl_img = crypt.bin.encodeBase64(stream.readAll(),#stream.readAll());
 				stream.close();
 			}
 			if(winform.标题plus.text != ""){
@@ -578,7 +578,8 @@ winform.添加plus.oncommand = function(id,event){
 			if(winform.lastTime == tl_time){
 				var imgUrl = null;
 				if(tl_img != null){
-					imgUrl = tl_img;
+					var strRecover = crypt.bin.decodeBase64(tl_img,#tl_img);
+					imgUrl = crypt.bin.base64DataUrl(strRecover,'image/jpg');
 				}
 				
 				if(imgUrl == null){

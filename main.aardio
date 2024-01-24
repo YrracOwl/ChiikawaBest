@@ -690,10 +690,10 @@ mainForm.createDBImgField = function(timeline_name){
 	dbTimeline.exec("ALTER TABLE ? ADD COLUMN image blob;",{timeline_name});
 	var isDone = mainForm.haveDBImgField(timeline_name);
 	if(isDone){
-		win.msgboxTest("新增image字段成功！","新增成功",win.getDesktop());
+		win.msgboxTest("升级成功！请重新打开！","升级成功",win.getDesktop());
 	}
 	else {
-		win.msgboxErr("新增image字段失败！","新增失败",win.getDesktop());
+		win.msgboxErr("升级失败！请重启程序再尝试！","升级失败",win.getDesktop());
 	}
 }
 
