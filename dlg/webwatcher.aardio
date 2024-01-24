@@ -36,9 +36,6 @@ import win.ui.tooltip;
 //下面创建一个手动跟踪模式的提示控件
 var balloonTipCtrl = win.ui.tooltip.tracking(winform,false);
 
-//导入fsys.file以获取文件的更新时间
-import fsys.dlg;
-
 //////////////////////////////////////////////////////////////////////
 //界面线程变量
 //////////////////////////////////////////////////////////////////////
@@ -336,7 +333,7 @@ winform.onClose = function(hwnd,message,wParam,lParam){
 }
 
 winform.选择文件.oncommand = function(id,event){
-	var filePath = fsys.dlg.open("应用程序|*.exe|所有文件|*.*");
+	var filePath = ..fsys.dlg.open("应用程序|*.exe|所有文件|*.*");
 	if(filePath){
 		winform.停止监控.oncommand();
 		winform.edit进程匹配.text = filePath;

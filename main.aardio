@@ -68,6 +68,11 @@ import web.view;
 //web.rest.github导入
 import web.rest.github;
 
+//soImage库导入，用于截图与读取
+import soImage;
+
+import fsys.dlg;
+
 //右下角提示库
 //import win.util.popup;
 
@@ -255,6 +260,10 @@ mainForm.trayCreate = function(){
 	mainForm.popmenu.add("闹钟",function(){
 		win.setForeground(alarmForm.hwnd);
 		alarmForm.show();
+	})
+	mainForm.popmenu.add("截图",function(){	
+		var watchWin1 = win.loadForm("\dlg\watchWin.aardio",,win.getDesktop());
+		watchWin1.show();
 	})
 	
 	mainForm.popmenu.add();//分隔线
@@ -665,12 +674,14 @@ timeline_choice = mainForm.loadForm("\dlg\timeline_choice.aardio");
 //数据库是否需要更新
 //字段判断
 mainForm.haveDBImgField = function(timeline_name){
-	var isOk = dbTimeline.exec("select * from sqlite_master where name=?? and sql like '%time%';",{timeline_name});
+	var cmd = dbTimeline.prepare("SELECT * FROM ?? ",{timeline_name}) 
+	var columns = cmd.getColumns();	
+	var isOk = table.find(columns,"image");
 	if(isOk){
-		logWarn("返回值为true，拥有image字段")
+		logWarn("返回值为",tostring(isOk),"拥有image字段")
 	}
 	else {
-		logErr("返回值为false，无image字段");
+		logErr("返回值为",tostring(isOk),"无image字段");
 	}
 	return isOk; 
 }

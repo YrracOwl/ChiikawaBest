@@ -118,7 +118,7 @@ winform.btn创建时间线.oncommand = function(id,event){
 	if(winform.txt时间线标题.text != ""){
 		try{
 			if( not ..dbTimeline.existsTable(winform.txt时间线标题.text) ){ 
-				..dbTimeline.exec( "CREATE TABLE ?? (time PRIMARY KEY, title, content);",{winform.txt时间线标题.text}); 
+				..dbTimeline.exec( "CREATE TABLE ?? (time PRIMARY KEY, title, content, image);",{winform.txt时间线标题.text}); 
 				..logWrite(">>>Timeline数据库新增表：",winform.txt时间线标题.text)
 			}
 			var cmd = ..dbBase.prepare("REPLACE INTO [timeline] VALUES ( @name,@time);");

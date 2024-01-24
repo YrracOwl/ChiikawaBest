@@ -185,14 +185,6 @@ li::marker {
 **/; 
 var content_body = /**
 <ul id="listContent" class="timeline">
-  <li class="timeline-event">
-    <label class="timeline-event-icon"></label>
-    <div class="timeline-event-copy">
-      <p class="timeline-event-thumbnail">当前无内容</p>
-      <h5>无内容</h5>
-      <p>请在左侧添加，双击列表内容可修改内容</p>
-    </div>
-  </li>
 </ul>  
 **/;
 
@@ -277,6 +269,14 @@ var content_js = /**
 		divEle.appendChild(titleEle);
 		divEle.appendChild(contentEle);
 		
+		console.log(datas)
+		if(datas[3] != 'null'){
+			var imgEle = document.createElement("img");
+			imgEle.setAttribute("src",datas[3]);
+			console.log(imgEle)
+			divEle.appendChild(imgEle)
+		}
+			
 		liEle.appendChild(labelEle);
 		liEle.appendChild(divEle);
 		return liEle; 
