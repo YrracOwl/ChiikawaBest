@@ -1,0 +1,12 @@
+import console;
+var timeFormat = {"16.5222";"0";"05"};
+console.logPause(timeFormat[1],timeFormat[2],timeFormat[3]);
+console.logPause(tonumber(timeFormat[1]))
+console.logPause(( tonumber(timeFormat[2]) ))
+console.logPause(( tonumber(timeFormat[3]) ))
+console.logPause(( tonumber(timeFormat[1]) ) < 24 and ( tonumber(timeFormat[2]) ) < 60 and ( tonumber(timeFormat[3]) ) < 60)
+if( ( tonumber(timeFormat[1]) ) and ( tonumber(timeFormat[2]) ) and ( tonumber(timeFormat[3]) )){
+	if(( tonumber(timeFormat[1]) ) < 24 and ( tonumber(timeFormat[2]) ) < 60 and ( tonumber(timeFormat[3]) ) < 60){
+		console.logPause( ( tonumber(timeFormat[2]) ) );
+	}
+}

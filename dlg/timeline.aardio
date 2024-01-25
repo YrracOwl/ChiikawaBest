@@ -498,8 +498,11 @@ winform.添加plus.oncommand = function(id,event){
 	winform.添加plus.disabled = true;
 	
 	var timeFormat = string.split(winform.时间plus.text,':');
-	if(tonumber(timeFormat[1]) && tonumber(timeFormat[2]) && tonumber(timeFormat[3])){
-		if(tonumber(timeFormat[1])<24 && tonumber(timeFormat[2])<60 && tonumber(timeFormat[3])<60){
+	var hour1,hour2 = tonumber(timeFormat[1]);
+	var minute1,minute2 = tonumber(timeFormat[2]);
+	var second1,second2 = tonumber(timeFormat[3]);
+	if(hour2 < 3 and minute2 < 3 and second2 < 3){
+		if(hour1 < 24 and minute1 < 60 and second1 < 60){
 			var tl_time = winform.datetimepick.text + '-' + winform.时间plus.text; 
 			var tl_title = winform.时间plus.text; 
 			var tl_content = "还没想好";
@@ -561,7 +564,7 @@ winform.添加plus.oncommand = function(id,event){
 				..logMsg(">>>写入成功：",winform.当前主题.text,tl_time);
 			}
 			
-
+	
 			
 			//修改了时间，需要删除
 			if(winform.lastTime != "" && winform.lastTime != tl_time){
@@ -601,7 +604,7 @@ winform.添加plus.oncommand = function(id,event){
 		var x,y,cx,cy = winform.时间plus.getPos(true);
     	balloonTipCtrl.setText("时间格式不合法，请输入24小时制时间").trackPopup(true,x+cx*3/4,y+cy );
 	}
-	
+
 	win.delay(1000);
 	winform.添加plus.disabled = false;
 }
