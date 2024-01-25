@@ -58,7 +58,6 @@ winform.保存.skin({
 	}
 })
 
-winform.callerHwnd = null;
 winform.caller = null;
 
 import win.region.hole;
@@ -124,10 +123,10 @@ winform.getHoleBmp = function(){
 
 winform.复制.oncommand = function(id,event){
 	imgCaptured.toClipBD();
-	if(winform.callerHwnd){
-		win.setForeground(winform.callerHwnd);
+	if(winform.caller){
+		win.setForeground(winform.caller.hwnd);
 		winform.caller.图片预览.foreground = imgCaptured.getBytes("*.bmp");
-		winform.caller.图片预览.text = null;
+		winform.caller.show();
 		winform.close();
 	}
 }
@@ -164,6 +163,15 @@ winform.plusPreview.wndproc = function(hwnd,message,wParam,lParam){
 		}
 	}
 	//无返回值则继续调用默认回调函数
+}
+
+winform.onClose = function(hwnd,message,wParam,lParam){
+	if(winform.caller){
+		win.setForeground(winform.caller.hwnd);
+		winform.caller.图片预览.foreground = imgCaptured.getBytes("*.bmp");
+		winform.caller.show();
+	};
+	imgCaptured.delete();
 }
 
 winform.width = 400;

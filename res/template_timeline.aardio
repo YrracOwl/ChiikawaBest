@@ -273,9 +273,9 @@ var content_js = /**
 		if(datas[3] != 'null'){
 			var imgEle = document.createElement("img");
 			imgEle.setAttribute("src",datas[3]);
-			//console.log(imgEle)
 			imgEle.setAttribute("width","100%");
 			imgEle.setAttribute("height","auto");
+			imgEle.setAttribute("style","max-height:450px; object-fit: scale-down;");
 			divEle.appendChild(imgEle)
 		}
 			
