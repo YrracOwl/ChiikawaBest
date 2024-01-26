@@ -207,6 +207,7 @@ winform.添加提醒项.oncommand = function(id,event){
 //import web.view;
 var tl_webview = ..web.view(winform.winTimelineShow,..wbUserDataDir,..launch_params);
 
+/***
 tl_webview.preloadScript(`
 //禁止超链接默认开新窗口
 window.addEventListener('load',function(){ 
@@ -220,6 +221,31 @@ document.addEventListener('mousedown', function (event) {
   for(var i=1;target && i<=5;i++){
   	if ( target.tagName == 'A')  {
   		target.removeAttribute('target');
+  		return;
+  	}
+  	
+  	target = target.parentNode; 
+  } 
+}, true);
+
+//禁止弹窗函数
+//window.open =  function(url){ window.location.href = url; }
+`);
+***/
+
+tl_webview.preloadScript(`
+//超链接默认打开新窗口
+window.addEventListener('load',function(){ 
+	let base = document.querySelector('base'); 
+	if (base) base.setAttribute('target',"_blank");	
+})
+
+//超链接默认开新窗口
+document.addEventListener('mousedown', function (event) {
+  var target = event.target;
+  for(var i=1;target && i<=5;i++){
+  	if ( target.tagName == 'A')  {
+  		target.setAttribute('target',"_blank");
   		return;
   	}
   	
@@ -344,13 +370,44 @@ tl_webview.external = {
 
 };
 
+/***
+	<?= string.load("\res\chiikawabest-indigo.css") ?>
+	
+	<?= string.load("\res\chiikawabest-ayu.css") ?>
+	
+	<?= string.load("\res\chiikawabest-d-boring.css") ?>
+	
+	<?= string.load("\res\chiikawabest-contrast.css") ?>
+	
+	<?= string.load("\res\chiikawabest-duotone-heat.css") ?>
+	<?= string.load("\res\chiikawabest-duotone-light.css") ?>
+	
+	<?= string.load("\res\chiikawabest-gandalf.css") ?>
+	
+	<?= string.load("\res\chiikawabest-lark.css") ?>
+	<?= string.load("\res\chiikawabest-lark-bold-color.css") ?>
+	
+	<?= string.load("\res\chiikawabest-red-graphite.css") ?>
+	
+	<?= string.load("\res\chiikawabest-olive-dunk.css") ?>
+	
+	<?= string.load("\res\chiikawabest-solarized-light.css") ?>
+	
+***/
+
+
 tl_webview.html = /**
 <!doctype html>
 <html>
 <head>
     <meta charset="utf-8">
     <title>待定</title>
+    
+    <style type="text/css">
     <?= content_css?>
+    <?= string.load("\res\chiikawabest-indigo.css") ?>
+    </style>
+    
     <?= content_js?>
 </head>
 <body>
@@ -359,18 +416,10 @@ tl_webview.html = /**
 </html>
 **/;
 
-//tl_webview.xcall("clearList");
-
-/*
-新增子事项
-*/
-
-
 
 winform.勾选plus.oncommand = function(id,event){
 	winform.tiktokChecker(winform);
 }
-
 
 /*
 子窗口函数
@@ -431,8 +480,8 @@ winform.timelineWebUpdate = function(winform){
 			if(imgUrl == null){
 				imgUrl = "null";
 			}
-			tl_webview.xcall("pushTable",{tostring(result.time);tostring(result.title);tostring(result.content);imgUrl});
-			//..logMsg(result.image)
+			//tl_webview.xcall("pushTable",{tostring(result.time);tostring(result.title);tostring(result.content);imgUrl});
+			tl_webview.xcall("pushTable",{tostring(result.time);tostring(result.title);..string.gfmark.render(result.content);imgUrl});
 		}
 	}
 	tl_webview.xcall("replaceList");
@@ -586,7 +635,8 @@ winform.添加plus.oncommand = function(id,event){
 					imgUrl = "null";
 				}
 				
-				tl_webview.xcall("updateContent",{tostring(tl_time);tostring(tl_title);tostring(tl_content);imgUrl});
+				//tl_webview.xcall("updateContent",{tostring(tl_time);tostring(tl_title);tostring(tl_content);imgUrl});
+				tl_webview.xcall("updateContent",{tostring(tl_time);tostring(tl_title);..string.gfmark.render(tl_content);imgUrl});
 			}
 			//修改了时间，或者纯粹新增，均不会触发
 			else {

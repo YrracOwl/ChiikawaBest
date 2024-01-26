@@ -1,5 +1,5 @@
 var content_css = /**
-<style type="text/css">
+
 
 /* Variables */
 /* Fonts */
@@ -138,7 +138,11 @@ body {
   padding: 0.25em 1em 0.2em 1em;
 }
 
-li::marker {
+#listContent>li::marker {
+  content: '';
+}
+
+.custom-context-menu>li::marker {
   content: '';
 }
 
@@ -181,7 +185,7 @@ li::marker {
   padding: 0.25em 1em 0.2em 1em;
 }
 
-</style>
+
 **/; 
 var content_body = /**
 <ul id="listContent" class="timeline">
@@ -259,14 +263,18 @@ var content_js = /**
 
 		timeEle.innerText = datas[0];
 		
-		var titleEle = document.createElement("h5"); 
+		var titleEle = document.createElement("h2");
 		titleEle.innerText = datas[1];
+		var titleWrapEle = document.createElement("div");
+		titleWrapEle.setAttribute("class","mkd")
+		titleWrapEle.appendChild(titleEle);
 		
-		var contentEle = document.createElement("p");
-		contentEle.innerText = datas[2];
+		var contentEle = document.createElement("div");
+		contentEle.setAttribute("class","mkd")
+		contentEle.innerHTML = datas[2];
 		
 		divEle.appendChild(timeEle);
-		divEle.appendChild(titleEle);
+		divEle.appendChild(titleWrapEle);
 		divEle.appendChild(contentEle);
 		
 		console.log(datas)

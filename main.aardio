@@ -71,6 +71,9 @@ import web.rest.github;
 //soImage库导入，用于截图与读取
 import soImage;
 
+//string.gfmark导入，作为markdown渲染
+import string.gfmark;
+
 import fsys.dlg;
 
 //右下角提示库
