@@ -24,17 +24,17 @@
 .mkd blockquote {
   margin-left: 0;
   background-color: #ebf4ff;
-  border-color: #7f9cf5;
+  border-color: #22355e;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
-  color: #667eea;
+  color: #1a2847;
 }
 .mkd strong {
-  color: #5a67d8;
+  color: #1a2847;
 }
 .mkd code,
 .mkd a {
-  color: #5a67d8;
+  color: #1a2847;
 }
 .mkd a {
   border-color: #667eea;
@@ -64,7 +64,7 @@
 }
 .mkd h1,
 .mkd h2 {
-  border-color: #5a67d8;
+  border-color: #1a2847;
   border-style: solid;
   border-top-width: 0px;
   border-right-width: 0px;
@@ -185,7 +185,7 @@
   -webkit-appearance: initial;
   display: block;
   position: absolute;
-  border: 1px solid #5a67d8;
+  border: 1px solid #1a2847;
   border-radius: 0.25rem;
   margin-left: -1.5rem;
   height: 1.2rem;
@@ -198,7 +198,7 @@
   box-shadow: none;
 }
 .mkd .task-list-item > input:hover {
-  border-color: #5a67d8;
+  border-color: #1a2847;
 }
 .mkd .task-list-item > input[checked]::before {
   content: "";
@@ -208,7 +208,7 @@
   height: 60%;
   width: 2px;
   transform: rotate(40deg);
-  background: #5a67d8;
+  background: #1a2847;
 }
 .mkd .task-list-item > input[checked]::after {
   content: "";
@@ -218,7 +218,7 @@
   height: 30%;
   width: 2px;
   transform: rotate(-40deg);
-  background: #5a67d8;
+  background: #1a2847;
 }
 .mkd pre.md-fences,
 .mkd pre.md-meta-block,
