@@ -1,8 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<project ver="10" name="ChiikawaBest" libEmbed="true" icon="res\chiikawaIcon.ico" ui="win" output="ChiikawaBest.exe" CompanyName="CarryWho" FileDescription="ChiikawaBest" LegalCopyright="Copyright (C) CarryWho 2023" ProductName="ChiikawaBest" InternalName="ChiikawaBest" FileVersion="1.1.0.01" ProductVersion="1.1.0.01" publishDir="/dist/" dstrip="false" local="false" ignored="false">
+<project ver="10" name="ChiikawaBest" libEmbed="true" icon="res\chiikawaIcon.ico" ui="win" output="ChiikawaBest.exe" CompanyName="CarryWho" FileDescription="ChiikawaBest" LegalCopyright="Copyright (C) CarryWho 2023" ProductName="ChiikawaBest" InternalName="ChiikawaBest" FileVersion="1.1.0.03" ProductVersion="1.1.0.03" publishDir="/dist/" dstrip="false" local="false" ignored="false">
 	<file name="main.aardio" path="main.aardio" comment="main.aardio"/>
 	<folder name="资源文件" path="res" embed="true" local="false" ignored="false">
 		<file name="chiikawa.png" path="res\chiikawa.png" comment="res\chiikawa.png"/>
+		<file name="chiikawabest-ayu.css" path="res\chiikawabest-ayu.css" comment="res\chiikawabest-ayu.css"/>
+		<file name="chiikawabest-contrast.css" path="res\chiikawabest-contrast.css" comment="res\chiikawabest-contrast.css"/>
+		<file name="chiikawabest-d-boring.css" path="res\chiikawabest-d-boring.css" comment="res\chiikawabest-d-boring.css"/>
+		<file name="chiikawabest-duotone-heat.css" path="res\chiikawabest-duotone-heat.css" comment="res\chiikawabest-duotone-heat.css"/>
+		<file name="chiikawabest-duotone-light.css" path="res\chiikawabest-duotone-light.css" comment="res\chiikawabest-duotone-light.css"/>
+		<file name="chiikawabest-gandalf.css" path="res\chiikawabest-gandalf.css" comment="res\chiikawabest-gandalf.css"/>
+		<file name="chiikawabest-indigo - 副本.css" path="res\chiikawabest-indigo - 副本.css" comment="res\chiikawabest-indigo - 副本.css"/>
+		<file name="chiikawabest-indigo.css" path="res\chiikawabest-indigo.css" comment="res\chiikawabest-indigo.css"/>
+		<file name="chiikawabest-lark-bold-color.css" path="res\chiikawabest-lark-bold-color.css" comment="res\chiikawabest-lark-bold-color.css"/>
+		<file name="chiikawabest-lark.css" path="res\chiikawabest-lark.css" comment="res\chiikawabest-lark.css"/>
+		<file name="chiikawabest-olive-dunk.css" path="res\chiikawabest-olive-dunk.css" comment="res\chiikawabest-olive-dunk.css"/>
+		<file name="chiikawabest-red-graphite.css" path="res\chiikawabest-red-graphite.css" comment="res\chiikawabest-red-graphite.css"/>
+		<file name="chiikawabest-solarized-light.css" path="res\chiikawabest-solarized-light.css" comment="res\chiikawabest-solarized-light.css"/>
 		<file name="chiikawaCircle.ico" path="res\chiikawaCircle.ico" comment="res\chiikawaCircle.ico"/>
 		<file name="chiikawaCircle.png" path="res\chiikawaCircle.png" comment="res\chiikawaCircle.png"/>
 		<file name="chiikawaIcon.ico" path="res\chiikawaIcon.ico" comment="res\chiikawaIcon.ico"/>
@@ -10,13 +23,6 @@
 		<file name="loading.gif" path="res\loading.gif" comment="res\loading.gif"/>
 		<file name="loading.html" path="res\loading.html" comment="res\loading.html"/>
 		<file name="template_timeline.aardio" path="res\template_timeline.aardio" comment="res\template_timeline.aardio"/>
-		<file name="template_timeline_0.aardio" path="res\template_timeline_0.aardio" comment="res\template_timeline_0.aardio"/>
-		<file name="template_timeline_1.aardio" path="res\template_timeline_1.aardio" comment="res\template_timeline_1.aardio"/>
-		<file name="template_timeline_2.aardio" path="res\template_timeline_2.aardio" comment="res\template_timeline_2.aardio"/>
-		<file name="template_timeline_3.aardio" path="res\template_timeline_3.aardio" comment="res\template_timeline_3.aardio"/>
-		<file name="template_timeline_4.aardio" path="res\template_timeline_4.aardio" comment="res\template_timeline_4.aardio"/>
-		<file name="template_timeline_5.aardio" path="res\template_timeline_5.aardio" comment="res\template_timeline_5.aardio"/>
-		<file name="template_timeline_6.aardio" path="res\template_timeline_6.aardio" comment="res\template_timeline_6.aardio"/>
 	</folder>
 	<folder name="窗体文件" path="dlg" comment="目录" embed="true" local="false" ignored="false">
 		<file name="add_alarm.aardio" path="dlg\add_alarm.aardio" comment="dlg\add_alarm.aardio"/>
