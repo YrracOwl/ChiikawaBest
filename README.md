@@ -1,7 +1,9 @@
 # 简介
 这是一个集成了**时间线**，**网页监控**，**截图**和**闹钟**功能的小应用。主界面是可爱的Chiikawa，所以这个应用叫"ChiikawaBest"。功能都在托盘区，**右键托盘区**自行探索。
+此应用使用[aardio](https://www.aardio.com/)开发。
 
-此应用使用aardio开发。
+This is a software integrated with **Timeline**, **WebWatching**, **ScreenCatch** and **Alarms**. The main UI is cutest Chiikawa which makes this app called "ChiikawaBest". All functions can be found on the tray, **Right Click** to explore.
+This app is developed with [aardio](https://www.aardio.com/).
 
 # 功能
 ## 时间线
