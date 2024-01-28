@@ -328,6 +328,7 @@ winform.停止监控.oncommand = function(id,event){
 }
 
 winform.onClose = function(hwnd,message,wParam,lParam){
+	winform.checkbox.oncommand();
 	winform.show(false);
     return false; 
 }
@@ -360,7 +361,8 @@ winform.打开笔记.oncommand = function(id,event){
 	var prcsExeName = winform.getPrcsExeName();
 	
 	if(appNoteWinForm[prcsExeName]){
-		win.showForeground(appNoteWinForm[prcsExeName].hwnd)
+		var tempPrcs = appNoteWinForm[prcsExeName];
+		win.showForeground(tempPrcs.hwnd);
 	}
 	elseif(prcsExeName == null){
 		return ; 
@@ -371,6 +373,7 @@ winform.打开笔记.oncommand = function(id,event){
 		frmChild.show();
 		appNoteWinForm[prcsExeName] = frmChild;
 	};
+	winform.checkbox.oncommand();
 	winform.关闭所有笔记.disabled = false;
 }
 
@@ -402,6 +405,18 @@ winform.关闭所有笔记.oncommand = function(id,event){
 
 winform.enableDpiScaling();
 ::User32.SendMessage(winform.配置选择.hwnd,0x142/*_CB_SETEDITSEL*/,-1,0);
+
+winform.wndproc = function(hwnd,message,wParam,lParam){
+	select( message ) { 
+		case 0x18/*_WM_SHOWWINDOW*/{
+			winform.checkbox.oncommand();
+		}
+		else{
+			
+		}
+	}
+	//无返回值则继续调用默认回调函数
+}
 
 //winform.show();
 win.loopMessage();

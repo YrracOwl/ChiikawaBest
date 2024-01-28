@@ -216,6 +216,10 @@ if( not dbAppNotes.existsTable("appNotesDefault")){
 	dbAppNotes.exec( "CREATE TABLE [appNotesDefault] (name PRIMARY KEY, content);")
 }
 
+if( not dbAppNotes.existsTable("appNotesPos")){
+	dbAppNotes.exec( "CREATE TABLE [appNotesPos] (name PRIMARY KEY, xx, yy, xwidth, yheight);")
+}
+
 //////////////////////////////////////////////////////////////////////
 //设置：托盘消息
 //////////////////////////////////////////////////////////////////////
