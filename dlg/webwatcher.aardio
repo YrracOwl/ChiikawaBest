@@ -396,7 +396,6 @@ if(..cfg.apps_setting.启动时监控应用){
 winform.关闭所有笔记.oncommand = function(id,event){
 	if(appNoteWinForm){
 		for(k,v in appNoteWinForm){
-			v.show(true)
 			v.forceClose();
 		}
 		appNoteWinForm = {};

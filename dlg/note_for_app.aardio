@@ -23,6 +23,7 @@ win.ui.simpleWindow(appNotesWin,,,,).skin(
 );
 
 appNotesWin.exeName = "SHIFT";
+appNotesWin.posChanged = false;
 
 appNotesWin.updateNote = function(exeName){
 	appNotesWin.exeName = exeName;
@@ -48,12 +49,14 @@ appNotesWin.updateNote = function(exeName){
 }
 
 appNotesWin.onClose = function(hwnd,message,wParam,lParam){
+	appNotesWin.savePos();
 	appNotesWin.show(false);
 	return false; 
 }
 
 appNotesWin.saveData = function(){
 	if(!appNotesWin.noteArea.readonly){
+		appNotesWin.show(true);
 		var ok = appNotesWin.msgboxTest("是否保存笔记？","保存笔记");
 		if(ok){
 			appNotesWin.保存.oncommand();
@@ -62,15 +65,18 @@ appNotesWin.saveData = function(){
 }
 
 appNotesWin.savePos = function(){
-	var xx1,yy1,xwidth1,yheight1 = win.getPos(appNotesWin.hwnd,true);
-	var cmd1 = ..dbAppNotes.prepare("REPLACE INTO [appNotesPos] VALUES (@name,@xx,@yy,@xwidth,@yheight);" );
-	cmd1.step(
-		name = appNotesWin.exeName;
-		xx = xx1;
-		yy = yy1;
-		xwidth = xwidth1;
-		yheight = yheight1;
-	);
+	if(appNotesWin.posChanged){
+		var xx1,yy1,xwidth1,yheight1 = win.getPos(appNotesWin.hwnd,true);
+		var cmd1 = ..dbAppNotes.prepare("REPLACE INTO [appNotesPos] VALUES (@name,@xx,@yy,@xwidth,@yheight);" );
+		cmd1.step(
+			name = appNotesWin.exeName;
+			xx = xx1;
+			yy = yy1;
+			xwidth = xwidth1;
+			yheight = yheight1;
+		);
+		appNotesWin.posChanged = false;
+	}
 }
 
 
@@ -112,7 +118,7 @@ appNotesWin.保存.oncommand = function(id,event){
 appNotesWin.wndproc = function(hwnd,message,wParam,lParam){
 	select( message ) { 
 		case 0x47/*_WM_WINDOWPOSCHANGED*/{
-			appNotesWin.savePos();
+			appNotesWin.posChanged = true;
 		}
 		else{
 		}
@@ -120,7 +126,7 @@ appNotesWin.wndproc = function(hwnd,message,wParam,lParam){
 	//无返回值则继续调用默认回调函数
 }
 
-appNotesWin.enableDpiScaling();
+//appNotesWin.enableDpiScaling();
 appNotesWin.show();
 win.loopMessage();
 return appNotesWin;
