@@ -156,6 +156,9 @@
   margin-top: 6px;
   margin-bottom: 6px;
 }
+.mkd mark{
+  background-color: #f8bc31;
+}
 .mkd .svg-markmap-box {
   min-height: 20rem;
   width: 100%;

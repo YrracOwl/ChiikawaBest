@@ -1,0 +1,6 @@
+import console;
+import string.gfmark;
+console.log(string.gfmark.version())
+console.log(string.gfmark.render("hightlight"))
+
+console.pause()

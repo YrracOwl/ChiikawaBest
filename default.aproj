@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<project ver="10" name="ChiikawaBest" libEmbed="true" icon="res\chiikawaIcon.ico" ui="win" output="ChiikawaBest.exe" CompanyName="CarryWho" FileDescription="ChiikawaBest" LegalCopyright="Copyright (C) CarryWho 2023" ProductName="ChiikawaBest" InternalName="ChiikawaBest" FileVersion="1.1.1.03" ProductVersion="1.1.1.03" publishDir="/dist/" dstrip="false" local="false" ignored="false">
+<project ver="10" name="ChiikawaBest" libEmbed="true" icon="res\chiikawaIcon.ico" ui="win" output="ChiikawaBest.exe" CompanyName="CarryWho" FileDescription="ChiikawaBest" LegalCopyright="Copyright (C) CarryWho 2023" ProductName="ChiikawaBest" InternalName="ChiikawaBest" FileVersion="1.1.1.04" ProductVersion="1.1.1.04" publishDir="/dist/" dstrip="false" local="false" ignored="false">
 	<file name="main.aardio" path="main.aardio" comment="main.aardio"/>
 	<folder name="资源文件" path="res" embed="true" local="false" ignored="false">
 		<file name="chiikawa.png" path="res\chiikawa.png" comment="res\chiikawa.png"/>
@@ -47,6 +47,7 @@
 		<file name="TestInet.aardio" path="dlg\TestInet.aardio" comment="dlg\TestInet.aardio"/>
 		<file name="watchWin.aardio" path="dlg\watchWin.aardio" comment="dlg\TestGlassWin.aardio"/>
 		<file name="TestTime.aardio" path="dlg\TestTime.aardio" comment="dlg\TestTime.aardio"/>
+		<file name="TestGfmark.aardio" path="dlg\TestGfmark.aardio" comment="dlg\TestGfmark.aardio"/>
 	</folder>
 	<folder name="html_crawler" path="html_crawler" comment="html_crawler" local="false" embed="false" ignored="false">
 		<file name="halo.carrywho.com.html" path="html_crawler\halo.carrywho.com.html" comment="html_crawler\halo.carrywho.com.html"/>
