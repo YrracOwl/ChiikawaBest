@@ -1,0 +1,51 @@
+import win.ui;
+/*DSG{{*/
+var winform = win.form(text="aardio form";right=259;bottom=151;border="thin";mode="popup";title=false)
+winform.add(
+btnBgColor={cls="button";text="背景色";left=16;top=24;right=96;bottom=56;dl=1;dt=1;font=LOGFONT(h=-16);z=1};
+btnHlColor={cls="button";text="高亮色";left=16;top=104;right=96;bottom=136;dl=1;dt=1;font=LOGFONT(h=-16);z=3};
+btnTxtColor={cls="button";text="重点色";left=16;top=64;right=96;bottom=96;dl=1;dt=1;font=LOGFONT(h=-16);z=2};
+plusbg={cls="plus";left=104;top=24;right=136;bottom=56;dl=1;dt=1;z=4};
+plusbgval={cls="plus";left=144;top=24;right=232;bottom=56;align="left";dl=1;dt=1;font=LOGFONT(h=-16);z=7};
+plushl={cls="plus";left=104;top=104;right=136;bottom=136;dl=1;dt=1;z=6};
+plushlval={cls="plus";left=144;top=104;right=232;bottom=136;align="left";dl=1;dt=1;font=LOGFONT(h=-16);z=9};
+plustxt={cls="plus";left=104;top=64;right=136;bottom=96;dl=1;dt=1;z=5};
+plustxtval={cls="plus";left=144;top=64;right=232;bottom=96;align="left";dl=1;dt=1;font=LOGFONT(h=-16);z=8}
+)
+/*}}*/
+
+import win.ui.simpleWindow;
+win.ui.simpleWindow(winform,,,,).skin(
+	background = { 
+		hover = 0xff99ffcc;
+		active = 0xffff6666; 
+		default = 0x00000000; 
+	}
+	color = { 
+		hover = 0xff666666;
+		active = 0xffffffff; 
+		default = 0xFF7BA5BF; 
+	}
+)
+
+winform.restoreColor = function(){
+	winform.plusbgval.text = "f7f4ed";
+	winform.plustxtval.text = "31322c";
+	winform.plushlval.text = "31322c";
+
+	winform.plusbg.background = 0xfff7f4ed;
+	winform.plustxt.background = 0xff31322c;
+	winform.plushl.background = 0xff31322c;
+}
+
+winform.btnBgColor.oncommand = function(id,event){
+	..win.ui.ctrl.pick().doModal(winform)
+}
+
+
+
+winform.restoreColor();
+
+winform.show();
+win.loopMessage();
+return winform;

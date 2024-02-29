@@ -48,6 +48,7 @@
 		<file name="watchWin.aardio" path="dlg\watchWin.aardio" comment="dlg\TestGlassWin.aardio"/>
 		<file name="TestTime.aardio" path="dlg\TestTime.aardio" comment="dlg\TestTime.aardio"/>
 		<file name="TestGfmark.aardio" path="dlg\TestGfmark.aardio" comment="dlg\TestGfmark.aardio"/>
+		<file name="timeline_skin.aardio" path="dlg\timeline_skin.aardio" comment="dlg\timeline_skin.aardio"/>
 	</folder>
 	<folder name="html_crawler" path="html_crawler" comment="html_crawler" local="false" embed="false" ignored="false">
 		<file name="halo.carrywho.com.html" path="html_crawler\halo.carrywho.com.html" comment="html_crawler\halo.carrywho.com.html"/>

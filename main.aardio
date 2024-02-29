@@ -83,6 +83,9 @@ import fsys.dlg;
 import win.ui.menu;
 import win.util.tray;
 
+//取色库
+import win.ui.ctrl.pick;
+
 //自定义窗口外观
 import win.ui.simpleWindow;
 win.ui.simpleWindow(mainForm,,,18,).skin(
