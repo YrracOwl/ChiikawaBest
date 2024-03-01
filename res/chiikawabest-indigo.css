@@ -31,6 +31,7 @@
 }
 .mkd strong {
   color: #1a2847;
+/* #1a2847 */
 }
 .mkd code,
 .mkd a {
@@ -298,4 +299,20 @@
 }
 .mkd .cm-s-inner .cm-type {
   color: #cbcb9f;
+}
+
+.mkd * {
+  color: var(--main-normal-color)
+}
+
+.mkd h1,
+.mkd h2,
+.mkd strong,
+.mkd a {
+  color: var(--main-txt-color);
+}
+
+.mkd h1,
+.mkd h2 {
+  border-color: var(--main-txt-color);
 }

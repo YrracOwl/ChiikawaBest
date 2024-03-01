@@ -211,6 +211,55 @@ if( not dbBase.existsTable("timeline") ){
 	)
 }
 
+if( not dbBase.existsTable("timelineskin") ){ 
+	dbBase.exec( "CREATE TABLE [timelineskin] (name PRIMARY KEY, color);");
+	var cmd = dbBase.prepare("REPLACE INTO [timelineskin] VALUES ( @name,@color);");
+	cmd.step(
+		name = "bg";
+		color = "FFF7F4ED";
+	);
+	cmd.step(
+		name = "txt";
+		color = "FF31322C";
+	);
+	cmd.step(
+		name = "hl";
+		color = "FFFECC11";
+	);
+	cmd.step(
+		name = "normal";
+		color = "FF31322C";
+	)
+}
+
+timeline_skin = {
+	bg = "FFF7F4ED";
+	txt = "FF31322C";
+	hl = "FFFECC11";
+	normal = "FF31322C";
+};
+
+if( dbBase.existsTable("timelineskin") ) {
+	for rowid, name, color in dbBase.each("SELECT rowid,* FROM timelineskin") {
+		select(name) {
+			case "bg" {
+				timeline_skin.bg = color;
+			}
+			case "txt" {
+				timeline_skin.txt = color;
+			}
+			case "hl" {
+				timeline_skin.hl = color;
+			}
+			case "normal" {
+				timeline_skin.normal = color;
+			}
+			else {
+			}
+		}
+	}
+}
+
 if( not dbAlarmClock.existsTable("default")){
 	dbAlarmClock.exec( "CREATE TABLE [default] (time PRIMARY KEY, content);"); 
 }

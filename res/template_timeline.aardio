@@ -17,12 +17,20 @@ var content_css = /**
     
 }
 
+:root {
+  --main-bg-color: #f7f4ed;
+  --main-txt-color: #31322c;
+  --main-hl-color: #fecc11;
+  --main-normal-color: #31322c;
+}
+
 body {
   font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 1em;
   font-weight: 300;
   line-height: 1.5;
   letter-spacing: 0.05em;
+  background-color: var(--main-bg-color);
 }
 
 /* Layout */
@@ -39,7 +47,7 @@ body {
   max-width: 90em;
 }
 .timeline:before {
-  background-color: #31322c;
+  background-color: var(--main-txt-color);
   content: '';
   margin-left: 1em;
   position: absolute;
@@ -110,8 +118,8 @@ body {
   -ms-transform: rotate(45deg);
   -webkit-transform: rotate(45deg);
   transform: rotate(45deg);
-  background-color: #31322c;
-  outline: 10px solid white;
+  background-color: var(--main-txt-color);
+  outline: 10px solid var(--main-bg-color);
   display: block;
   margin: 0.5em 0.5em 0.5em -0.5em;
   position: absolute;
@@ -129,7 +137,7 @@ body {
   transition: box-shadow 0.5s ease-in 0.1s;
   color: white;
   font-size: 0.75em;
-  background-color: #31322c;
+  background-color: var(--main-txt-color);
   -moz-box-shadow: inset 0 0 0 0em #bf242a;
   -webkit-box-shadow: inset 0 0 0 0em #bf242a;
   box-shadow: inset 0 0 0 0em #bf242a;
@@ -162,8 +170,8 @@ body {
   -ms-transform: rotate(45deg);
   -webkit-transform: rotate(45deg);
   transform: rotate(45deg);
-  background-color: #31322c;
-  outline: 10px solid white;
+  background-color: var(--main-txt-color);
+  outline: 10px solid var(--main-bg-color);
   display: block;
   margin: 0.5em 0.5em 0.5em -0.5em;
   position: absolute;
@@ -176,7 +184,7 @@ body {
 .timeline-event-thumbnail-disable {
   color: white;
   font-size: 0.75em;
-  background-color: #31322c;
+  background-color: var(--main-txt-color);
   -moz-box-shadow: inset 0 0 0 0em #bf242a;
   -webkit-box-shadow: inset 0 0 0 0em #bf242a;
   box-shadow: inset 0 0 0 0em #bf242a;
@@ -185,6 +193,9 @@ body {
   padding: 0.25em 1em 0.2em 1em;
 }
 
+.mkd strong {
+  background-color: var(--main-hl-color);
+}
 
 **/; 
 var content_body = /**
@@ -338,8 +349,7 @@ var content_js = /**
 		timelineEle.style.maxWidth = '70em';
 	};
 	
-	function changeClass(className,oldClass,newClass)
-	{
+	function changeClass(className,oldClass,newClass){
 		var objectNodes = document.querySelectorAll(className);
 		if(objectNodes){
 			objectNodes.forEach((object) => {
@@ -347,6 +357,18 @@ var content_js = /**
     			object.className = object.className.replace( regExp , newClass );
 			});			
 		};
+	}
+	function hexToRgba(hex) {
+		var rgbaNum = 'rgba(' + parseInt('0x' + hex.slice(3, 5)) + ',' + parseInt('0x' + hex.slice(5, 7)) + ',' + parseInt('0x' + hex.slice(7, 9)) + ',' + parseInt('0x' + hex.slice(1, 3))/255 + ')'
+		console.log(rgbaNum);console.log(hex);
+  		return rgbaNum;
+	}
+	function themeSet(themeData){
+		const root = document.querySelector(':root');
+		root.style.setProperty('--main-bg-color', hexToRgba('#'+themeData[0]));
+		root.style.setProperty('--main-txt-color', hexToRgba('#'+themeData[1]));
+		root.style.setProperty('--main-hl-color', hexToRgba('#'+themeData[2]));
+		root.style.setProperty('--main-normal-color', hexToRgba('#'+themeData[3]));
 	}
 	
 	var currentMouseEle = document.querySelectorAll(":hover"); 

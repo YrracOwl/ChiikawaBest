@@ -1,16 +1,20 @@
 import win.ui;
 /*DSG{{*/
-var winform = win.form(text="aardio form";right=259;bottom=151;border="thin";mode="popup";title=false)
+var winform = win.form(text="aardio form";right=271;bottom=223;border="none";mode="popup";title=false)
 winform.add(
 btnBgColor={cls="button";text="背景色";left=16;top=24;right=96;bottom=56;dl=1;dt=1;font=LOGFONT(h=-16);z=1};
 btnHlColor={cls="button";text="高亮色";left=16;top=104;right=96;bottom=136;dl=1;dt=1;font=LOGFONT(h=-16);z=3};
+btnNormalColor={cls="button";text="文本色";left=16;top=144;right=96;bottom=176;dl=1;dt=1;font=LOGFONT(h=-16);z=5};
+btnRestore={cls="button";text="恢复默认";left=96;top=184;right=176;bottom=216;dl=1;dt=1;font=LOGFONT(h=-16);z=13};
 btnTxtColor={cls="button";text="重点色";left=16;top=64;right=96;bottom=96;dl=1;dt=1;font=LOGFONT(h=-16);z=2};
-plusbg={cls="plus";left=104;top=24;right=136;bottom=56;dl=1;dt=1;z=4};
-plusbgval={cls="plus";left=144;top=24;right=232;bottom=56;align="left";dl=1;dt=1;font=LOGFONT(h=-16);z=7};
-plushl={cls="plus";left=104;top=104;right=136;bottom=136;dl=1;dt=1;z=6};
-plushlval={cls="plus";left=144;top=104;right=232;bottom=136;align="left";dl=1;dt=1;font=LOGFONT(h=-16);z=9};
-plustxt={cls="plus";left=104;top=64;right=136;bottom=96;dl=1;dt=1;z=5};
-plustxtval={cls="plus";left=144;top=64;right=232;bottom=96;align="left";dl=1;dt=1;font=LOGFONT(h=-16);z=8}
+plusbg={cls="plus";left=104;top=24;right=136;bottom=56;border={radius=12;width=1};dl=1;dt=1;z=4};
+plusbgval={cls="plus";left=144;top=24;right=256;bottom=56;align="left";dl=1;dt=1;font=LOGFONT(h=-16;weight=700);z=9};
+plushl={cls="plus";left=104;top=104;right=136;bottom=136;border={radius=12;width=1};dl=1;dt=1;z=8};
+plushlval={cls="plus";left=144;top=104;right=256;bottom=136;align="left";dl=1;dt=1;font=LOGFONT(h=-16;weight=700);z=11};
+plusnormal={cls="plus";left=104;top=144;right=136;bottom=176;border={radius=12;width=1};dl=1;dt=1;z=7};
+plusnormalval={cls="plus";left=144;top=144;right=256;bottom=176;align="left";dl=1;dt=1;font=LOGFONT(h=-16;weight=700);z=12};
+plustxt={cls="plus";left=104;top=64;right=136;bottom=96;border={radius=12;width=1};dl=1;dt=1;z=6};
+plustxtval={cls="plus";left=144;top=64;right=256;bottom=96;align="left";dl=1;dt=1;font=LOGFONT(h=-16;weight=700);z=10}
 )
 /*}}*/
 
@@ -28,24 +32,120 @@ win.ui.simpleWindow(winform,,,,).skin(
 	}
 )
 
-winform.restoreColor = function(){
-	winform.plusbgval.text = "f7f4ed";
-	winform.plustxtval.text = "31322c";
-	winform.plushlval.text = "31322c";
+winform.setColors = function(){
+	winform.plusbgval.text = ..timeline_skin.bg;
+	winform.plustxtval.text = ..timeline_skin.txt;
+	winform.plushlval.text = ..timeline_skin.hl;
+	winform.plusnormalval.text = ..timeline_skin.normal;
+	
+	winform.plusbg.background = tonumber(winform.plusbgval.text,16);
+	winform.plustxt.background = tonumber(winform.plustxtval.text,16);
+	winform.plushl.background = tonumber(winform.plushlval.text,16);
+	winform.plusnormal.background = tonumber(winform.plusnormalval.text,16);
+}
 
-	winform.plusbg.background = 0xfff7f4ed;
-	winform.plustxt.background = 0xff31322c;
-	winform.plushl.background = 0xff31322c;
+winform.restoreColor = function(){
+	winform.plusbgval.text = "FFF7F4ED";
+	winform.plustxtval.text = "FF31322C";
+	winform.plushlval.text = "FFFECC11";
+	winform.plusnormalval.text = "FF31322C";
+	
+	winform.plusbg.background = tonumber(winform.plusbgval.text,16);
+	winform.plustxt.background = tonumber(winform.plustxtval.text,16);
+	winform.plushl.background = tonumber(winform.plushlval.text,16);
+	winform.plusnormal.background = tonumber(winform.plusnormalval.text,16);
+}
+
+
+winform.btnRestore.oncommand = function(id,event){
+	winform.restoreColor();
+}
+
+winform.onClose = function(hwnd,message,wParam,lParam){
+    ..timeline_skin.bg = winform.plusbgval.text;
+    ..timeline_skin.txt = winform.plustxtval.text;
+    ..timeline_skin.hl = winform.plushlval.text;
+    ..timeline_skin.normal = winform.plusnormalval.text;
+    
+    winform.parent.timelineThemeSet();
+    
+    winform.show(false);
+    winform.writeDBSkin();
+}
+
+winform.writeDBSkin = function(){
+	var cmd = ..dbBase.prepare("REPLACE INTO [timelineskin] VALUES ( @name,@color);");
+	cmd.step(
+		name = "bg";
+		color = ..timeline_skin.bg;
+	);
+	cmd.step(
+		name = "txt";
+		color = ..timeline_skin.txt;
+	);
+	cmd.step(
+		name = "hl";
+		color = ..timeline_skin.hl;
+	);
+	cmd.step(
+		name = "normal";
+		color = ..timeline_skin.normal;
+	);
 }
 
 winform.btnBgColor.oncommand = function(id,event){
-	..win.ui.ctrl.pick().doModal(winform)
+	var colorPickers = ..win.ui.ctrl.pick(winform);
+	colorPickers.onColorChange = function(argb){
+		winform.plusbg.background = argb;
+		var rr,gg,bb,aa = colorPickers.getRgba(); 
+		winform.plusbgval.text = string.format("%02x",aa) ++ string.format("%02x",rr) ++ string.format("%02x",gg) ++ string.format("%02x",bb);
+		winform.plusbgval.text = string.upper(winform.plusbgval.text);
+	}
+	
+	colorPickers.setColor(winform.plusbg.background);
+	colorPickers.doModal();
 }
 
+winform.btnTxtColor.oncommand = function(id,event){
+	var colorPickers = ..win.ui.ctrl.pick(winform);
+	colorPickers.onColorChange = function(argb){
+		winform.plustxt.background = argb;
+		var rr,gg,bb,aa = colorPickers.getRgba();
+		winform.plustxtval.text = string.format("%02x",aa) ++ string.format("%02x",rr) ++ string.format("%02x",gg) ++ string.format("%02x",bb);
+		winform.plustxtval.text = string.upper(winform.plustxtval.text);
+	}
+	
+	colorPickers.setColor(winform.plustxt.background);
+	colorPickers.doModal();
+}
 
+winform.btnHlColor.oncommand = function(id,event){
+	var colorPickers = ..win.ui.ctrl.pick(winform);
+	colorPickers.onColorChange = function(argb){
+		winform.plushl.background = argb;
+		var rr,gg,bb,aa = colorPickers.getRgba(); 
+		winform.plushlval.text = string.format("%02x",aa) ++ string.format("%02x",rr) ++ string.format("%02x",gg) ++ string.format("%02x",bb);
+		winform.plushlval.text = string.upper(winform.plushlval.text);
+	}
+	
+	colorPickers.setColor(winform.plushl.background);
+	colorPickers.doModal();
+}
 
-winform.restoreColor();
+winform.btnNormalColor.oncommand = function(id,event){
+	var colorPickers = ..win.ui.ctrl.pick(winform);
+	colorPickers.onColorChange = function(argb){
+		winform.plusnormal.background = argb;
+		var rr,gg,bb,aa = colorPickers.getRgba(); 
+		winform.plusnormalval.text = string.format("%02x",aa) ++ string.format("%02x",rr) ++ string.format("%02x",gg) ++ string.format("%02x",bb);
+		winform.plusnormalval.text = string.upper(winform.plusnormalval.text);
+	}
+	
+	colorPickers.setColor(winform.plusnormal.background);
+	colorPickers.doModal();
+}
 
+winform.setColors();
 winform.show();
 win.loopMessage();
 return winform;
