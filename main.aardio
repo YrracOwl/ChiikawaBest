@@ -198,8 +198,12 @@ dbAlarmClock = sqlite(dbAlarmClockPath);
 dbAppNotesPath = dbDir+"/appNotes.db";
 dbAppNotes = sqlite(dbAppNotesPath);
 
+//LANChat数据库路径
+dbLANChatPath = dbDir+"/LANChat.db";
+dbLANChat = sqlite(dbLANChatPath);
+
 if( not dbTimeline.existsTable("default") ){ 
-	dbTimeline.exec( "CREATE TABLE [default] (time PRIMARY KEY, title, content);"); 
+	dbTimeline.exec( "CREATE TABLE [default] (time PRIMARY KEY, title, content, image);"); 
 }
 
 if( not dbBase.existsTable("timeline") ){ 
@@ -270,6 +274,10 @@ if( not dbAppNotes.existsTable("appNotesDefault")){
 
 if( not dbAppNotes.existsTable("appNotesPos")){
 	dbAppNotes.exec( "CREATE TABLE [appNotesPos] (name PRIMARY KEY, xx, yy, xwidth, yheight);")
+}
+
+if( not dbLANChat.existsTable("LANChat")){
+	dbLANChat.exec( "CREATE TABLE [LANChat] (time PRIMARY KEY, domain, chatgroup, content);")
 }
 
 //////////////////////////////////////////////////////////////////////
