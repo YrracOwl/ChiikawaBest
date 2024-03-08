@@ -1,0 +1,11 @@
+import win.ui;
+/*DSG{{*/
+var chatWins = win.form(text="Chatting";right=799;bottom=599)
+chatWins.add()
+/*}}*/
+
+
+
+chatWins.show();
+win.loopMessage();
+return chatWins;
