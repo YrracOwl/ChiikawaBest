@@ -334,6 +334,12 @@ var content_js = /**
     	}, 5);
 	};
 	
+	function getHtml(){
+		var content = document.documentElement.outerHTML;
+		return content; 
+	};
+	
+	
 	function Wider(){
 		var timelineEle = document.querySelector(".timeline"); 
 		timelineEle.style.maxWidth = '110em';

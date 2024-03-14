@@ -26,14 +26,20 @@ if(#_CMDLINE){
 	}
 }
 
-var atom,hwnd/*冲突窗口的句柄,该函数会自动激活此窗口*/ = mainForm.atom("3C6F3EEC-7B25-44F1-B612-FBAA2319827D.ChiikawaBest");
-if(!atom){
-	/*为窗口设置原子值可以避免一个程序重复运行多个实例*/
-	//win.show(hwnd,0x9/*_SW_RESTORE*/);
-	//win.setForeground(hwnd);
-	win.msgbox("程序已启动！请查看托盘！","ChiikawaBest",0,0,1200)
-	win.quitMessage();
-	return;
+//process库导入
+import process;
+
+//创建原子窗体
+var atomId,hwnd = win.ui.atom.find("3C6F3EEC-7B25-44F1-B612-FBAA2319827D.ChiikawaBest")
+if( atomId ){
+    win.show(hwnd, true);
+    win.setForeground(hwnd);
+    win.quitMessage();
+    return;
+}
+else {
+    mainForm._atomId =  process.atom.add("3C6F3EEC-7B25-44F1-B612-FBAA2319827D.ChiikawaBest");
+    win.property.set(mainForm.hwnd, win.ui.atom._unique_prop_name, mainForm._atomId );
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -49,9 +55,6 @@ if( !_STUDIO_INVOKED ){
 
 //fsys的删除库
 import fsys.remove;
-
-//process库导入
-import process;
 
 //inet.downBox导入
 import inet.downBox;
@@ -86,9 +89,11 @@ import win.util.tray;
 //取色库
 import win.ui.ctrl.pick;
 
-//web socket库导入
+//web.socket库导入
 import web.socket.server;
 import web.socket.client;
+
+import win.clip;
 
 //自定义窗口外观
 import win.ui.simpleWindow;
@@ -123,6 +128,17 @@ namespace wsock.tcp.simpleHttpServer{
     //startPort = 8615; //不指定端口时会自动分配空闲端口
     threadGlobal = { mainForm = ..mainForm }; //指定 HTTP 服务线程的默认全局变量,注意定义线程函数的作用域同名变量不能是局部变量
 }
+
+//设置：网站根目录
+siteBaseDir = "/siteBase/";
+if(not io.exist(siteBaseDir)){
+	io.createDir(siteBaseDir);
+}
+
+//wsock.tcp.asynHttpServer导入
+import wsock.tcp.asynHttpServer;
+siteServer = wsock.tcp.asynHttpServer();
+siteServer.start("0.0.0.0");//这里可以指定 IP 和端口，不指定则自动分配空闲端口
 
 //////////////////////////////////////////////////////////////////////
 //全局变量
@@ -367,6 +383,7 @@ mainForm.trayCreate = function(){
 	mainForm.popmenu.add();//分隔线
 	mainForm.popmenu.add('退出',function(id){
 		mainForm.onClose = null;
+		siteServer.stop();
 		mainForm.onClose = function(hwnd,message,wParam,lParam){
 			if(webwatcher != "notExist"){
 					webwatcher.onClose = null;
@@ -411,6 +428,9 @@ mainForm.onClose = function(hwnd,message,wParam,lParam){
     return true;//阻击默认消息传递，取消最小化过程
 }
 
+mainForm.onDestroy = function(){
+    siteServer.stop();
+}
 
 var minimize_1st_show = true; 
 

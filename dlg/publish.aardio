@@ -1,0 +1,45 @@
+import win.ui;
+/*DSG{{*/
+var winform = win.form(text="发布";right=191;bottom=159;border="none";max=false;min=false;mode="popup")
+winform.add(
+btnCopy={cls="button";text="复制内网地址";left=16;top=120;right=176;bottom=152;dl=1;dt=1;font=LOGFONT(h=-16);z=3};
+btnOpenDir={cls="button";text="打开文件夹";left=16;top=80;right=176;bottom=112;dl=1;dt=1;font=LOGFONT(h=-16);z=2};
+btnPublish={cls="button";text="发布到网页";left=16;top=40;right=176;bottom=72;dl=1;dt=1;font=LOGFONT(h=-16);z=1}
+)
+/*}}*/
+
+import win.ui.simpleWindow;
+win.ui.simpleWindow(winform,,,,).skin(
+	background = { 
+		hover = 0xff99ffcc;
+		active = 0xffff6666; 
+		default = 0x00000000; 
+	}
+	color = { 
+		hover = 0xff666666;
+		active = 0xffffffff; 
+		default = 0xFF7BA5BF; 
+	}
+)
+
+winform.btnCopy.disabled = true;
+
+winform.btnPublish.oncommand = function(id,event){
+	winform.htmlPath = winform.parent.saveToPublish();
+	htmlPathGet = ..siteServer.getUrl(winform.htmlPath)
+	..process.execute(htmlPathGet);
+	winform.btnCopy.disabled = false;
+}
+
+winform.btnCopy.oncommand = function(id,event){
+	var LANadress = ..siteServer.getUrl(winform.htmlPath,true);
+	..win.clip.write(LANadress,false);
+}
+
+winform.btnOpenDir.oncommand = function(id,event){
+	..process("explorer.exe",io.fullpath(..siteBaseDir))
+}
+
+winform.show();
+win.loopMessage();
+return winform;
