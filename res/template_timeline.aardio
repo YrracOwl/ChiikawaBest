@@ -44,7 +44,7 @@ body {
 .timeline {
   margin: 4em auto;
   position: relative;
-  max-width: 90em;
+  max-width: 60em;
 }
 .timeline:before {
   background-color: var(--main-txt-color);
@@ -342,17 +342,17 @@ var content_js = /**
 	
 	function Wider(){
 		var timelineEle = document.querySelector(".timeline"); 
-		timelineEle.style.maxWidth = '110em';
+		timelineEle.style.maxWidth = '100em';
 	};
 
 	function Middle(){
 		var timelineEle = document.querySelector(".timeline"); 
-		timelineEle.style.maxWidth = '90em';
+		timelineEle.style.maxWidth = '80em';
 	};
 	
 	function Smaller(){
 		var timelineEle = document.querySelector(".timeline"); 
-		timelineEle.style.maxWidth = '70em';
+		timelineEle.style.maxWidth = '60em';
 	};
 	
 	function changeClass(className,oldClass,newClass){
@@ -364,6 +364,14 @@ var content_js = /**
 			});			
 		};
 	}
+	
+	function animationActivate(){
+		changeClass(".timeline-event-disable","timeline-event-disable","timeline-event");
+        changeClass(".timeline-event-icon-disable","timeline-event-icon-disable","timeline-event-icon");
+        changeClass(".timeline-event-thumbnail-disable","timeline-event-thumbnail-disable","timeline-event-thumbnail");
+	}
+	
+	
 	function hexToRgba(hex) {
 		var rgbaNum = 'rgba(' + parseInt('0x' + hex.slice(3, 5)) + ',' + parseInt('0x' + hex.slice(5, 7)) + ',' + parseInt('0x' + hex.slice(7, 9)) + ',' + parseInt('0x' + hex.slice(1, 3))/255 + ')'
 		console.log(rgbaNum);console.log(hex);

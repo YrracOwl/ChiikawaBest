@@ -1,10 +1,11 @@
 import win.ui;
 /*DSG{{*/
-var winform = win.form(text="发布";right=191;bottom=159;border="none";max=false;min=false;mode="popup")
+var winform = win.form(text="发布";right=191;bottom=191;border="none";max=false;min=false;mode="popup")
 winform.add(
-btnCopy={cls="button";text="复制内网地址";left=16;top=120;right=176;bottom=152;dl=1;dt=1;font=LOGFONT(h=-16);z=3};
-btnOpenDir={cls="button";text="打开文件夹";left=16;top=80;right=176;bottom=112;dl=1;dt=1;font=LOGFONT(h=-16);z=2};
-btnPublish={cls="button";text="发布到网页";left=16;top=40;right=176;bottom=72;dl=1;dt=1;font=LOGFONT(h=-16);z=1}
+btnCopy={cls="button";text="复制内网地址";left=16;top=88;right=176;bottom=120;dl=1;dt=1;font=LOGFONT(h=-16);z=3};
+btnOpenDir={cls="button";text="打开文件夹";left=16;top=40;right=176;bottom=72;dl=1;dt=1;font=LOGFONT(h=-16);z=2};
+btnPublish={cls="button";text="发布";left=16;top=136;right=88;bottom=168;dl=1;dt=1;font=LOGFONT(h=-16);z=1};
+btnVisit={cls="button";text="访问";left=104;top=136;right=176;bottom=168;dl=1;dt=1;font=LOGFONT(h=-16);z=4}
 )
 /*}}*/
 
@@ -22,22 +23,45 @@ win.ui.simpleWindow(winform,,,,).skin(
 	}
 )
 
-winform.btnCopy.disabled = true;
+//下面创建一个手动跟踪模式的提示控件
+import win.ui.tooltip;
+var balloonFlagShow = win.ui.tooltip.tracking(winform,false);
+
+winform.htmlPath = winform.parent.pathGen();
+winform.LANaddress = ..siteServer.getUrl(winform.htmlPath,true);
+
+winform.parent.modalMask.show(true);
 
 winform.btnPublish.oncommand = function(id,event){
-	winform.htmlPath = winform.parent.saveToPublish();
-	htmlPathGet = ..siteServer.getUrl(winform.htmlPath)
-	..process.execute(htmlPathGet);
-	winform.btnCopy.disabled = false;
+	var flag = winform.parent.saveToPublish();
+	if(flag){
+		var x,y,cx,cy = winform.btnPublish.getPos(true);
+    	balloonFlagShow.setText("发布成功！右侧*访问*打开浏览器！").trackPopup(true,x+cx*3/4,y+cy );
+    	win.delay(1600);
+    	balloonFlagShow.trackPopup(false);
+	}
+}
+
+winform.btnVisit.oncommand = function(id,event){
+	..process.execute(winform.LANaddress);
 }
 
 winform.btnCopy.oncommand = function(id,event){
-	var LANadress = ..siteServer.getUrl(winform.htmlPath,true);
-	..win.clip.write(LANadress,false);
+	var flag = ..win.clip.write(winform.LANaddress,false);
+	if(flag){
+		var x,y,cx,cy = winform.btnCopy.getPos(true);
+    	balloonFlagShow.setText("复制成功！Ctrl+C可粘贴！").trackPopup(true,x+cx*3/4,y+cy );
+    	win.delay(1600);
+    	balloonFlagShow.trackPopup(false);
+	}
 }
 
 winform.btnOpenDir.oncommand = function(id,event){
 	..process("explorer.exe",io.fullpath(..siteBaseDir))
+}
+
+winform.onClose = function(hwnd,message,wParam,lParam){
+    winform.parent.modalMask.show(false);
 }
 
 winform.show();

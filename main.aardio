@@ -130,7 +130,7 @@ namespace wsock.tcp.simpleHttpServer{
 }
 
 //设置：网站根目录
-siteBaseDir = "/siteBase/";
+siteBaseDir = "/home/";
 if(not io.exist(siteBaseDir)){
 	io.createDir(siteBaseDir);
 }
@@ -138,7 +138,11 @@ if(not io.exist(siteBaseDir)){
 //wsock.tcp.asynHttpServer导入
 import wsock.tcp.asynHttpServer;
 siteServer = wsock.tcp.asynHttpServer();
-siteServer.start("0.0.0.0");//这里可以指定 IP 和端口，不指定则自动分配空闲端口
+//这里可以指定 IP 和端口，不指定则自动分配空闲端口
+//成功返回true，失败返回null
+if(siteServer.start("0.0.0.0", 40315) == null){
+	siteServer.start("0.0.0.0");
+}
 
 //////////////////////////////////////////////////////////////////////
 //全局变量

@@ -326,6 +326,7 @@ thread.set("thrdTimelineUpdate", thrdTimelineUpdate);
 
 import win.ui.mask;
 var frmMask = win.ui.mask(winform.winTimelineShow,true)
+winform.modalMask = win.ui.mask(winform);
 
 tl_webview.external = {
 	modifyList = function(timeSel){
@@ -455,6 +456,9 @@ winform.childWinUpdate = function(tlTitle){
 	currentTimeLine = tlTitle;
 	winform.当前主题.text = currentTimeLine;
 	tl_webview.xcall("setTitle",winform.当前主题.text);
+	if(_WIN10_LATER){
+		tl_webview.xcall("animationActivate");
+	}
 	thread.invoke( 
 		function(winform,tlTitle){
 			winform.chkDbField(tlTitle);
@@ -832,11 +836,12 @@ winform.more.oncommand = function(id,event){
 winform.saveToPublish = function(){
 	var htmlPath = ..siteBaseDir + winform.当前主题.text + ".html"; 
 	string.save(htmlPath, tl_webview.xcall("getHtml"));
-	return htmlPath; 
+	return htmlPath;
 }
 
-winform.LANAddress = function(){
-	
+winform.pathGen = function(){
+	var htmlPath = ..siteBaseDir + winform.当前主题.text + ".html";
+	return htmlPath; 
 }
 
 
