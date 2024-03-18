@@ -1,5 +1,5 @@
-inet_launch_params_http = "HTTP=HTTP://127.0.0.1:20221";
-inet_launch_params_socks = "SOCKS5=SOCKS5://127.0.0.1:20220";
+inet_launch_params_http = "HTTP=HTTP://127.0.0.1:20200";
+inet_launch_params_socks = "SOCKS5=SOCKS5://127.0.0.1:20199";
 inet_launch_params_none = "";
 
 import web.rest.github;
@@ -7,12 +7,32 @@ import web.rest.client;
 import console;
 
 console.log(">>>Test Github")
-var client = web.rest.client(,inet_launch_params_http);
-
+/*
 console.dump(web.rest.github.latestRelease("YrracOwl/ChiikawaBest"))
 
+console.log(">>>Test Github Path Info")
 var urlPath = web.rest.github.latestRelease("YrracOwl/ChiikawaBest","ChiikawaBest.exe")
 console.dump(urlPath)
+*/
+
+/*
+console.log(">>>Client Head")
+var client = web.rest.client(,inet_launch_params_http);
+latestPath = "https://github.com/YrracOwl/ChiikawaBest/releases/latest/";
+
+client.get(latestPath);
+console.dump(client.lastStatusCode);
+console.more(1)
+
+var flag = client.head(latestPath);
+if(flag){
+	console.dump(client.lastResponseHeaders());
+	console.more(1)
+	client.get(latestPath);
+	console.dump(client.lastStatusCode);
+	console.more(1)
+}
+*/
 
 /*
 var RestGithub = web.rest.client("Mozilla/5.0","HTTP=HTTP://127.0.0.1:20200","localhost,127.0.0.*");
@@ -20,5 +40,24 @@ var GithubResponse = RestGithub.get("https://www.google.com");
 console.dump(GithubResponse);
 */
 
+latestPath = "https://github.com/YrracOwl/ChiikawaBest/releases/latest";
+
+import inet.http;
+var http = inet.http(,inet_launch_params_http);
+http.disableRedirects(true) ;
+http.beginRequest(latestPath);
+http.send();
+console.log(http.readHeader("status"))
+http.endRequest();
+
+/*
+import inet.whttp;
+var http = inet.whttp()
+http.disableRedirects()
+var str,code,message = http.get(latestPath)
+
+io.open()
+io.print( str,code,message )
+*/
 
 console.pause();

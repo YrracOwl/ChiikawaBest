@@ -32,9 +32,16 @@ import process;
 //创建原子窗体
 var atomId,hwnd = win.ui.atom.find("3C6F3EEC-7B25-44F1-B612-FBAA2319827D.ChiikawaBest")
 if( atomId ){
-    win.show(hwnd, true);
-    win.setForeground(hwnd);
-    win.quitMessage();
+	if(!hwnd){
+		process.atom.delete(atomId);
+		process.execute(io._exepath,'operation=slowStart');
+	}
+	else {
+		win.show(hwnd, true);
+    	win.setForeground(hwnd);
+	}
+	
+	win.quitMessage();
     return;
 }
 else {
@@ -138,6 +145,7 @@ if(not io.exist(siteBaseDir)){
 //wsock.tcp.asynHttpServer导入
 import wsock.tcp.asynHttpServer;
 siteServer = wsock.tcp.asynHttpServer();
+
 //这里可以指定 IP 和端口，不指定则自动分配空闲端口
 //成功返回true，失败返回null
 if(siteServer.start("0.0.0.0", 40315) == null){
@@ -434,6 +442,7 @@ mainForm.onClose = function(hwnd,message,wParam,lParam){
 
 mainForm.onDestroy = function(){
     siteServer.stop();
+    siteServer = null;
 }
 
 var minimize_1st_show = true; 
