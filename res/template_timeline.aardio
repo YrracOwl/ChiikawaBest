@@ -31,6 +31,7 @@ body {
   line-height: 1.5;
   letter-spacing: 0.05em;
   background-color: var(--main-bg-color);
+  text : var(--main-normal-color);
 }
 
 /* Layout */
@@ -195,6 +196,10 @@ body {
 
 .mkd strong {
   background-color: var(--main-hl-color);
+}
+
+input[type="checkbox"]:disabled {
+    color: var(--main-normal-color);
 }
 
 **/; 

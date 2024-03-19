@@ -202,8 +202,6 @@ console.log(updateFilePath)
 wbUserDataDir = io.appData(appName+"userDataDir");
 wbHistoryDir = wbUserDataDir+"\EBWebView\Default\";
 
-
-
 //设置：数据库设置
 dbDirBackUp = io.appData(appName+"databaseBackups");
 dbDir = io.appData(appName+"database");
@@ -326,6 +324,7 @@ mainForm.trayCreate = function(){
 	*/
 	import win.ui.menu;
 	mainForm.popmenu = win.ui.popmenu(mainForm);//创建弹出菜单
+/*
     stat = win.isVisible(mainForm.hwnd);
     if(stat){
     	mainForm.popmenu.add("隐藏主窗口",function(id){
@@ -337,7 +336,12 @@ mainForm.trayCreate = function(){
 			win.setForeground(mainForm.hwnd)
 		});
     }
-	
+*/
+	mainForm.popmenu.add("显示主窗口",function(id){
+		mainForm.show(true);
+		win.setForeground(mainForm.hwnd)
+	});
+		
 	mainForm.popmenu.add();//分隔线
 	mainForm.popmenu.add("设置",function(){
 		var settings1 = mainForm.loadForm("\dlg\settings.aardio");
@@ -470,11 +474,16 @@ webWatcher_taskScheduler = win.taskScheduler(mainForm);
 //自定义函数
 //////////////////////////////////////////////////////////////////////
 
-var updateUrlbase = "https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/dist/ChiikawaBest.exe";
+updateUrlBackUp = "https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/release/ChiikawaBest.exe";
+updateUrlbase = "https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/release/ChiikawaBest.exe";
 var updateUrlPrefix1 = "https://github.moeyy.xyz/";
 var updateUrlPrefix2 = "https://git.886.be/";
 var updateUrlPrefix3 = "https://ghps.cc/";
 var updateUrlPrefix = {updateUrlPrefix1;updateUrlPrefix2;updateUrlPrefix3};
+
+if(cfg.apps_setting.urlSetting){
+	updateUrlbase = cfg.apps_setting.urlSetting;
+}
 
 mainForm.updateUrl = updateUrlbase;
 mainForm.updateCheckOver = false;
@@ -497,14 +506,17 @@ mainForm.updateStart = function(){
 
 mainForm.checkUpdate = function(){
 	mainForm.updateStatus = false;
-	
-	//var LatestRelease = web.rest.github.latestRelease("YrracOwl/ChiikawaBest");
+	var LatestReleaseUrlPath = updateUrlbase;
+
+/*
 	var LatestReleaseUrlPath = web.rest.github.latestRelease("YrracOwl/ChiikawaBest","ChiikawaBest.exe");
 	if(LatestReleaseUrlPath == null){
 		mainForm.msgboxErr("当前无法访问Github，请稍后再试");
 		mainForm.updateStatus = true;
 		return; 
 	}
+*/
+	
 	var updateUrlMirrors = {};
 	for(k,v in updateUrlPrefix){
 		updateUrlMirrors[k] = updateUrlPrefix[k] + LatestReleaseUrlPath;
@@ -566,13 +578,15 @@ mainForm.checkUpdate = function(){
 
 mainForm.initialCheckUpdate = function(){
 	mainForm.updateStatus = false;
-	
-	//var LatestRelease = web.rest.github.latestRelease("YrracOwl/ChiikawaBest");
+	var LatestReleaseUrlPath = updateUrlbase;
+/*
 	var LatestReleaseUrlPath = web.rest.github.latestRelease("YrracOwl/ChiikawaBest","ChiikawaBest.exe");
 	if(LatestReleaseUrlPath == null){
 		mainForm.msgboxErr("当前无法访问Github，请稍后再试");
 		return; 
 	}
+*/
+	
 	var updateUrlMirrors = {};
 	for(k,v in updateUrlPrefix){
 		updateUrlMirrors[k] = updateUrlPrefix[k] + LatestReleaseUrlPath;
