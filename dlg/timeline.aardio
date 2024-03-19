@@ -459,6 +459,7 @@ winform.chkDbField = function(tlTitle){
 winform.childWinUpdate = function(tlTitle){
 	currentTimeLine = tlTitle;
 	winform.当前主题.text = currentTimeLine;
+	winform.text = "时间线 - " + winform.当前主题.text;
 	tl_webview.xcall("setTitle",winform.当前主题.text);
 	if(_WIN10_LATER){
 		tl_webview.xcall("animationActivate");
@@ -485,6 +486,21 @@ winform.listboxUpdate = function(winform){
 	}
 }
 
+winform.gfmarkCheckList = function(strPrepared){
+	var strGfmark = ..string.gfmark.render(strPrepared);
+	var pattern = //<\<li\>\[ \]>
+	var replaceText = `<li><input type="checkbox" disabled />`;
+	var replacecount = "99";
+	strGfmarkReplaceResultMid = string.replace( strGfmark,pattern,replaceText,replacecount);
+
+	var pattern = //<\<li\>\[x\]>
+	var replaceText = `<li><input type="checkbox" checked disabled />`;
+	strGfmarkReplaceResult = string.replace( strGfmarkReplaceResultMid,pattern,replaceText,replacecount);	
+
+	return strGfmarkReplaceResult;
+}
+
+
 winform.timelineWebUpdate = function(winform){
 	tl_webview.xcall("clearListTemp");
 	if(winform.listbox.count<1){
@@ -503,7 +519,7 @@ winform.timelineWebUpdate = function(winform){
 				imgUrl = "null";
 			}
 			//tl_webview.xcall("pushTable",{tostring(result.time);tostring(result.title);tostring(result.content);imgUrl});
-			tl_webview.xcall("pushTable",{tostring(result.time);tostring(result.title);..string.gfmark.render(result.content);imgUrl});
+			tl_webview.xcall("pushTable",{tostring(result.time);tostring(result.title);winform.gfmarkCheckList(result.content);imgUrl});
 		}
 	}
 	tl_webview.xcall("replaceList");
@@ -658,7 +674,7 @@ winform.添加plus.oncommand = function(id,event){
 				}
 				
 				//tl_webview.xcall("updateContent",{tostring(tl_time);tostring(tl_title);tostring(tl_content);imgUrl});
-				tl_webview.xcall("updateContent",{tostring(tl_time);tostring(tl_title);..string.gfmark.render(tl_content);imgUrl});
+				tl_webview.xcall("updateContent",{tostring(tl_time);tostring(tl_title);winform.gfmarkCheckList(tl_content);imgUrl});
 			}
 			//修改了时间，或者纯粹新增，均不会触发
 			else {
