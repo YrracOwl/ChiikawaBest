@@ -66,6 +66,9 @@ import fsys.remove;
 //inet.downBox导入
 import inet.downBox;
 
+//inet.url导入
+import inet.url;
+
 //gid库导入用于翻转颜色
 import gdi;
 

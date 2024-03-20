@@ -4,7 +4,7 @@ var winform = win.form(text="应用设置";right=447;bottom=207;clipch=1)
 winform.add(
 btnRestore={cls="button";text="恢复默认链接";left=80;top=128;right=176;bottom=152;dl=1;dt=1;flat=1;z=8};
 static={cls="static";text="更新地址：";left=8;top=128;right=80;bottom=152;center=1;dl=1;dt=1;transparent=1;z=7};
-urlSetting={cls="edit";left=8;top=152;right=440;bottom=176;dl=1;dt=1;edge=1;z=6};
+urlSetting={cls="edit";text="https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/release/ChiikawaBest.exe";left=8;top=152;right=440;bottom=176;dl=1;dt=1;edge=1;z=6};
 关闭时清空记录={cls="checkbox";text="关闭时清空记录 (即时生效)";left=8;top=8;right=440;bottom=32;dl=1;dt=1;z=1};
 启动到托盘={cls="checkbox";text="启动时最小化到托盘";left=8;top=32;right=440;bottom=56;dl=1;dt=1;z=2};
 启动时检测更新={cls="checkbox";text="启动时检测更新";left=8;top=56;right=440;bottom=80;dl=1;dt=1;z=3};
@@ -33,12 +33,21 @@ winform.btnRestore.oncommand = function(id,event){
 	winform.urlSetting.text = ..updateUrlBackUp;
 }
 
-winform.urlSetting.wndproc = function(hwnd,message,wParam,lParam){
-	if(wParam == 8/*_WM_KILLFOCUS*/){
-		var str = winform.urlSetting.text;
-		var pattern =  "\a+\://\S*"
-		strMatchResult = string.match( str, pattern );
-		if (strMatchResult) {} else {winform.btnRestore.oncommand();}
+winform.wndproc = function(hwnd,message,wParam,lParam){
+	select( message ) { 
+		case 0x201/*_WM_LBUTTONDOWN*/{
+			var str = ..inet.url.encodeUri(winform.urlSetting.text);
+			var pattern =  "\a+\://\S*"
+			var strMatchResult = string.match( str, pattern );
+			if (strMatchResult) {
+				winform.urlSetting.text = strMatchResult;
+			}
+			else {
+				winform.btnRestore.oncommand();
+			}
+		}
+		else{
+		}
 	}
 	//无返回值则继续调用默认回调函数
 }

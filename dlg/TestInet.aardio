@@ -40,8 +40,10 @@ var GithubResponse = RestGithub.get("https://www.google.com");
 console.dump(GithubResponse);
 */
 
-latestPath = "https://github.com/YrracOwl/ChiikawaBest/releases/latest";
+latestPath = "https://github.com/Yrrac Owl/ChiikawaBest/releases/latest";
+latestPath = "https://牛啊牛.com"
 
+/*
 import inet.http;
 var http = inet.http(,inet_launch_params_http);
 http.disableRedirects(true) ;
@@ -49,6 +51,7 @@ http.beginRequest(latestPath);
 http.send();
 console.log(http.readHeader("status"))
 http.endRequest();
+*/
 
 /*
 import inet.whttp;
@@ -60,4 +63,10 @@ io.open()
 io.print( str,code,message )
 */
 
-console.pause();
+import inet.url;
+
+console.dump(inet.url.encode(latestPath))
+console.dump(inet.url.encodeUri(latestPath))
+console.dump(inet.url.encodeMbcs(latestPath))
+
+console.more(1)
