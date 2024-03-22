@@ -28,8 +28,6 @@ import win.ui.tooltip;
 var balloonFlagShow = win.ui.tooltip.tracking(winform,false);
 
 winform.htmlPath = winform.parent.pathGen();
-winform.LANaddress = ..siteServer.getUrl(winform.htmlPath,true);
-
 winform.parent.modalMask.show(true);
 
 winform.btnPublish.oncommand = function(id,event){
@@ -64,6 +62,32 @@ winform.onClose = function(hwnd,message,wParam,lParam){
     winform.parent.modalMask.show(false);
 }
 
+winform.uiWait = function(trueOrFalse){
+	if(trueOrFalse){
+		winform.btnVisit.disabledText = {"✶";"✸";"✹";"✺";"✹";"✷"};
+		winform.btnCopy.disabledText = {"✶";"✸";"✹";"✺";"✹";"✷"};
+	}
+	else {
+		winform.btnVisit.disabledText = null;
+		winform.btnCopy.disabledText = null;
+	}
+	
+}
+
+winform.LANaddressReady = function(){
+	winform.LANaddress = ..siteServer.getUrl(winform.htmlPath,true);
+}
+
+
+winform.uiWait(true);
 winform.show();
+
+thread.invokeAndWait(
+	function(winform){
+		winform.LANaddressReady();
+	},winform
+);
+
+winform.uiWait(false);
 win.loopMessage();
 return winform;
