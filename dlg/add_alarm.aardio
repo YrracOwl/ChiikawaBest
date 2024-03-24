@@ -120,7 +120,8 @@ if(..dbAlarmClock.existsTable("default")){
 				win.setForeground(foregroundHwnd);
 				frmChild.show();
 				frmChild.redrawBackground();
-				win.flash(frmChild.hwnd,32);
+				win.delay(980)
+				win.flash(frmChild.hwnd,9);
 
 			},AlarmContent,k);
 			
@@ -350,7 +351,8 @@ alarmSetWinform.plusBtn.oncommand = function(id,event){
 		win.setForeground(foregroundHwnd);
 		frmChild.show();
 		frmChild.redrawBackground();
-		win.flash(frmChild.hwnd,32);
+		win.delay(980)
+		win.flash(frmChild.hwnd,9);
 		
 	},AlarmContent,tempTime);
 	

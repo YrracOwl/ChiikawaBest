@@ -9,6 +9,7 @@ plusTime={cls="plus";left=8;top=32;right=288;bottom=72;dl=1;dr=1;dt=1;font=LOGFO
 )
 /*}}*/
 
+import win.ui.fade;
 var timeFormatted = null;
 winform.updateContent = function(contentStr,timeStr){
 	timeFormatted = time(timeStr,"%Y年%m月%d日%H时%M分%S秒");
@@ -45,6 +46,7 @@ winform.btnD30.oncommand = function(id,event){
 }
 
 winform.enableDpiScaling();
+win.ui.fade(winform,960);
 //winform.show();
 win.loopMessage();
 return winform;

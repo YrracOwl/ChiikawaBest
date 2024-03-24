@@ -441,7 +441,7 @@ mainForm.onClose = function(hwnd,message,wParam,lParam){
 	mainForm.show(false); //隐藏窗口
 	if(!cfg.apps_setting.启动到托盘 and minimize_1st_show){
 		minimize_1st_show = false;
-		mainForm.tray.pop("应用已启动，右击托盘获取更多菜单","ChiikawaBest",,3000);
+		mainForm.tray.pop("应用"+mainForm.appVersion+"已启动，右击托盘获取更多菜单","ChiikawaBest",,3000);
 	}
     //mainForm.popmenu.setString(1,"显示")
     return true;//阻击默认消息传递，取消最小化过程
@@ -458,7 +458,7 @@ mainForm.onMinimize = function(lParam){
 	mainForm.show(false); //隐藏窗口
 	if(!cfg.apps_setting.启动到托盘 and minimize_1st_show){
 		minimize_1st_show = false;
-		mainForm.tray.pop("应用已启动，右击托盘获取更多菜单","ChiikawaBest",,3000);
+		mainForm.tray.pop("应用"+mainForm.appVersion+"已启动，右击托盘获取更多菜单","ChiikawaBest",,3000);
 	}
     //mainForm.popmenu.setString(1,"显示")
     return true;//阻击默认消息传递，取消最小化过程
@@ -839,14 +839,14 @@ if(!cfg.apps_setting.启动次数){
 mainForm.enableDpiScaling();
 if(cfg.apps_setting.启动到托盘){
 	if(checkFirstLaunch){
-		mainForm.tray.pop("应用已启动，右击托盘获取更多菜单","ChiikawaBest");
+		mainForm.tray.pop("应用"+mainForm.appVersion+"已启动，右击托盘获取更多菜单","ChiikawaBest");
 	}
 	elseif(cfg.apps_setting.启动次数 < 6){
-		mainForm.tray.pop("应用已启动，右击托盘获取更多菜单","ChiikawaBest");
+		mainForm.tray.pop("应用"+mainForm.appVersion+"已启动，右击托盘获取更多菜单","ChiikawaBest");
 		cfg.apps_setting.启动次数 = cfg.apps_setting.启动次数 + 1;
 	}
 	else {
-		mainForm.tray.pop("应用已启动","ChiikawaBest");
+		mainForm.tray.pop("应用"+mainForm.appVersion+"已启动","ChiikawaBest");
 	}
 }
 else {
