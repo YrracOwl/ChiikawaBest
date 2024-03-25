@@ -89,6 +89,8 @@ import string.gfmark;
 
 import fsys.dlg;
 
+import fsys.dlg.dir;
+
 //右下角提示库
 //import win.util.popup;
 
@@ -382,6 +384,13 @@ mainForm.trayCreate = function(){
 		logForm.show();
 	})
 	
+	mainForm.popmenu.add("加载库",function(){
+		var dirPath = fsys.dlg.dir("\");
+		if(dirPath){
+			mainForm.loadAddOns(dirPath);
+		}
+	})
+	
 	mainForm.popmenu.add();//分割线
 	mainForm.popmenu.add("版本："+mainForm.appVersion,function(){	
 		var frmChild = mainForm.loadForm("\dlg\productDescription.aardio");
@@ -472,7 +481,6 @@ mainForm.onMinimize = function(lParam){
 import win.taskScheduler;
 webWatcher_taskScheduler = win.taskScheduler(mainForm);
 
-
 //////////////////////////////////////////////////////////////////////
 //自定义函数
 //////////////////////////////////////////////////////////////////////
@@ -510,15 +518,6 @@ mainForm.updateStart = function(){
 mainForm.checkUpdate = function(){
 	mainForm.updateStatus = false;
 	var LatestReleaseUrlPath = updateUrlbase;
-
-/*
-	var LatestReleaseUrlPath = web.rest.github.latestRelease("YrracOwl/ChiikawaBest","ChiikawaBest.exe");
-	if(LatestReleaseUrlPath == null){
-		mainForm.msgboxErr("当前无法访问Github，请稍后再试");
-		mainForm.updateStatus = true;
-		return; 
-	}
-*/
 	
 	var updateUrlMirrors = {};
 	for(k,v in updateUrlPrefix){
@@ -589,7 +588,6 @@ mainForm.initialCheckUpdate = function(){
 		return; 
 	}
 */
-	
 	var updateUrlMirrors = {};
 	for(k,v in updateUrlPrefix){
 		updateUrlMirrors[k] = updateUrlPrefix[k] + LatestReleaseUrlPath;
@@ -739,25 +737,6 @@ cleanHistory = function(){
 			mainForm.msgbox("没有历史记录！即将自动退出！","恭喜！",0,1000)
 		}
 	}
-/*
-	if(cfg.apps_setting){
-    	if(cfg.apps_setting.关闭时清空记录){
-    	    if(io.exist(wbHistoryDir + "Visited Links")){
-    	    	mainForm.msgbox("3秒后即将清理历史记录","注意",0,3000)
-    			if(io.remove(wbHistoryDir + "Visited Links") and io.remove(wbHistoryDir + "History") and io.remove(wbHistoryDir + "History-journal")){
-    				mainForm.msgbox("清理成功！即将自动退出！", "恭喜！",0,1200)
-    			}
-    			else {
-    				mainForm.msgbox("清理失败！请手动清理！即将自动退出！", "注意！",0,2000)
-    			}
-    	    }
-			else {
-				mainForm.msgbox("没有历史记录！即将自动退出！","恭喜！",0,1000)
-			}
-			
-    	}
-	}
-*/
 }
 
 //多线程写数据库函数
@@ -818,6 +797,34 @@ mainForm.createDBImgField = function(timeline_name){
 	}
 }
 
+//加载第三方程序文件
+mainForm.varAddOns = {};
+mainForm.loadAddOns = function(dirPath){
+	if(io.exist(dirPath)){
+		var dirFullPath = io.fullpath(dirPath);
+		fsys.enum( dirFullPath, "*.aardio",
+			function(dir,filename,fullpath,findData){ 
+				if(filename){ 
+		           	logMsg("发现文件："+filename,"完整路径："+fullpath)
+		           	mainForm.varAddOns[filename] = loadcodex(fullpath);
+				}
+				else{
+					logMsg("发现目录：" + dir )
+				}
+			},
+			function(dirPath,dirName){
+				if(dirName == "README"){
+					return false; 
+				}
+				return true;
+			} 
+		);
+	}
+	else {
+		logErr(dirPath + "不存在！")
+	}
+	
+}
 
 //////////////////////////////////////////////////////////////////////
 //创建托盘图标
@@ -855,6 +862,10 @@ else {
 
 if(cfg.apps_setting.启动时监控应用){
 	webwatcher = mainForm.loadForm("\dlg\webwatcher.aardio");
+}
+
+if(io.exist("\ckwLibs")){
+	mainForm.loadAddOns("\ckwLibs");
 }
 
 return win.loopMessage();

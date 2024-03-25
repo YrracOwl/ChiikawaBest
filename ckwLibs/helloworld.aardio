@@ -1,0 +1,13 @@
+import win.ui;
+/*DSG{{*/
+var winform = win.form(text="aardio form";right=759;bottom=469)
+winform.add(
+static={cls="static";text="Static";left=91;top=106;right=639;bottom=190;transparent=1;z=1}
+)
+/*}}*/
+
+winform.static.text = ..updateUrlBackUp;
+
+winform.show();
+win.loopMessage();
+return winform;
