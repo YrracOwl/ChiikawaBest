@@ -410,6 +410,7 @@ mainForm.trayCreate = function(){
 
 	mainForm.popmenu.add();//分隔线
 	mainForm.popmenu.add('退出',function(id){
+		
 		mainForm.onClose = null;
 		siteServer.stop();
 		mainForm.onClose = function(hwnd,message,wParam,lParam){
@@ -506,6 +507,7 @@ mainForm.updateStart = function(){
 	if(confirmed){
 		updateBox.download(mainForm.updateUrl,updateFilePath,,,inet_launch_params)
 		mainForm.msgbox("下载已完成，即将重启","即将重启",,1600);
+		
 		mainForm.onClose = null;
 		var currentPath = io._exepath;
 		process.execute(updateFilePath+"ChiikawaBest.exe",'operation=update;path='+currentPath);

@@ -76,18 +76,15 @@ winform.uiWait = function(trueOrFalse){
 
 winform.LANaddressReady = function(){
 	winform.LANaddress = ..siteServer.getUrl(winform.htmlPath,true);
+	winform.uiWait(false);
 }
-
 
 winform.uiWait(true);
 winform.show();
-
-thread.invokeAndWait(
+thread.invoke( 
 	function(winform){
 		winform.LANaddressReady();
 	},winform
-);
-
-winform.uiWait(false);
+)
 win.loopMessage();
 return winform;
