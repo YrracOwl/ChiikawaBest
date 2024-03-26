@@ -142,15 +142,21 @@ namespace wsock.tcp.simpleHttpServer{
 }
 
 serverMain = wsock.tcp.simpleHttpServer.mainThread();
-serverMain.start("0.0.0.0",40315);
 
-import console;console.dump(serverMain.getLocalIp())
-if(serverMain.getLocalIp() == null){
-	serverMain.start("0.0.0.0",0);
-	console.dump(serverMain.getLocalIp())
+mainForm.serverPath = "";
+mainForm.serverPort = 9090;
+
+if(cfg.apps_setting.localPort){
+	mainForm.serverPort = tonumber(cfg.apps_setting.localPort);
 }
 
-//defaulUrl = wsock.tcp.simpleHttpServer.startUrl("/res/loading.html");//参数支持 aardio 工程嵌入资源目录路径
+serverMain.start("0.0.0.0",mainForm.serverPort);
+
+if(serverMain.getLocalIp() == null){
+	serverMain.start("0.0.0.0",0);
+}
+
+mainForm.serverPath = serverMain.getUrl("",true);
 
 //设置：网站根目录
 siteBaseDir = "/home/";
@@ -421,7 +427,10 @@ mainForm.trayCreate = function(){
 
 	mainForm.popmenu.add();//分隔线
 	mainForm.popmenu.add('退出',function(id){
-		serverMain.stop();
+		if(serverMain){
+			serverMain.stop();
+			serverMain = null;
+		}
 		mainForm.onClose = null;
 		mainForm.onClose = function(hwnd,message,wParam,lParam){
 			if(webwatcher != "notExist"){
@@ -431,6 +440,7 @@ mainForm.trayCreate = function(){
 			cleanHistory();
     		fadeHide();	
 		}
+		mainForm.releaseAddOns();
 		mainForm.close();
 	})
 	mainForm.popmenu.popup();
@@ -468,7 +478,11 @@ mainForm.onClose = function(hwnd,message,wParam,lParam){
 }
 
 mainForm.onDestroy = function(){
-	serverMain.stop();
+	if(serverMain){
+		serverMain.stop();
+		serverMain = null;
+	}
+	mainForm.releaseAddOns();
 }
 
 var minimize_1st_show = true; 
@@ -516,8 +530,14 @@ mainForm.updateStart = function(){
 	if(confirmed){
 		updateBox.download(mainForm.updateUrl,updateFilePath,,,inet_launch_params)
 		mainForm.msgbox("下载已完成，即将重启","即将重启",,1600);
-		serverMain.stop();
+		
+		if(serverMain){
+			serverMain.stop();
+			serverMain = null;
+		}
 		mainForm.onClose = null;
+		mainForm.releaseAddOns();
+		
 		var currentPath = io._exepath;
 		process.execute(updateFilePath+"ChiikawaBest.exe",'operation=update;path='+currentPath);
 		mainForm.close();
@@ -836,6 +856,17 @@ mainForm.loadAddOns = function(dirPath){
 	}
 	
 }
+
+mainForm.releaseAddOns = function(){
+	for(k,v in mainForm.varAddOns){
+		mainForm.varAddOns[k] = null;
+	}
+	mainForm.varAddOns = {};
+}
+
+
+logWarn("服务器地址：", mainForm.serverPath);
+logWarn("服务器ID：",serverMain.serverId);
 
 //////////////////////////////////////////////////////////////////////
 //创建托盘图标

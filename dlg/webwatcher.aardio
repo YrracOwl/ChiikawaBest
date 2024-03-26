@@ -70,7 +70,7 @@ document.addEventListener('mousedown', function (event) {
 window.open =  function(url){ window.location.href = url; };
 
 `)
-var url_loading = ..wsock.tcp.simpleHttpServer.getUrl("\res\loading.html"); 
+var url_loading = ..serverMain.getUrl("\res\loading.html"); 
 
 //复用代码，已经加入到"winform.配置选择.onOk()"中了
 //因此需要在onOk()函数之后再调用
@@ -103,7 +103,7 @@ winform.返回.oncommand = function(id,event){
 }
 
 winform.首页.oncommand = function(id,event){
-	var url_crwaler = ..wsock.tcp.simpleHttpServer.getUrl(init_thrdTable.path_html_crawler); 
+	var url_crwaler = ..serverMain.getUrl(init_thrdTable.path_html_crawler); 
 	ww_webview.go(url_crwaler);
 	if(url_crwaler != url_loading){
 		init_thrdTable.g_wb_location = ww_webview.location;
