@@ -50,10 +50,10 @@ body {
 .timeline:before {
   background-color: var(--main-txt-color);
   content: '';
-  margin-left: 1em;
+  margin-left: 0px;
   position: absolute;
   top: 0;
-  left: 3.44em;
+  left: 80px;
   width: 2px;
   height: 100%;
 }
@@ -125,7 +125,7 @@ body {
   margin: 0.5em 0.5em 0.5em -0.5em;
   position: absolute;
   top: 0;
-  left: 2em;
+  left: 40px;
   width: 1em;
   height: 1em;
 }
@@ -177,7 +177,7 @@ body {
   margin: 0.5em 0.5em 0.5em -0.5em;
   position: absolute;
   top: 0;
-  left: 2em;
+  left: 40px;
   width: 1em;
   height: 1em;
 }
