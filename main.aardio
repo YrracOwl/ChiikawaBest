@@ -137,9 +137,20 @@ cfg = fsys.config(cfgPath);
 import wsock.tcp.simpleHttpServer;
 namespace wsock.tcp.simpleHttpServer{
 	//startIp = "0.0.0.0"; //不限制本机 IP
-    //startPort = 8615; //不指定端口时会自动分配空闲端口
+    //startPort = 40315; //不指定端口时会自动分配空闲端口
     threadGlobal = { mainForm = ..mainForm }; //指定 HTTP 服务线程的默认全局变量,注意定义线程函数的作用域同名变量不能是局部变量
 }
+
+serverMain = wsock.tcp.simpleHttpServer.mainThread();
+serverMain.start("0.0.0.0",40315);
+
+import console;console.dump(serverMain.getLocalIp())
+if(serverMain.getLocalIp() == null){
+	serverMain.start("0.0.0.0",0);
+	console.dump(serverMain.getLocalIp())
+}
+
+//defaulUrl = wsock.tcp.simpleHttpServer.startUrl("/res/loading.html");//参数支持 aardio 工程嵌入资源目录路径
 
 //设置：网站根目录
 siteBaseDir = "/home/";
@@ -148,14 +159,14 @@ if(not io.exist(siteBaseDir)){
 }
 
 //wsock.tcp.asynHttpServer导入
+//这里可以指定 IP 和端口，不指定则自动分配空闲端口;成功返回true，失败返回null
+/*
 import wsock.tcp.asynHttpServer;
 siteServer = wsock.tcp.asynHttpServer();
-
-//这里可以指定 IP 和端口，不指定则自动分配空闲端口
-//成功返回true，失败返回null
 if(siteServer.start("0.0.0.0", 40315) == null){
 	siteServer.start("0.0.0.0");
-}
+};
+*/
 
 //////////////////////////////////////////////////////////////////////
 //全局变量
@@ -410,9 +421,8 @@ mainForm.trayCreate = function(){
 
 	mainForm.popmenu.add();//分隔线
 	mainForm.popmenu.add('退出',function(id){
-		
+		serverMain.stop();
 		mainForm.onClose = null;
-		siteServer.stop();
 		mainForm.onClose = function(hwnd,message,wParam,lParam){
 			if(webwatcher != "notExist"){
 					webwatcher.onClose = null;
@@ -458,8 +468,7 @@ mainForm.onClose = function(hwnd,message,wParam,lParam){
 }
 
 mainForm.onDestroy = function(){
-    siteServer.stop();
-    siteServer = null;
+	serverMain.stop();
 }
 
 var minimize_1st_show = true; 
@@ -507,7 +516,7 @@ mainForm.updateStart = function(){
 	if(confirmed){
 		updateBox.download(mainForm.updateUrl,updateFilePath,,,inet_launch_params)
 		mainForm.msgbox("下载已完成，即将重启","即将重启",,1600);
-		
+		serverMain.stop();
 		mainForm.onClose = null;
 		var currentPath = io._exepath;
 		process.execute(updateFilePath+"ChiikawaBest.exe",'operation=update;path='+currentPath);
