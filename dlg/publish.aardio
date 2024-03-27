@@ -75,7 +75,8 @@ winform.uiWait = function(trueOrFalse){
 }
 
 winform.LANaddressReady = function(){
-	winform.LANaddress = ..serverMain.getUrl(winform.htmlPath,true);
+	winform.LANaddress = string.slice(..mainForm.serverPath,1,-2,true)+winform.htmlPath;
+	..logMsg(winform.LANaddress)
 	winform.uiWait(false);
 }
 
