@@ -107,6 +107,9 @@ import web.socket.client;
 
 import win.clip;
 
+//super hotkey库导入
+import key.hotkey; 
+
 //自定义窗口外观
 import win.ui.simpleWindow;
 win.ui.simpleWindow(mainForm,,,18,).skin(
@@ -827,6 +830,52 @@ mainForm.createDBImgField = function(timeline_name){
 		win.msgboxErr("升级失败！请重启程序再尝试！","升级失败",win.getDesktop());
 	}
 }
+
+mainForm.loadWatchWin = function(){
+	var watchWinHK = win.loadForm("\dlg\watchWin.aardio",,win.getDesktop());
+	win.setTop(watchWinHK.hwnd)
+}
+
+mainForm.loadWebWatcher = function(){
+	if(webwatcher == "notExist"){
+		webwatcher = mainForm.loadForm("\dlg\webwatcher.aardio");
+	}
+	win.setTop(webwatcher.hwnd)
+	win.setForeground(webwatcher.hwnd);
+	webwatcher.show();
+}
+
+
+//注册快捷键
+mainForm.superHotkey = key.hotkey(mainForm) //创建超级热键,必须用于窗口程序中
+//批量加载热键配置表
+mainForm.superHotkey.loadTable({
+	(function(){
+		//这里的代码可以直接执行	
+	})();
+	
+	["~1"] = function(hFocus){
+		win.setForeground(mainForm.hwnd)
+		mainForm.loadWatchWin();
+	};
+	["~2"] = function(hFocus){
+		win.setForeground(mainForm.hwnd)
+		timeline_choice.show();
+		win.setTop(timeline_choice.hwnd)
+		win.setForeground(timeline_choice.hwnd);
+	};
+	["~Q"] = function(hFocus){
+		win.setForeground(mainForm.hwnd)
+		alarmForm.show();
+		win.setTop(alarmForm.hwnd)
+		win.setForeground(alarmForm.hwnd);
+	};
+	["~W"] = function(hFocus){
+		win.setForeground(mainForm.hwnd)
+		mainForm.loadWebWatcher();
+	};
+});
+
 
 //加载第三方程序文件
 mainForm.varAddOns = {};
