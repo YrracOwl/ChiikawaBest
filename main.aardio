@@ -107,9 +107,6 @@ import web.socket.client;
 
 import win.clip;
 
-//super hotkey库导入
-import key.hotkey; 
-
 //自定义窗口外观
 import win.ui.simpleWindow;
 win.ui.simpleWindow(mainForm,,,18,).skin(
@@ -832,50 +829,120 @@ mainForm.createDBImgField = function(timeline_name){
 }
 
 mainForm.loadWatchWin = function(){
+	if(win.isVisible(mainForm.hwnd)){
+		mainForm.show(false);
+		win.setForeground(mainForm.hwnd)
+		thread.invoke(
+			function(mainForm){
+				import win;
+				win.delay(100);
+				mainForm.loadWatchWin();
+			},mainForm
+		)
+		return;
+	}
 	var watchWinHK = win.loadForm("\dlg\watchWin.aardio",,win.getDesktop());
-	win.setTop(watchWinHK.hwnd)
+	watchWinHK.doTop();
 }
 
 mainForm.loadWebWatcher = function(){
+	if(win.isVisible(mainForm.hwnd)){
+		mainForm.show(false);
+		win.setForeground(mainForm.hwnd)
+		thread.invoke(
+			function(mainForm){
+				import win;
+				win.delay(100);
+				mainForm.loadWebWatcher();
+			},mainForm
+		)
+		return;
+	}
 	if(webwatcher == "notExist"){
 		webwatcher = mainForm.loadForm("\dlg\webwatcher.aardio");
 	}
-	win.setTop(webwatcher.hwnd)
-	win.setForeground(webwatcher.hwnd);
+	webwatcher.doForeground();
 	webwatcher.show();
 }
 
+mainForm.showTimeline = function(){
+	if(win.isVisible(mainForm.hwnd)){
+		mainForm.show(false);
+		win.setForeground(mainForm.hwnd)
+		thread.invoke(
+			function(mainForm){
+				import win;
+				win.delay(100);
+				mainForm.showTimeline();
+			},mainForm
+		)
+		return;
+	}
+	timeline_choice.show();
+	timeline_choice.doForeground();
+}
+
+mainForm.showAlarm =function(){
+	if(win.isVisible(mainForm.hwnd)){
+		mainForm.show(false);
+		win.setForeground(mainForm.hwnd)
+		thread.invoke(
+			function(mainForm){
+				import win;
+				win.delay(100);
+				mainForm.showAlarm();
+			},mainForm
+		)
+		return;
+	}
+	alarmForm.show();
+	alarmForm.doForeground();
+}
+
+
+//super hotkey库导入
+import key.hotkey;
 
 //注册快捷键
 mainForm.superHotkey = key.hotkey(mainForm) //创建超级热键,必须用于窗口程序中
+
 //批量加载热键配置表
+/*
 mainForm.superHotkey.loadTable({
 	(function(){
 		//这里的代码可以直接执行	
 	})();
 	
 	["~1"] = function(hFocus){
-		win.setForeground(mainForm.hwnd)
 		mainForm.loadWatchWin();
 	};
 	["~2"] = function(hFocus){
-		win.setForeground(mainForm.hwnd)
-		timeline_choice.show();
-		win.setTop(timeline_choice.hwnd)
-		win.setForeground(timeline_choice.hwnd);
+		mainForm.showTimeline();
 	};
 	["~Q"] = function(hFocus){
-		win.setForeground(mainForm.hwnd)
-		alarmForm.show();
-		win.setTop(alarmForm.hwnd)
-		win.setForeground(alarmForm.hwnd);
+		mainForm.showAlarm();
 	};
 	["~W"] = function(hFocus){
-		win.setForeground(mainForm.hwnd)
 		mainForm.loadWebWatcher();
 	};
 });
+*/
 
+hkid1 = mainForm.reghotkey(function(id,mod,vk){
+	mainForm.loadWatchWin();
+},1,0x51);//ALT+Q
+
+hkid2 = mainForm.reghotkey(function(id,mod,vk){
+	mainForm.showTimeline();
+},1,0x58);//ALT+X
+
+hkid3 = mainForm.reghotkey(function(id,mod,vk){
+	mainForm.showAlarm();
+},1,0x31);//ALT+1
+
+hkid4 = mainForm.reghotkey(function(id,mod,vk){
+	mainForm.loadWebWatcher();
+},1,0x43);//ALT+C
 
 //加载第三方程序文件
 mainForm.varAddOns = {};

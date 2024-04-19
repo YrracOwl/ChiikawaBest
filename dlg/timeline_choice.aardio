@@ -87,6 +87,16 @@ var updateCombobox = function(winform){
 };
 
 winform.btn打开时间线.oncommand = function(id,event){
+	isFound = table.find(winform.选择时间线.items,winform.选择时间线.selText);
+	
+	if(isFound == null){
+	    //手动显示提示
+    	var x,y,cx,cy = winform.txt时间线标题.getPos(true);
+    	balloonTipCtrl.setText("请先创建该时间线").trackPopup(true,x+cx*3/4,y+cy,2000);
+    	winform.balloonTipCtrlState = true;
+    	winform.选择时间线.selIndex = table.len(winform.选择时间线.items);
+    	return ; 
+	}
 	
 	winform.btn打开时间线.disabled = true;
 	
@@ -218,6 +228,10 @@ winform.onClose = function(hwnd,message,wParam,lParam){
 
 winform.enableDpiScaling();
 ::User32.SendMessage(winform.选择时间线.hwnd,0x142/*_CB_SETEDITSEL*/,-1,0);
+
+winform.doForeground = function(){
+	win.setForeground(winform.hwnd)
+}
 
 //winform.show();
 win.loopMessage();

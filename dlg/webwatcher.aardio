@@ -417,6 +417,10 @@ winform.wndproc = function(hwnd,message,wParam,lParam){
 	//无返回值则继续调用默认回调函数
 }
 
+winform.doForeground = function(){
+	win.setForeground(winform.hwnd)
+}
+
 //winform.show();
 win.loopMessage();
 return winform;

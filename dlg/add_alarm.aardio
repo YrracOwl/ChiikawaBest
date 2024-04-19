@@ -449,5 +449,9 @@ alarmSetWinform.enableDpiScaling();
 ::User32.SendMessage(alarmSetWinform.快捷定时.hwnd,0x142/*_CB_SETEDITSEL*/,-1,0);
 //alarmSetWinform.show();
 
+alarmSetWinform.doForeground = function(){
+	win.setForeground(alarmSetWinform.hwnd)
+}
+
 win.loopMessage();
 return alarmSetWinform;

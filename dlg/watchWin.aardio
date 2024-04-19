@@ -1,6 +1,6 @@
 import win.ui;
 /*DSG{{*/
-var winform = win.form(text="watchWin";right=199;bottom=99;border="none")
+var winform = win.form(text="截图";right=199;bottom=99;border="none")
 winform.add(
 plusPreview={cls="plus";left=2;top=32;right=198;bottom=98;clipBk=false;db=1;dl=1;dr=1;dt=1;foreRepeat="scale";notify=1;repeat="scale";z=1};
 保存={cls="plus";text="保存";left=175;top=5;right=225;bottom=27;bgcolor=-5197169;dl=1;dt=1;font=LOGFONT(h=-16);notify=1;z=5};
@@ -178,5 +178,10 @@ winform.width = 400;
 winform.height = 400;
 win.setTopmost(winform.hwnd,true)
 winform.show();
+
+winform.doTop = function(){
+	win.setTopmost(winform.hwnd,true);
+}
+
 win.loopMessage();
 return winform;
