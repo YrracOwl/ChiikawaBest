@@ -1,24 +1,23 @@
 import win.ui;
 /*DSG{{*/
-var winform = win.form(text="应用设置";right=447;bottom=207;clipch=1)
+var winform = win.form(text="应用设置";right=447;bottom=207;clipch=1;)
 winform.add(
-btnRestore={cls="button";text="恢复默认链接";left=80;top=152;right=176;bottom=176;dl=1;dt=1;flat=1;z=8};
-localPort={cls="edit";text="9090";left=104;top=128;right=176;bottom=152;dl=1;dt=1;edge=1;z=10};
-static={cls="static";text="更新地址：";left=8;top=152;right=80;bottom=176;center=1;dl=1;dt=1;transparent=1;z=7};
-static2={cls="static";text="本地服务端口：";left=8;top=128;right=104;bottom=152;center=1;dl=1;dt=1;transparent=1;z=9};
-urlSetting={cls="edit";text="https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/release/ChiikawaBest.exe";left=8;top=176;right=440;bottom=200;dl=1;dt=1;edge=1;z=6};
-关闭时清空记录={cls="checkbox";text="关闭时清空记录 (即时生效)";left=8;top=8;right=440;bottom=32;dl=1;dt=1;z=1};
-启动到托盘={cls="checkbox";text="启动时最小化到托盘";left=8;top=32;right=440;bottom=56;dl=1;dt=1;z=2};
-启动时检测更新={cls="checkbox";text="启动时检测更新";left=8;top=56;right=440;bottom=80;dl=1;dt=1;z=3};
-启动时监控应用={cls="checkbox";text="启动时监控应用";left=8;top=80;right=440;bottom=104;dl=1;dt=1;z=4};
-模拟移动端渲染={cls="checkbox";text="模拟移动端渲染";left=8;top=104;right=440;bottom=128;checked=1;dl=1;dt=1;z=5}
+btnRestore={cls="button";text="恢复默认链接";left=80;top=128;right=176;bottom=152;dl=1;dt=1;flat=1;z=7;};
+localPort={cls="edit";text="9090";left=104;top=104;right=176;bottom=128;dl=1;dt=1;edge=1;z=9;};
+static={cls="static";text="更新地址：";left=8;top=128;right=80;bottom=152;center=1;dl=1;dt=1;transparent=1;z=6;};
+static2={cls="static";text="本地服务端口：";left=8;top=104;right=104;bottom=128;center=1;dl=1;dt=1;transparent=1;z=8;};
+urlSetting={cls="edit";text="https://raw.githubusercontent.com/YrracOwl/ChiikawaBest/master/release/ChiikawaBest.exe";left=8;top=152;right=440;bottom=176;dl=1;dt=1;edge=1;z=5;};
+关闭时清空记录={cls="checkbox";text="关闭时清空记录 (即时生效)";left=8;top=8;right=440;bottom=32;dl=1;dt=1;z=1;};
+启动到托盘={cls="checkbox";text="启动时最小化到托盘";left=8;top=32;right=440;bottom=56;dl=1;dt=1;z=2;};
+启动时监控应用={cls="checkbox";text="启动时监控应用";left=8;top=56;right=440;bottom=80;dl=1;dt=1;z=3;};
+模拟移动端渲染={cls="checkbox";text="模拟移动端渲染";left=8;top=80;right=440;bottom=104;checked=1;dl=1;dt=1;z=4;};
+
 )
 /*}}*/
 
 winform.bindConfig( ..cfg.apps_setting,{
 	checkbox = {
 		["启动到托盘"] = "checked";
-		["启动时检测更新"] = "checked";
 		["启动时监控应用"] = "checked";
 		["模拟移动端渲染"] = "checked";
 	};

@@ -1,9 +1,10 @@
 import win.ui;
 import win.ui.atom;
 /*DSG{{*/
-mainForm = win.form(text="ChiikawaBest";right=220;bottom=118;border="none";max=false;min=false)
+mainForm = win.form(text="ChiikawaBest";right=220;bottom=118;border="none";max=false;min=false;)
 mainForm.add(
-bk={cls="bk";left=0;top=0;right=224;bottom=120;ah=1;aw=1;background="\res\keai.jpg";z=1}
+bk={cls="bk";left=0;top=0;right=224;bottom=120;ah=1;aw=1;background="\res\keai.jpg";z=1;};
+
 )
 /*}}*/
 
@@ -76,7 +77,7 @@ import gdi;
 import sqlite;
 
 //web.view库导入
-import web.view;
+import web.view.7;
 
 //web.rest.github导入
 import web.rest.github;
@@ -413,7 +414,7 @@ mainForm.trayCreate = function(){
 		var frmChild = mainForm.loadForm("\dlg\productDescription.aardio");
 		frmChild.show();
 	})
-	mainForm.popmenu.add("关于软件",function(){	
+	mainForm.popmenu.add("关于软件/手动更新",function(){	
 		process("explorer.exe","https://github.com/YrracOwl/ChiikawaBest")
 	})
 	if(mainForm.updateStatus){//检查更新
@@ -842,6 +843,7 @@ mainForm.loadWatchWin = function(){
 		return;
 	}
 	var watchWinHK = win.loadForm("\dlg\watchWin.aardio",,win.getDesktop());
+	watchWinHK.undoTop();
 	watchWinHK.doTop();
 }
 
@@ -928,9 +930,16 @@ mainForm.superHotkey.loadTable({
 });
 */
 
-hkid1 = mainForm.reghotkey(function(id,mod,vk){
-	mainForm.loadWatchWin();
-},1,0x51);//ALT+Q
+if(io.exist("\ChiikawaBest_WatchWin.exe")){
+	hkid1 = mainForm.reghotkey(function(id,mod,vk){
+		var prc = process.shell("ChiikawaBest_WatchWin.exe");
+	},1,0x51);//ALT+Q
+}
+else {
+	hkid1 = mainForm.reghotkey(function(id,mod,vk){
+		mainForm.loadWatchWin();
+	},1,0x51);//ALT+Q
+}
 
 hkid2 = mainForm.reghotkey(function(id,mod,vk){
 	mainForm.showTimeline();
@@ -990,6 +999,8 @@ logWarn("服务器ID：",serverMain.serverId);
 
 mainForm.tray = win.util.tray(mainForm) //创建托盘图标
 mainForm.tray.tip = "右键打开菜单" //设置鼠标提示
+
+cfg.apps_setting.启动时检测更新 = null;
 
 if(cfg.apps_setting.启动时检测更新){
 	mainForm.tray.pop("正在检测更新...","ChiikawaBest",,1200);
