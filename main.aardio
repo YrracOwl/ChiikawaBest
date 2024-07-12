@@ -372,22 +372,22 @@ mainForm.trayCreate = function(){
 	})
 	
 	mainForm.popmenu.add();//分隔线
-	mainForm.popmenu.add("网页监控",function(){
+	mainForm.popmenu.add("网页监控(Alt+C)",function(){
 		if(webwatcher == "notExist"){
 			webwatcher = mainForm.loadForm("\dlg\webwatcher.aardio");
 		}
 		win.setForeground(webwatcher.hwnd);
 		webwatcher.show();
 	})
-	mainForm.popmenu.add("时间线",function(){
+	mainForm.popmenu.add("时间线(Alt+X)",function(){
 		win.setForeground(timeline_choice.hwnd);
 		timeline_choice.show();
 	})
-	mainForm.popmenu.add("闹钟",function(){
+	mainForm.popmenu.add("闹钟(Alt+1)",function(){
 		win.setForeground(alarmForm.hwnd);
 		alarmForm.show();
 	})
-	mainForm.popmenu.add("截图",function(){	
+	mainForm.popmenu.add("截图(Alt+Q)",function(){	
 		var watchWin1 = win.loadForm("\dlg\watchWin.aardio",,win.getDesktop());
 		watchWin1.show();
 	})
