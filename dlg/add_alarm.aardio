@@ -63,6 +63,63 @@ statusbar.setMinHeight(30);//设置最小高度（含上下边框宽度）
 statusbar.addItem("当前时间 " + tostring(time(,"%H:%M:%S")) , 110/*宽度*/);
 statusbar.addItem("请添加闹钟", /*宽度*/);
 
+alarmSetWinform.showPos = function(posStr, frmChildWidth, frmChildHeight){
+	
+	var alarmWidth, alarmHeight = frmChildWidth, frmChildHeight;
+	
+	var workAreaTable = win.getWorkArea(win.getDesktop());
+	var bottomPos, leftPos, rightPos, topPos = workAreaTable.bottom, workAreaTable.left, workAreaTable.right, workAreaTable.top;
+	
+	var alarmPosX, alarmPosY = leftPos, topPos;
+	
+/*
+	var PosLUX, PosLUY = leftPos, topPos;
+	var PosRUX, PosRUY = rightPos-alarmWidth, topPos;
+	var PosRDX, PosRDY = rightPos-alarmWidth, bottomPos-alarmHeight;
+	var PosLDX, PosLDY = leftPos, bottomPos-alarmHeight;
+	var PosMX, PosMY = leftPos + (rightPos-leftPos)*0.5-alarmWidth*0.5, topPos + (bottomPos-topPos)*0.5-alarmHeight*0.5;
+*/
+	
+	var hwndForeground = win.getForeground();
+	if(hwndForeground){
+		var workAreaTable = win.getWorkArea(hwndForeground);
+		var bottomPos, leftPos, rightPos, topPos = workAreaTable.bottom, workAreaTable.left, workAreaTable.right, workAreaTable.top;
+	}
+		
+	var PosLUX, PosLUY = leftPos, topPos;
+	var PosRUX, PosRUY = rightPos-alarmWidth, topPos;
+	var PosRDX, PosRDY = rightPos-alarmWidth, bottomPos-alarmHeight;
+	var PosLDX, PosLDY = leftPos, bottomPos-alarmHeight;
+	var PosMX, PosMY = leftPos + (rightPos-leftPos)*0.5-alarmWidth*0.5, topPos + (bottomPos-topPos)*0.5-alarmHeight*0.5;
+	var PosMUX, PosMUY = leftPos + (rightPos-leftPos)*0.5-alarmWidth*0.5, topPos + (bottomPos-topPos)*0.1;
+	
+	select(posStr) {
+		case "居中显示" {
+			alarmPosX, alarmPosY = PosMX, PosMY;
+		}
+		case "中上显示" {
+			alarmPosX, alarmPosY = PosMUX, PosMUY;
+		}
+		case "左上角显示" {
+			alarmPosX, alarmPosY = PosLUX, PosLUY;
+		}
+		case "右上角显示" {
+			alarmPosX, alarmPosY = PosRUX, PosRUY;
+		}
+		case "右下角显示" {
+			alarmPosX, alarmPosY = PosRDX, PosRDY;
+		}
+		case "左下角显示" {
+			alarmPosX, alarmPosY = PosLDX, PosLDY;
+		}
+		else {
+			alarmPosX, alarmPosY = PosMX, PosMY;
+		}
+	};
+	
+	return alarmPosX, alarmPosY; 
+}
+
 import quarks;
 //计划任务导入
 import win.taskScheduler;
@@ -88,6 +145,7 @@ alarm_taskScheduler.start();
 
 var taskTable = {};
 var scheduleTable = {};
+var outdatedTable = {};
 if(..dbAlarmClock.existsTable("default")){
 	..logMsg(">>>加载闹钟：")
 	for rowid, time, content in ..dbAlarmClock.each("SELECT rowid,* FROM [default]") {
@@ -106,32 +164,50 @@ if(..dbAlarmClock.existsTable("default")){
 			var Sstr = tm.second;
 			
 			var AlarmContent = v;
-			scheduleTable[k] = alarm_taskScheduler.create(k,function(AlarmContent,k){
-				var frmChild = win.loadForm("\dlg\alarms.aardio",,win.getDesktop());
-				frmChild.updateContent(AlarmContent,k);
-				
-				alarmSetWinform.enableDpiScaling("init");
-				var alarmClockX, alarmClockY = alarmSetWinform.showPos(alarmSetWinform.显示位置.selText, frmChild.width, frmChild.height);		
-				win.setPos(frmChild.hwnd, alarmClockX, alarmClockY);
-
-				var foregroundHwnd = win.getForeground();
-				
-				win.setTopmost(frmChild.hwnd);
-				win.setForeground(foregroundHwnd);
-				frmChild.show();
-				frmChild.redrawBackground();
-				win.delay(980)
-				win.flash(frmChild.hwnd,9);
-
-			},AlarmContent,k);
 			
-			scheduleTable[k].time = { 
-    			second =  Sstr ;
-    			minute = Mstr ; 
-    			hour = Hstr ;
-    			day = dstr ;
-    			month = mstr ;
-			};
+			var outdated = tm.diffsecond(time()); 
+			
+			//判断闹钟是否过期
+			if(outdated>0){
+				scheduleTable[k] = alarm_taskScheduler.create(k,function(AlarmContent,k){
+					var frmChild = win.loadForm("\dlg\alarms.aardio",,win.getDesktop());
+					frmChild.updateContent(AlarmContent,k);
+					
+					alarmSetWinform.enableDpiScaling("init");
+					var alarmClockX, alarmClockY = alarmSetWinform.showPos(alarmSetWinform.显示位置.selText, frmChild.width, frmChild.height);		
+					win.setPos(frmChild.hwnd, alarmClockX, alarmClockY);
+	
+					var foregroundHwnd = win.getForeground();
+					
+					win.setTopmost(frmChild.hwnd);
+					win.setForeground(foregroundHwnd);
+					frmChild.show();
+					frmChild.redrawBackground();
+					win.delay(980)
+					win.flash(frmChild.hwnd,9);
+	
+				},AlarmContent,k);
+				
+				scheduleTable[k].time = { 
+    				second =  Sstr ;
+    				minute = Mstr ; 
+    				hour = Hstr ;
+    				day = dstr ;
+    				month = mstr ;
+				};
+			}
+			else {
+				..logMsg("「过期」变量-outdated:",outdated)
+				var outdatedAlarmWin = win.loadForm("\dlg\notify_todo.aardio",,win.getDesktop());
+				outdatedAlarmWin.plusContent.text = AlarmContent;
+				
+				var alarmClockX, alarmClockY = alarmSetWinform.showPos("右下角显示", outdatedAlarmWin.width, outdatedAlarmWin.height);
+				win.setPos(outdatedAlarmWin.hwnd, alarmClockX, alarmClockY);
+		
+				outdatedAlarmWin.show();
+				outdatedTable[k] = outdatedAlarmWin;
+			}
+
 		}
 	}
 	
@@ -209,63 +285,6 @@ alarmSetWinform.spinss.onnotify = function(id,code,ptr){
 	}
 }
 
-alarmSetWinform.showPos = function(posStr, frmChildWidth, frmChildHeight){
-	
-	var alarmWidth, alarmHeight = frmChildWidth, frmChildHeight;
-	
-	var workAreaTable = win.getWorkArea(win.getDesktop());
-	var bottomPos, leftPos, rightPos, topPos = workAreaTable.bottom, workAreaTable.left, workAreaTable.right, workAreaTable.top;
-	
-	var alarmPosX, alarmPosY = leftPos, topPos;
-	
-/*
-	var PosLUX, PosLUY = leftPos, topPos;
-	var PosRUX, PosRUY = rightPos-alarmWidth, topPos;
-	var PosRDX, PosRDY = rightPos-alarmWidth, bottomPos-alarmHeight;
-	var PosLDX, PosLDY = leftPos, bottomPos-alarmHeight;
-	var PosMX, PosMY = leftPos + (rightPos-leftPos)*0.5-alarmWidth*0.5, topPos + (bottomPos-topPos)*0.5-alarmHeight*0.5;
-*/
-	
-	var hwndForeground = win.getForeground();
-	if(hwndForeground){
-		var workAreaTable = win.getWorkArea(hwndForeground);
-		var bottomPos, leftPos, rightPos, topPos = workAreaTable.bottom, workAreaTable.left, workAreaTable.right, workAreaTable.top;
-	}
-		
-	var PosLUX, PosLUY = leftPos, topPos;
-	var PosRUX, PosRUY = rightPos-alarmWidth, topPos;
-	var PosRDX, PosRDY = rightPos-alarmWidth, bottomPos-alarmHeight;
-	var PosLDX, PosLDY = leftPos, bottomPos-alarmHeight;
-	var PosMX, PosMY = leftPos + (rightPos-leftPos)*0.5-alarmWidth*0.5, topPos + (bottomPos-topPos)*0.5-alarmHeight*0.5;
-	var PosMUX, PosMUY = leftPos + (rightPos-leftPos)*0.5-alarmWidth*0.5, topPos + (bottomPos-topPos)*0.1;
-	
-	select(posStr) {
-		case "居中显示" {
-			alarmPosX, alarmPosY = PosMX, PosMY;
-		}
-		case "中上显示" {
-			alarmPosX, alarmPosY = PosMUX, PosMUY;
-		}
-		case "左上角显示" {
-			alarmPosX, alarmPosY = PosLUX, PosLUY;
-		}
-		case "右上角显示" {
-			alarmPosX, alarmPosY = PosRUX, PosRUY;
-		}
-		case "右下角显示" {
-			alarmPosX, alarmPosY = PosRDX, PosRDY;
-		}
-		case "左下角显示" {
-			alarmPosX, alarmPosY = PosLDX, PosLDY;
-		}
-		else {
-			alarmPosX, alarmPosY = PosMX, PosMY;
-		}
-	};
-	
-	return alarmPosX, alarmPosY; 
-}
-
 alarmSetWinform.timeJump = function(tm,selJumpTime){
 	if(alarmSetWinform.checkbox.checked){
 		select(selJumpTime) {
@@ -336,33 +355,47 @@ alarmSetWinform.plusBtn.oncommand = function(id,event){
 	var Sstr = tm.second;
 	
 	var AlarmContent = taskTable[tempTime];
-	..logMsg("添加闹钟：",tempTime,AlarmContent)
-	scheduleTable[tempTime] = alarm_taskScheduler.create(tempTime,function(AlarmContent,tempTime){
-		var frmChild = win.loadForm("\dlg\alarms.aardio",,win.getDesktop());
-		frmChild.updateContent(AlarmContent,tempTime);
-			
-		alarmSetWinform.enableDpiScaling("init");
-		var alarmClockX, alarmClockY = alarmSetWinform.showPos(alarmSetWinform.显示位置.selText, frmChild.width, frmChild.height);
-		win.setPos(frmChild.hwnd, alarmClockX, alarmClockY);
-		
-		var foregroundHwnd = win.getForeground();
-		
-		win.setTopmost(frmChild.hwnd);
-		win.setForeground(foregroundHwnd);
-		frmChild.show();
-		frmChild.redrawBackground();
-		win.delay(980)
-		win.flash(frmChild.hwnd,9);
-		
-	},AlarmContent,tempTime);
+	var outdated = tm.diffsecond(time()); 
 	
-	scheduleTable[tempTime].time = { 
-    	second =  Sstr ;
-    	minute = Mstr ; 
-    	hour = Hstr ;
-    	day = dstr ;
-    	month = mstr ;
-	};
+	if(outdated>0){
+		..logMsg("添加闹钟：",tempTime,AlarmContent)
+		scheduleTable[tempTime] = alarm_taskScheduler.create(tempTime,function(AlarmContent,tempTime){
+			var frmChild = win.loadForm("\dlg\alarms.aardio",,win.getDesktop());
+			frmChild.updateContent(AlarmContent,tempTime);
+				
+			alarmSetWinform.enableDpiScaling("init");
+			var alarmClockX, alarmClockY = alarmSetWinform.showPos(alarmSetWinform.显示位置.selText, frmChild.width, frmChild.height);
+			win.setPos(frmChild.hwnd, alarmClockX, alarmClockY);
+			
+			var foregroundHwnd = win.getForeground();
+			
+			win.setTopmost(frmChild.hwnd);
+			win.setForeground(foregroundHwnd);
+			frmChild.show();
+			frmChild.redrawBackground();
+			win.delay(980)
+			win.flash(frmChild.hwnd,9);
+			
+		},AlarmContent,tempTime);
+		
+		scheduleTable[tempTime].time = { 
+    		second =  Sstr ;
+    		minute = Mstr ; 
+    		hour = Hstr ;
+    		day = dstr ;
+    		month = mstr ;
+		};
+	}
+	else {
+		..logMsg("「过期」变量-outdated:",outdated)
+		var outdatedAlarmWin = win.loadForm("\dlg\notify_todo.aardio",,win.getDesktop());
+		outdatedAlarmWin.plusContent.text = AlarmContent;
+
+		var alarmClockX, alarmClockY = alarmSetWinform.showPos("右下角显示", outdatedAlarmWin.width, outdatedAlarmWin.height);
+		win.setPos(outdatedAlarmWin.hwnd, alarmClockX, alarmClockY);
+		outdatedAlarmWin.show();
+		outdatedTable[k] = outdatedAlarmWin;
+	}
 	
 	alarmSetWinform.datetimepick.time = time.now();
 	alarmSetWinform.spinhh.pos = tostring(time(__,'%H'));
@@ -450,6 +483,7 @@ alarmSetWinform.enableDpiScaling();
 //alarmSetWinform.show();
 
 alarmSetWinform.doForeground = function(){
+	alarmSetWinform.show();
 	win.setForeground(alarmSetWinform.hwnd)
 }
 
