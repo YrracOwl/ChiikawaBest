@@ -1,10 +1,9 @@
 import win.ui;
 import win.ui.atom;
 /*DSG{{*/
-mainForm = win.form(text="ChiikawaBest";right=220;bottom=118;border="none";max=false;min=false;)
+mainForm = win.form(text="ChiikawaBest";right=220;bottom=118;border="none";max=false;min=false)
 mainForm.add(
-bk={cls="bk";left=0;top=0;right=224;bottom=120;ah=1;aw=1;background="\res\keai.jpg";z=1;};
-
+bk={cls="bk";left=0;top=0;right=224;bottom=120;ah=1;aw=1;background="\res\keai.jpg";z=1}
 )
 /*}}*/
 
@@ -107,6 +106,8 @@ import web.socket.server;
 import web.socket.client;
 
 import win.clip;
+
+import sys.run;
 
 //自定义窗口外观
 import win.ui.simpleWindow;
@@ -372,22 +373,22 @@ mainForm.trayCreate = function(){
 	})
 	
 	mainForm.popmenu.add();//分隔线
-	mainForm.popmenu.add("网页监控(Alt+C)",function(){
+	mainForm.popmenu.add("网页监控 (Alt+C)",function(){
 		if(webwatcher == "notExist"){
 			webwatcher = mainForm.loadForm("\dlg\webwatcher.aardio");
 		}
 		win.setForeground(webwatcher.hwnd);
 		webwatcher.show();
 	})
-	mainForm.popmenu.add("时间线(Alt+X)",function(){
+	mainForm.popmenu.add("时间线 (Alt+X)",function(){
 		win.setForeground(timeline_choice.hwnd);
 		timeline_choice.show();
 	})
-	mainForm.popmenu.add("闹钟(Alt+1)",function(){
+	mainForm.popmenu.add("闹钟 (Alt+1)",function(){
 		win.setForeground(alarmForm.hwnd);
 		alarmForm.show();
 	})
-	mainForm.popmenu.add("截图(Alt+Q)",function(){	
+	mainForm.popmenu.add("截图 (Alt+Q)",function(){	
 		var watchWin1 = win.loadForm("\dlg\watchWin.aardio",,win.getDesktop());
 		watchWin1.show();
 	})
@@ -843,8 +844,10 @@ mainForm.loadWatchWin = function(){
 		return;
 	}
 	var watchWinHK = win.loadForm("\dlg\watchWin.aardio",,win.getDesktop());
+	watchWinHK.show(false);
 	watchWinHK.undoTop();
 	watchWinHK.doTop();
+	watchWinHK.show(true);
 }
 
 mainForm.loadWebWatcher = function(){
@@ -1036,5 +1039,7 @@ if(cfg.apps_setting.启动时监控应用){
 if(io.exist("\ckwLibs")){
 	mainForm.loadAddOns("\ckwLibs");
 }
+
+StartUpMan = sys.run("ChiikawaBest-StartUp");
 
 return win.loopMessage();

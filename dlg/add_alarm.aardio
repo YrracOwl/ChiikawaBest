@@ -453,5 +453,14 @@ alarmSetWinform.doForeground = function(){
 	win.setForeground(alarmSetWinform.hwnd)
 }
 
+alarmSetWinform.reSetAlarm = function(text){
+	alarmSetWinform.plusContent.text = text;
+	alarmSetWinform.datetimepick.time = time.now();
+	alarmSetWinform.spinhh.pos = tostring(time(__,'%H'));
+	alarmSetWinform.spinmm.pos = tostring(time(__,'%M'));
+	alarmSetWinform.spinss.pos = tostring(time(__,'%S'));	
+}
+
+
 win.loopMessage();
 return alarmSetWinform;

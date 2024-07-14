@@ -3,10 +3,15 @@ import win.ui;
 var winform = win.form(text="闹钟列表";right=459;bottom=459;border="none";clipch=1)
 winform.add(
 checkbox={cls="checkbox";text="全选";left=8;top=40;right=72;bottom=64;dl=1;dt=1;font=LOGFONT(h=-13);z=2};
-checklist={cls="checklist";left=8;top=72;right=456;bottom=455;db=1;dl=1;dr=1;dt=1;edge=1;font=LOGFONT(h=-13);items={};z=1};
+checklist={cls="checklist";left=8;top=72;right=456;bottom=432;db=1;dl=1;dr=1;dt=1;edge=1;font=LOGFONT(h=-13);items={};z=1};
 plusDel={cls="plus";text="删除闹钟";left=352;top=32;right=450;bottom=62;align="left";bgcolor=1587666;border={radius=22};dr=1;dt=1;font=LOGFONT(h=-13);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=3}};iconText='\uF014';notify=1;textPadding={left=30};z=3}
 )
 /*}}*/
+
+import win.ui.statusbar;
+var statusbar = win.ui.statusbar( winform );
+statusbar.setMinHeight(30);//设置最小高度（含上下边框宽度）
+statusbar.addItem("  注：双击上方选项，重新添加闹钟...");
 
 winform.plusDel.disabled = true;
 
@@ -71,6 +76,23 @@ winform.plusDel.oncommand = function(id,event){
 		..logWarn("删除闹钟：",value)
 	}
 	winform.checklistUpdate();
+}
+
+winform.checklist.wndproc = function(hwnd,message,wParam,lParam){
+	select(message) {
+		case 0x203/*_WM_LBUTTONDBLCLK*/ {
+			var tempIndex = winform.checklist.getFocused();
+			var tempTxt = winform.checklist.getItemText(tempIndex);
+			var timeDBClicked = string.split(tempTxt,"-")[1];
+			var textDBClicked = string.split(tempTxt,"-")[2];
+			..alarmForm.reSetAlarm(textDBClicked);
+			..alarmForm.doForeground();
+			winform.close();
+		}
+		else {
+		}
+	}
+	//无返回值则继续调用默认回调函数
 }
 
 winform.enableDpiScaling();
