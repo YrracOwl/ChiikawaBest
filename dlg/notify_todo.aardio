@@ -42,5 +42,12 @@ winform.onClose = function(hwnd,message,wParam,lParam){
 }
 
 //winform.show();
+
+winform.titlebar.wndproc = {
+	[ 0x201/*_WM_LBUTTONDOWN*/ ] = function(hwnd,message,wParam,lParam){
+		return true; 
+	}
+}
+
 win.loopMessage();
 return winform;

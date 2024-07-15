@@ -44,6 +44,8 @@ alarmSetWinform.plusBtn.skin({
 	}
 })
 
+notifyWinSpace = 6;
+
 alarmSetWinform.plusContent.setCueBannerText("请输入闹钟标题");
 
 alarmSetWinform.显示位置.items = {"左上角显示";"左下角显示";"中上显示";"居中显示";"右上角显示";"右下角显示";}
@@ -203,7 +205,7 @@ if(..dbAlarmClock.existsTable("default")){
 				outdatedAlarmWin.plusContent.text = AlarmContent;
 				
 				var alarmClockX, alarmClockY = alarmSetWinform.showPos("右下角显示", outdatedAlarmWin.width, outdatedAlarmWin.height);
-				win.setPos(outdatedAlarmWin.hwnd, alarmClockX, alarmClockY-(todoCnt-1)*outdatedAlarmWin.height-10);
+				win.setPos(outdatedAlarmWin.hwnd, alarmClockX, alarmClockY-(todoCnt-1)*outdatedAlarmWin.height-todoCnt*notifyWinSpace);
 				
 				outdatedAlarmWin.rank = todoCnt;
 				outdatedTable[todoCnt] = outdatedAlarmWin;
@@ -396,7 +398,7 @@ alarmSetWinform.plusBtn.oncommand = function(id,event){
 		outdatedAlarmWin.plusContent.text = AlarmContent;
 
 		var alarmClockX, alarmClockY = alarmSetWinform.showPos("右下角显示", outdatedAlarmWin.width, outdatedAlarmWin.height);
-		win.setPos(outdatedAlarmWin.hwnd, alarmClockX, alarmClockY-(todoCnt-1)*outdatedAlarmWin.height-10);
+		win.setPos(outdatedAlarmWin.hwnd, alarmClockX, alarmClockY-(todoCnt-1)*outdatedAlarmWin.height-todoCnt*notifyWinSpace);
 		
 		outdatedAlarmWin.rank = todoCnt;
 		outdatedTable[todoCnt] = outdatedAlarmWin;
@@ -512,14 +514,14 @@ alarmSetWinform.pipeline = function(caller){
 			var xxs,yys,widths,heights = win.getPos(v.hwnd,true);
 			var tempHwnd = v.hwnd;
 			thread.invoke( 
-				function(tempHwnd,xxs,yys,heights){
+				function(tempHwnd,xxs,yys,heights,notifyWinSpace){
 					import win;
 					var aniCycles = 10;
 					for(aniSecs=1;aniCycles;1){
-						win.setPos(tempHwnd, xxs, yys+heights*aniSecs/aniCycles);
+						win.setPos(tempHwnd, xxs, yys+(heights+notifyWinSpace)*aniSecs/aniCycles);
 						win.delay(3);
 					}
-				},tempHwnd,xxs,yys,heights
+				},tempHwnd,xxs,yys,heights,notifyWinSpace
 			);
 		}
 	}
@@ -529,7 +531,7 @@ alarmSetWinform.showTodosAll = function(){
 	for(k,v in outdatedTable){
 		v.show(false)
 		var alarmClockX, alarmClockY = alarmSetWinform.showPos("右下角显示", v.width, v.height);
-		win.setPos(v.hwnd, alarmClockX, alarmClockY-(k-1)*v.height-10);
+		win.setPos(v.hwnd, alarmClockX, alarmClockY-(k-1)*v.height-k*notifyWinSpace);
 		v.show(true);
 	}
 }
