@@ -12,4 +12,5 @@ var appVersion = tostring(versionInfo.productVersion["major"]) + '.' +tostring(v
 string.save("/release/"+tostring(appVersion),appVersion);
 
 import console;
+console.log("Version:",tostring(appVersion))
 console.logPause("dist 2 release!")

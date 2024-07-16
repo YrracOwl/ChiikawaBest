@@ -601,6 +601,10 @@ mainForm.checkUpdate = function(){
 			mainForm.updateStatus = true;
 		}
 		else {
+			mainForm.updateUrl = updateUrlbase;
+			mainForm.updateCheckOver = false;
+			mainForm.updateOk = null;
+			mainForm.updateStatus = false;
 			return; 
 		}
 	}

@@ -1,9 +1,0 @@
-﻿错误发生在文件---------------:
-D:\aardio\project\ChiikawaBest\dlg\add_alarm.aardio
-错误信息---------------:
-
-{Error}:
-{Line}:#522
-{File}:D:\aardio\project\ChiikawaBest\dlg\add_alarm.aardio
-{Error}:<unexpected symbol>
-{Near}:','
