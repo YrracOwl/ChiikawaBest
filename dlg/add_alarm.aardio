@@ -211,6 +211,7 @@ if(..dbAlarmClock.existsTable("default")){
 				outdatedTable[todoCnt] = outdatedAlarmWin;
 				todoCnt = todoCnt+1;
 				
+				win.setTopmost(outdatedAlarmWin.hwnd)
 				outdatedAlarmWin.show();
 			}
 
@@ -403,6 +404,7 @@ alarmSetWinform.plusBtn.oncommand = function(id,event){
 		outdatedAlarmWin.rank = todoCnt;
 		outdatedTable[todoCnt] = outdatedAlarmWin;
 		todoCnt = todoCnt+1;
+		win.setTopmost(outdatedAlarmWin.hwnd);
 		
 		alarmSetWinform.showTodosAll();
 		
