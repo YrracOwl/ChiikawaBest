@@ -201,7 +201,7 @@ if(..dbAlarmClock.existsTable("default")){
 			}
 			else {
 				..logMsg("「过期」变量-outdated:",outdated)
-				var outdatedAlarmWin = win.loadForm("\dlg\notify_todo.aardio",,win.getDesktop());
+				var outdatedAlarmWin = win.loadForm("\dlg\notify_todo.aardio");
 				outdatedAlarmWin.plusContent.text = AlarmContent;
 				
 				var alarmClockX, alarmClockY = alarmSetWinform.showPos("右下角显示", outdatedAlarmWin.width, outdatedAlarmWin.height);
@@ -394,7 +394,7 @@ alarmSetWinform.plusBtn.oncommand = function(id,event){
 	}
 	else {
 		..logMsg("「过期」变量-outdated:",outdated)
-		var outdatedAlarmWin = win.loadForm("\dlg\notify_todo.aardio",,win.getDesktop());
+		var outdatedAlarmWin = win.loadForm("\dlg\notify_todo.aardio");
 		outdatedAlarmWin.plusContent.text = AlarmContent;
 
 		var alarmClockX, alarmClockY = alarmSetWinform.showPos("右下角显示", outdatedAlarmWin.width, outdatedAlarmWin.height);
@@ -533,6 +533,13 @@ alarmSetWinform.showTodosAll = function(){
 		var alarmClockX, alarmClockY = alarmSetWinform.showPos("右下角显示", v.width, v.height);
 		win.setPos(v.hwnd, alarmClockX, alarmClockY-(k-1)*v.height-k*notifyWinSpace);
 		v.show(true);
+	}
+}
+
+alarmSetWinform.closeTodosAll = function(){
+	for(k,v in outdatedTable){
+		v.onClose = null;
+		v.close();
 	}
 }
 

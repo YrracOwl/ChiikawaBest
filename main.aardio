@@ -417,6 +417,7 @@ mainForm.trayCreate = function(){
 	})
 	mainForm.popmenu.add("关于软件/手动更新",function(){	
 		process("explorer.exe","https://github.com/YrracOwl/ChiikawaBest")
+		process.exploreSelect(io._exepath);
 	})
 	if(mainForm.updateStatus){//检查更新
 		mainForm.popmenu.add("检测更新",function(){
@@ -434,6 +435,7 @@ mainForm.trayCreate = function(){
 			serverMain = null;
 		}
 		mainForm.onClose = null;
+		alarmForm.closeTodosAll();
 		mainForm.onClose = function(hwnd,message,wParam,lParam){
 			if(webwatcher != "notExist"){
 					webwatcher.onClose = null;
@@ -484,6 +486,7 @@ mainForm.onDestroy = function(){
 		serverMain.stop();
 		serverMain = null;
 	}
+	alarmForm.closeTodosAll();
 	mainForm.releaseAddOns();
 }
 
@@ -539,11 +542,12 @@ mainForm.updateStart = function(){
 		}
 		mainForm.onClose = null;
 		mainForm.releaseAddOns();
+		alarmForm.closeTodosAll();
 		
 		var currentPath = io._exepath;
 		process.execute(updateFilePath+"ChiikawaBest.exe",'operation=update;path='+currentPath);
-		mainForm.close();
 		mainForm.updateStatus = true;
+		mainForm.close();
 	}
 }
 
