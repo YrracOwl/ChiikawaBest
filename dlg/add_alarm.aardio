@@ -145,11 +145,13 @@ timeShowClock.interval = {
 
 alarm_taskScheduler.start();
 
+var alwaysTopWin = {};
 var taskTable = {};
 var scheduleTable = {};
 var outdatedTable = {};
 var todoCnt = 1;
 if(..dbAlarmClock.existsTable("default")){
+	
 	..logMsg(">>>加载闹钟：")
 	for rowid, time, content in ..dbAlarmClock.each("SELECT rowid,* FROM [default]") {
 		taskTable[time] = content;
@@ -530,19 +532,62 @@ alarmSetWinform.pipeline = function(caller){
 }
 
 alarmSetWinform.showTodosAll = function(){
-	for(k,v in outdatedTable){
-		v.show(false)
-		var alarmClockX, alarmClockY = alarmSetWinform.showPos("右下角显示", v.width, v.height);
-		win.setPos(v.hwnd, alarmClockX, alarmClockY-(k-1)*v.height-k*notifyWinSpace);
-		v.show(true);
+	var notifyTable = {};
+	alarmSetWinform.closeTodosAll();
+	outdatedTable = {};
+	if(..dbAlarmClock.existsTable("default")){
+		..logMsg(">>>加载闹钟：")
+		for rowid, time, content in ..dbAlarmClock.each("SELECT rowid,* FROM [default]") {
+			notifyTable[time] = content;
+		}
+		..logWarn(table.count(notifyTable))
+		if(table.count(notifyTable)>0){
+			for(k,v in notifyTable){
+				..logMsg(k,v)
+				var tm = time(k,"%Y年%m月%d日%H时%M分%S秒");
+				var tmstr = tostring(tm);
+				var mstr = tm.month;
+				var dstr = tm.day;
+				var Hstr = tm.hour;
+				var Mstr = tm.minute;
+				var Sstr = tm.second;
+				
+				var AlarmContent = v;
+				
+				var outdated = tm.diffsecond(time()); 
+				
+				//判断闹钟是否过期
+				if(outdated>0){
+				}
+				else {
+					..logMsg("「过期」变量-outdated:",outdated)
+					var outdatedAlarmWin = win.loadForm("\dlg\notify_todo.aardio");
+					outdatedAlarmWin.plusContent.text = AlarmContent;
+					
+					var alarmClockX, alarmClockY = alarmSetWinform.showPos("右下角显示", outdatedAlarmWin.width, outdatedAlarmWin.height);
+					win.setPos(outdatedAlarmWin.hwnd, alarmClockX, alarmClockY-(todoCnt-1)*outdatedAlarmWin.height-todoCnt*notifyWinSpace);
+					
+					outdatedAlarmWin.rank = todoCnt;
+					outdatedTable[todoCnt] = outdatedAlarmWin;
+					todoCnt = todoCnt+1;
+					
+					win.setTopmost(outdatedAlarmWin.hwnd)
+					outdatedAlarmWin.show();
+				}
+	
+			}
+		}
+		
+		
 	}
 }
 
 alarmSetWinform.closeTodosAll = function(){
 	for(k,v in outdatedTable){
 		v.onClose = null;
-		v.close();
-	}
+		win.close(v.hwnd);
+	};
+	todoCnt = 1;
 }
 
 

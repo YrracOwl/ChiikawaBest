@@ -27,6 +27,12 @@ win.ui.simpleWindow(winform,,,,).skin(
 )
 
 winform.button.oncommand = function(id,event){
+	if(..serverMain){
+		..serverMain.stop();
+		..serverMain = null;
+	}
+	..alarmForm.closeTodosAll();
+	..mainForm.releaseAddOns();
 	..mainForm.onClose = null;
 	process.execute(..io._exepath,'operation=slowStart');
 	..mainForm.close();

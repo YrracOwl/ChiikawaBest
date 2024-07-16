@@ -38,7 +38,6 @@ winform.rank = 0;
 winform.onClose = function(hwnd,message,wParam,lParam){
 	winform.show(false);
     ..alarmForm.pipeline(winform.rank);
-    return true; 
 }
 
 //winform.show();

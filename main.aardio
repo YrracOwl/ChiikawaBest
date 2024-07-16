@@ -49,6 +49,10 @@ else {
     win.property.set(mainForm.hwnd, win.ui.atom._unique_prop_name, mainForm._atomId );
 }
 
+
+win.setTopmost(mainForm.hwnd);
+win.show(mainForm.hwnd,false)
+
 //////////////////////////////////////////////////////////////////////
 //Libray导入
 //////////////////////////////////////////////////////////////////////
@@ -1047,5 +1051,7 @@ if(io.exist("\ckwLibs")){
 }
 
 StartUpMan = sys.run("ChiikawaBest-StartUp");
+
+
 
 return win.loopMessage();
