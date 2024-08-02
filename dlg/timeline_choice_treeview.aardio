@@ -67,6 +67,8 @@ var updateTreeview = function(winform){
 			winform.树形展示.insertItem(name,winform.treeviewParentItems[v])
 		}
 	}
+	
+	winform.树形展示.expand(winform.treeviewParentItems["未分类"])
 };
 
 updateTreeview(winform);
@@ -80,10 +82,11 @@ winform.btn创建时间线.oncommand = function(id,event){
 				..dbTimeline.exec( "CREATE TABLE ?? (time PRIMARY KEY, title, content, image);",{winform.txt时间线标题.text}); 
 				..logWrite(">>>Timeline数据库新增表：",winform.txt时间线标题.text)
 			}
-			var cmd = ..dbBase.prepare("REPLACE INTO [timeline] VALUES ( @name,@time);");
+			var cmd = ..dbBase.prepare("REPLACE INTO [timeline] VALUES ( @name,@time,@category);");
 			cmd.step(
 				name = winform.txt时间线标题.text;
 				time = time.now();
+				category = "未分类"
 			)
 			..logWrite(">>>Base数据库新增Timeline：",winform.txt时间线标题.text)
 			
@@ -175,35 +178,32 @@ winform.树形展示.onnotify = function(id,code,ptr){
         var hItem,tvht = winform.树形展示.hitTest();
         winform.树形展示.setSelected(hItem);
         
-        var menu = win.ui.popmenu(winform)
-        
+        var menu = win.ui.popmenu(winform);
+                
         if( winform.checkChild(hItem) == true ){
 			menu.add("新建分类",function(){
-				
+				winform.newCat();
 			})
 			
-			menu.add("删除此分类",function(){
-				
-			})
+			if( winform.树形展示.getItemPath(hItem) != "未分类" ){
+				menu.add("删除此分类",function(){
+					winform.deleteCat(winform.树形展示.getItemText(hItem))
+				})
+			}
         }
         elseif( winform.checkChild(hItem) == false ){
             menu.add("打开文件",function(){
             	winform.openTimeline(hItem);
             })
-			
+            
 			menu.add("更改分类",function(){
 				
-			})
+			});
 			
 			menu.add("删除此时间线",function(){
             	winform.deleteTimeline(hItem);
             })
         }
-        menu.add()
-        menu.add("新建时间线",function(){
-        	
-        })
-        
         menu.popup(x,y,true);
     }
 }
@@ -226,7 +226,8 @@ winform.checkChild = function(hItem){
 winform.deleteTimeline = function(hItem){
 	var rdyDelTimeline = winform.树形展示.getItemText(hItem);
 	
-	var confirmed = win.msgboxTest("确认删除时间线："""+rdyDelTimeline+"""吗？","确认删除");
+	var confirmed = winform.msgboxTest("确认删除时间线："""+rdyDelTimeline+"""吗？","确认删除")
+	
 	if(confirmed){
 		
 		var deleteTime = time(,"%Y年%m月%d日%H时%M分%S秒"); 
@@ -235,6 +236,14 @@ winform.deleteTimeline = function(hItem){
 		
 		..dbTimeline.exec("DROP TABLE ??",{rdyDelTimeline})
 		..logWarn(">>>已删除Base数据库Timeline中: ",rdyDelTimeline)
+		
+		for rowid, name, time, category in ..dbBase.each("SELECT rowid,* FROM timeline") {
+			if(name == rdyDelTimeline){
+				..dbBase.exec("DELETE FROM ?? WHERE name=?",{"timelinecategory"+category, rdyDelTimeline})
+				break;
+			}
+		}
+		
 		..dbBase.exec("DELETE FROM ?? WHERE name=?;",{ "timeline",rdyDelTimeline} )
 		..logWarn(">>>已删除Timeline数据库中的表：",rdyDelTimeline)
 	}
@@ -259,6 +268,73 @@ winform.openTimeline = function(hItem){
 	
 	win.delay(1000);
 	winform.close();
+}
+
+winform.newCat = function(){	
+	var frmChild = winform.loadForm("\dlg\timeline_choice_treeview_askinput.aardio");
+	frmChild.doModal();
+	if(winform.userInput){
+		var rdyNewCat = winform.userInput;
+		var isFound = table.find(winform.treeviewParentItems, rdyNewCat);
+		if(isFound){
+			return ; 
+		}
+		else {
+			var cmd = ..dbBase.prepare("REPLACE INTO [timelinecategory] VALUES ( @name,@time);");
+			cmd.step(
+				name = rdyNewCat;
+				time = time.now();
+			)
+			..dbBase.exec( "CREATE TABLE [timelinecategory"+rdyNewCat+"] (name PRIMARY KEY, time);");
+		}
+	}
+	
+	updateTreeview(winform);
+}
+
+winform.deleteCat = function(currentCat){
+	var cntLen = 0;
+	for rowid, name, time in ..dbBase.each("SELECT rowid,* FROM timelinecategory"+currentCat) {
+		winform.changeCat(name, currentCat, "未分类");
+	}
+	
+	for rowid, name, time in ..dbBase.each("SELECT rowid,* FROM timelinecategory"+currentCat) {
+		cntLen = cntLen + 1;
+	}
+	
+	if(cntLen == 0){
+		..dbBase.exec("DELETE FROM ?? WHERE name=?;",{ "timelinecategory",currentCat})
+		..dbBase.exec("DROP TABLE ??",{"timelinecategory"+currentCat});
+	}
+	
+	updateTreeview(winform);
+}
+
+
+winform.changeCat = function(chosenTimeline, currentCat, destCat){
+	..dbBase.exec("DELETE FROM ?? WHERE name=?;",{ "timelinecategory"+currentCat,chosenTimeline});
+	var cmd1 = ..dbBase.prepare("REPLACE INTO [timelinecategory"+ destCat +"] VALUES ( @name,@time);");
+	cmd1.step(
+		name = chosenTimeline;
+		time = time.now();
+	)
+	
+	for rowid, Tname, Ttime, Tcategory in ..dbBase.each("SELECT rowid,* FROM timeline") {
+		if(Tname == chosenTimeline){
+			var cmd = ..dbBase.prepare("REPLACE INTO [timeline] VALUES ( @name,@time,@category);");
+			cmd.step(
+				name = Tname;
+				time = Ttime;
+				category = destCat;
+			)
+			break;
+		}
+	}
+	
+}
+
+winform.getUsrerInput = function(txt){
+	winform.userInput = txt;
 }
 
 

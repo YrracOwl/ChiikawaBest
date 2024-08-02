@@ -1,0 +1,28 @@
+import win.ui;
+/*DSG{{*/
+var winform = win.form(text="aardio form";right=395;bottom=102)
+winform.add(
+button={cls="button";text="确定";left=144;top=64;right=248;bottom=96;default=1;font=LOGFONT(h=-13);z=2};
+combobox={cls="combobox";left=16;top=32;right=384;bottom=56;edge=1;items={};mode="dropdown";z=1}
+)
+/*}}*/
+
+import win.ui.simpleWindow;
+win.ui.simpleWindow(winform,,,,).skin(
+	background = { 
+		hover = 0xff99ffcc;
+		active = 0xffff6666; 
+		default = 0x00000000; 
+	}
+	color = { 
+		hover = 0xff666666;
+		active = 0xffffffff; 
+		default = 0xFF7BA5BF; 
+	}
+)
+
+
+
+winform.show();
+win.loopMessage();
+return winform;

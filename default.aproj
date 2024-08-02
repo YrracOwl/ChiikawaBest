@@ -55,6 +55,8 @@
 		<file name="watchWin.aardio" path="dlg\watchWin.aardio" comment="dlg\watchWin.aardio"/>
 		<file name="watchWinStandalone.aardio" path="dlg\watchWinStandalone.aardio" comment="dlg\watchWinStandalone.aardio"/>
 		<file name="webwatcher.aardio" path="dlg\webwatcher.aardio" comment="dlg\webwatcher.aardio"/>
+		<file name="timeline_choice_treeview_askinput.aardio" path="dlg\timeline_choice_treeview_askinput.aardio" comment="dlg\timeline_choice_treeview_askinput.aardio"/>
+		<file name="timeline_choice_treeview_changeCat.aardio" path="dlg\timeline_choice_treeview_changeCat.aardio" comment="dlg\timeline_choice_treeview_changeCat.aardio"/>
 	</folder>
 	<folder name="html_crawler" path="html_crawler" comment="html_crawler" local="false" embed="false" ignored="false">
 		<file name="halo.carrywho.com.html" path="html_crawler\halo.carrywho.com.html" comment="html_crawler\halo.carrywho.com.html"/>

@@ -265,12 +265,23 @@ if( not dbTimeline.existsTable("default") ){
 }
 
 if( not dbBase.existsTable("timeline") ){ 
-	dbBase.exec( "CREATE TABLE [timeline] (name PRIMARY KEY, time);");
-	var cmd = dbBase.prepare("REPLACE INTO [timeline] VALUES ( @name,@time);");
+	dbBase.exec( "CREATE TABLE [timeline] (name PRIMARY KEY, time, category);");
+	var cmd = dbBase.prepare("REPLACE INTO [timeline] VALUES ( @name,@time,@category);");
 	cmd.step(
 		name = "default";
 		time = time.now();
+		category = "未分类";
 	)
+}
+
+if( dbBase.existsTable("timeline")){
+	var cmd = dbBase.prepare("SELECT * FROM [timeline];") 
+	var columns = cmd.getColumns();	
+	var isOk = table.find(columns,"category");
+	if(isOk){}
+	else {
+		dbBase.exec("ALTER TABLE [timeline] ADD COLUMN category TEXT DEFAULT ?;",{"未分类"});
+	}
 }
 
 if( not dbBase.existsTable("timelinecategory") ){
