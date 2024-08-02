@@ -1,0 +1,267 @@
+import fonts.fontAwesome;
+
+import win.ui;
+import win.ui.atom;
+/*DSG{{*/
+var winform = win.form(text="选择时间线";right=295;bottom=495;border="none";max=false)
+winform.add(
+["btn创建时间线"]={cls="plus";text="创建时间线(Ctrl+G)";left=72;top=456;right=232;bottom=486;align="left";bgcolor=-5197169;border={radius=16};dl=1;dt=1;font=LOGFONT(h=-13);iconStyle={align="left";font=LOGFONT(h=-16;name='FontAwesome');padding={left=10;bottom=-2}};iconText='\uF02D';notify=1;textPadding={left=30};z=3};
+["txt时间线标题"]={cls="plus";left=16;top=408;right=280;bottom=448;border={bottom=1;color=-6908266};dl=1;dt=1;editable="edit";font=LOGFONT(h=-16);notify=1;tabstop=1;textPadding={top=16};z=1};
+树形展示={cls="treeview";left=16;top=32;right=280;bottom=408;asel=false;bgcolor=16777215;border=1;z=4};
+选择时间线={cls="combobox";left=16;top=32;right=280;bottom=56;border=1;clipch=1;dl=1;dt=1;font=LOGFONT(h=-13);hide=1;items={};mode="dropdown";tabstop=1;z=2}
+)
+/*}}*/
+
+import fsys;
+
+import win.ui.tooltip; 
+//下面创建一个手动跟踪模式的提示控件
+var balloonTipCtrl = win.ui.tooltip.tracking(winform,false);
+winform.balloonTipCtrlState = false;
+
+winform.txt时间线标题.text = "";
+winform.txt时间线标题.setCueBannerText("请输入时间线标题");
+
+winform.btn创建时间线.skin({
+	background={
+		default=0x668FB2B0;
+		disabled=0xFFCCCCCC;
+		hover=0xFF928BB3
+	};
+	color={
+		default=0xFF000000;
+		disabled=0xFF6D6D6D
+	}
+})
+
+winform.txt时间线标题.skin(
+	background = { 
+		hover = "/res/images/btn-hover.png";
+		focus = "/res/images/btn-focus.jpg";
+		active = "/res/images/btn-active.png";
+		disabled = "/res/images/btn-disabled.png"; 
+	}
+)
+
+import win.ui.mask;
+var frmMask = win.ui.mask(winform,true)
+
+winform.treeviewParentItems = {};
+var updateTreeview = function(winform){
+	winform.树形展示.clear();
+	winform.treeviewParentItems = {};
+	var tree_timeline = {};
+	..logMsg(">>>更新items")
+	for rowid, name, time in ..dbBase.each("SELECT rowid,* FROM timelinecategory") {
+		/*
+		for 语句的第一个返回值如果为 null 就会退出循环,
+		如果数据库返回的第一个字段可能为空,那么可以把 SQLite 默认就有的索引字段 rowid 放在最前面
+		*/
+		table.push(tree_timeline,name)
+		..logMsg(rowid,time,name)
+		winform.treeviewParentItems[name] = winform.树形展示.insertItem(name);
+	}
+	
+	for(k,v in tree_timeline){
+		for rowid, name, time in ..dbBase.each("SELECT rowid,* FROM timelinecategory"+v) {
+			winform.树形展示.insertItem(name,winform.treeviewParentItems[v])
+		}
+	}
+};
+
+updateTreeview(winform);
+
+winform.btn创建时间线.oncommand = function(id,event){
+	winform.btn创建时间线.disabled = true;
+	
+	if(winform.txt时间线标题.text != ""){
+		try{
+			if( not ..dbTimeline.existsTable(winform.txt时间线标题.text) ){ 
+				..dbTimeline.exec( "CREATE TABLE ?? (time PRIMARY KEY, title, content, image);",{winform.txt时间线标题.text}); 
+				..logWrite(">>>Timeline数据库新增表：",winform.txt时间线标题.text)
+			}
+			var cmd = ..dbBase.prepare("REPLACE INTO [timeline] VALUES ( @name,@time);");
+			cmd.step(
+				name = winform.txt时间线标题.text;
+				time = time.now();
+			)
+			..logWrite(">>>Base数据库新增Timeline：",winform.txt时间线标题.text)
+			
+			var cmd1 = ..dbBase.prepare("REPLACE INTO [timelinecategory未分类] VALUES ( @name,@time);");
+			cmd1.step(
+				name = winform.txt时间线标题.text;
+				time = time.now();
+			)
+			..logWrite(">>>Base数据库新增timelinecategory未分类：",winform.txt时间线标题.text)
+		}
+		catch(e){
+			..logErr(">>>Timeline数据库创建表失败：",winform.txt时间线标题.text);
+			..logErr(">>>Base数据库新增Timeline失败：",winform.txt时间线标题.text);
+			..logErr(e) 
+		}
+		winform.txt时间线标题.text = "";
+	}
+	else {
+	    //手动显示提示
+    	var x,y,cx,cy = winform.txt时间线标题.getPos(true);
+    	balloonTipCtrl.setText("请输入标题再创建").trackPopup(true,x+cx*3/4,y+cy,2000);
+    	winform.balloonTipCtrlState = true;
+	}
+	updateTreeview(winform);
+	
+	win.delay(1000);
+	winform.btn创建时间线.disabled = false;
+}
+
+
+import win.ui.simpleWindow;
+win.ui.simpleWindow(winform,,,,).skin(
+	background = { 
+		hover = 0xff99ffcc;
+		active = 0xffff6666; 
+		default = 0x00000000; 
+	}
+	color = { 
+		hover = 0xff666666;
+		active = 0xffffffff; 
+		default = 0xFF7BA5BF; 
+	}
+)
+
+import win.ui.accelerator;
+win.ui.accelerator({
+	{ ctrl = true; vkey = 'G'#; oncommand = winform.btn创建时间线.oncommand } 
+	//{ ctrl = true; vkey = 'D'#; oncommand = winform.btn打开时间线.oncommand } 
+},winform);
+
+winform.wndproc = function(hwnd,message,wParam,lParam){
+	select( message ) { 
+		case 0x200/*_WM_MOUSEMOVE*/{
+			if(winform.balloonTipCtrlState){
+				balloonTipCtrl.popup(false);
+				winform.balloonTipCtrlState = false;
+			}
+		}
+		case 3/*_WM_MOVE*/{
+			if(winform.balloonTipCtrlState){
+    			var x,y,cx,cy = winform.txt时间线标题.getPos(true);
+    			balloonTipCtrl.setText("请输入标题再创建").trackPopup(true,x+cx*3/4,y+cy,2000);
+			}
+		}
+		else{
+			
+		}
+	}
+	//无返回值则继续调用默认回调函数
+}
+
+
+winform.onClose = function(hwnd,message,wParam,lParam){
+    winform.show(false);
+    return false; 
+}
+
+winform.enableDpiScaling();
+::User32.SendMessage(winform.选择时间线.hwnd,0x142/*_CB_SETEDITSEL*/,-1,0);
+
+winform.doForeground = function(){
+	win.setForeground(winform.hwnd)
+}
+
+winform.树形展示.onnotify = function(id,code,ptr){
+    if( code == 0xFFFFFE3D/*_TVN_SELCHANGEDW*/ ){ //改变选项
+    }
+    elseif(code = 0xFFFFFFFB/*_NM_RCLICK*/){ //鼠标右键单击
+        var hItem,tvht = winform.树形展示.hitTest();
+        winform.树形展示.setSelected(hItem);
+        
+        var menu = win.ui.popmenu(winform)
+        
+        if( winform.checkChild(hItem) == true ){
+			menu.add("新建分类",function(){
+				
+			})
+			
+			menu.add("删除此分类",function(){
+				
+			})
+        }
+        elseif( winform.checkChild(hItem) == false ){
+            menu.add("打开文件",function(){
+            	winform.openTimeline(hItem);
+            })
+			
+			menu.add("更改分类",function(){
+				
+			})
+			
+			menu.add("删除此时间线",function(){
+            	winform.deleteTimeline(hItem);
+            })
+        }
+        menu.add()
+        menu.add("新建时间线",function(){
+        	
+        })
+        
+        menu.popup(x,y,true);
+    }
+}
+
+winform.checkChild = function(hItem){
+	if(hItem){
+		var dataPath = winform.树形展示.getItemPath(hItem);
+		var dataText = winform.树形展示.getItemText(hItem); 
+		if(dataText == dataPath){
+			hasChild = true;
+		}
+		else {
+			hasChild = false;
+		}
+		return hasChild; 
+	}
+	return null; 
+}
+
+winform.deleteTimeline = function(hItem){
+	var rdyDelTimeline = winform.树形展示.getItemText(hItem);
+	
+	var confirmed = win.msgboxTest("确认删除时间线："""+rdyDelTimeline+"""吗？","确认删除");
+	if(confirmed){
+		
+		var deleteTime = time(,"%Y年%m月%d日%H时%M分%S秒"); 
+		var backupPath = fsys.createDir(dbDirBackUp + "/" + tostring(deleteTime) + "-删除【" + rdyDelTimeline + "】前备份",true);
+		fsys.copy(..dbDir,backupPath)
+		
+		..dbTimeline.exec("DROP TABLE ??",{rdyDelTimeline})
+		..logWarn(">>>已删除Base数据库Timeline中: ",rdyDelTimeline)
+		..dbBase.exec("DELETE FROM ?? WHERE name=?;",{ "timeline",rdyDelTimeline} )
+		..logWarn(">>>已删除Timeline数据库中的表：",rdyDelTimeline)
+	}
+	else {
+		..logWarn(">>>取消删除")
+	}
+
+	updateTreeview(winform);
+}
+
+winform.openTimeline = function(hItem){
+	var rdyOpenTimeline = winform.树形展示.getItemText(hItem);
+	
+	frmMask.show(true);
+	var timelineChild = ..mainForm.loadForm("\dlg\timeline.aardio");
+	
+	timelineChild.childWinUpdate(rdyOpenTimeline);
+	timelineChild.listboxUpdate(timelineChild);
+	timelineChild.timelineWebUpdate(timelineChild);
+	
+	frmMask.show(false);
+	
+	win.delay(1000);
+	winform.close();
+}
+
+
+//winform.show();
+win.loopMessage();
+return winform;

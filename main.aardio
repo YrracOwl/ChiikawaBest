@@ -273,6 +273,26 @@ if( not dbBase.existsTable("timeline") ){
 	)
 }
 
+if( not dbBase.existsTable("timelinecategory") ){
+	dbBase.exec( "CREATE TABLE [timelinecategory] (name PRIMARY KEY, time);");
+	var cmd = dbBase.prepare("REPLACE INTO [timelinecategory] VALUES ( @name,@time);");
+	cmd.step(
+		name = "未分类";
+		time = time.now();
+	)
+}
+
+if( not dbBase.existsTable("timelinecategory未分类") ){ 
+	dbBase.exec( "CREATE TABLE [timelinecategory未分类] (name PRIMARY KEY, time);");
+	var cmd = dbBase.prepare("REPLACE INTO [timelinecategory未分类] VALUES ( @name,@time);");
+	for rowid, Tname, Ttime in dbBase.each("SELECT rowid,* FROM timeline") {
+		cmd.step(
+			name = Tname;
+			time = Ttime;
+		)
+	}
+}
+
 if( not dbBase.existsTable("timelineskin") ){ 
 	dbBase.exec( "CREATE TABLE [timelineskin] (name PRIMARY KEY, color);");
 	var cmd = dbBase.prepare("REPLACE INTO [timelineskin] VALUES ( @name,@color);");
@@ -811,7 +831,7 @@ webwatcher = "notExist";
 webwatcherPrcsCntShot = 0;
 
 //全局时间线选择
-timeline_choice = mainForm.loadForm("\dlg\timeline_choice.aardio");
+timeline_choice = mainForm.loadForm("\dlg\timeline_choice_treeview.aardio");
 
 
 //数据库是否需要更新
