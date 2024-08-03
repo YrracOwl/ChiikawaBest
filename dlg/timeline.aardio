@@ -903,7 +903,7 @@ winform.btnRead.oncommand = function(id,event){
 
 winform.timelineThemeSet();
 winform.enableDpiScaling();
-winform.show();
+//winform.show();
 winform.winTimelineShow.setFocus();
 win.loopMessage();
 return winform;

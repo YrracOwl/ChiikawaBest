@@ -1,9 +1,9 @@
 import win.ui;
 /*DSG{{*/
-var winform = win.form(text="aardio form";right=395;bottom=102)
+var winform = win.form(text="更改分类";right=231;bottom=102;border="none";max=false;min=false)
 winform.add(
-button={cls="button";text="确定";left=144;top=64;right=248;bottom=96;default=1;font=LOGFONT(h=-13);z=2};
-combobox={cls="combobox";left=16;top=32;right=384;bottom=56;edge=1;items={};mode="dropdown";z=1}
+button={cls="button";text="确定";left=64;top=64;right=168;bottom=96;default=1;font=LOGFONT(h=-13);z=1};
+combobox={cls="combobox";left=16;top=32;right=216;bottom=56;edge=1;font=LOGFONT(h=-15);items={};mode="dropdown";z=2}
 )
 /*}}*/
 
@@ -21,7 +21,33 @@ win.ui.simpleWindow(winform,,,,).skin(
 	}
 )
 
+winform.updateCombobox = function(hItemTable,chosenTimeline, currentCat){
+	var comboboxList = {};
+	for(k,v in hItemTable){
+		table.push(comboboxList,k);
+	}
+	winform.combobox.items = comboboxList;
+	winform.combobox.selIndex = 1;
+	
+	winform.chosenTimeline = chosenTimeline;
+	winform.currentCat = currentCat;
+}
 
+winform.button.oncommand = function(id,event){
+	
+	var timelineCat = winform.combobox.items[winform.combobox.selIndex];
+	if(timelineCat){
+		if( timelineCat != winform.currentCat){
+			
+		}
+		winform.parent.changeCat(winform.chosenTimeline, winform.currentCat, timelineCat);
+		winform.close();
+	}
+	else {
+		winform.combobox.selIndex = 1;
+	}
+	
+}
 
 winform.show();
 win.loopMessage();

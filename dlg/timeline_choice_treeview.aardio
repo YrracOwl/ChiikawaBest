@@ -134,7 +134,6 @@ win.ui.simpleWindow(winform,,,,).skin(
 import win.ui.accelerator;
 win.ui.accelerator({
 	{ ctrl = true; vkey = 'G'#; oncommand = winform.btn创建时间线.oncommand } 
-	//{ ctrl = true; vkey = 'D'#; oncommand = winform.btn打开时间线.oncommand } 
 },winform);
 
 winform.wndproc = function(hwnd,message,wParam,lParam){
@@ -197,7 +196,7 @@ winform.树形展示.onnotify = function(id,code,ptr){
             })
             
 			menu.add("更改分类",function(){
-				
+				winform.loadChangeCat(winform.treeviewParentItems,hItem)
 			});
 			
 			menu.add("删除此时间线",function(){
@@ -206,6 +205,15 @@ winform.树形展示.onnotify = function(id,code,ptr){
         }
         menu.popup(x,y,true);
     }
+    elseif(code = 0xFFFFFFFD/*_NM_DBLCLK*/){
+    	var hItem,tvht = winform.树形展示.hitTest();
+        winform.树形展示.setSelected(hItem);
+        if(winform.checkChild(hItem) == false){
+        	winform.openTimeline(hItem);
+        }
+        
+    }
+    
 }
 
 winform.checkChild = function(hItem){
@@ -264,10 +272,11 @@ winform.openTimeline = function(hItem){
 	timelineChild.listboxUpdate(timelineChild);
 	timelineChild.timelineWebUpdate(timelineChild);
 	
-	frmMask.show(false);
 	
-	win.delay(1000);
+	frmMask.show(false);
 	winform.close();
+	
+	timelineChild.show(true);
 }
 
 winform.newCat = function(){	
@@ -330,8 +339,23 @@ winform.changeCat = function(chosenTimeline, currentCat, destCat){
 			break;
 		}
 	}
-	
 }
+
+winform.loadChangeCat = function(hItemTable,hItem){
+	var chosenTimeline = winform.树形展示.getItemText(hItem);
+	var currentCat = "未分类";
+	for rowid, Tname, Ttime, Tcategory in ..dbBase.each("SELECT rowid,* FROM timeline") {
+		if(Tname == chosenTimeline){
+			currentCat = Tcategory;
+			break;
+		}
+	}
+	var frmChild = winform.loadForm("\dlg\timeline_choice_treeview_changeCat.aardio");
+	frmChild.updateCombobox(hItemTable,chosenTimeline,currentCat);
+	frmChild.doModal();
+	updateTreeview(winform);
+}
+
 
 winform.getUsrerInput = function(txt){
 	winform.userInput = txt;
