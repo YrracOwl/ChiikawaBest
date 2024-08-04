@@ -886,6 +886,8 @@ mainForm.loadWatchWin = function(){
 	}
 	var watchWinHK = win.loadForm("\dlg\watchWin.aardio",,win.getDesktop());
 	watchWinHK.show(false);
+	var x,y = win.getCursorPos();
+	win.setPos(watchWinHK.hwnd,x,y);
 	watchWinHK.undoTop();
 	watchWinHK.doTop();
 	watchWinHK.show(true);

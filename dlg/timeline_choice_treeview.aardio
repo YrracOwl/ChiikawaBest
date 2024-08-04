@@ -279,16 +279,18 @@ winform.openTimeline = function(hItem){
 	timelineChild.show(true);
 }
 
-winform.newCat = function(){	
+winform.newCat = function(){
+	winform.userInput = null;
 	var frmChild = winform.loadForm("\dlg\timeline_choice_treeview_askinput.aardio");
 	frmChild.doModal();
 	if(winform.userInput){
 		var rdyNewCat = winform.userInput;
-		var isFound = table.find(winform.treeviewParentItems, rdyNewCat);
+		var isFound = winform.treeviewParentItems[rdyNewCat];
+		
 		if(isFound){
 			return ; 
 		}
-		else {
+		elseif(isFound == null) {
 			var cmd = ..dbBase.prepare("REPLACE INTO [timelinecategory] VALUES ( @name,@time);");
 			cmd.step(
 				name = rdyNewCat;

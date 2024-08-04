@@ -21,10 +21,34 @@ win.ui.simpleWindow(winform,,,,).skin(
 	}
 )
 
+import win.ui.tooltip; 
+//下面创建一个手动跟踪模式的提示控件
+var balloonTipCtrl = win.ui.tooltip.tracking(winform,false);
+
 winform.ok.oncommand = function(id,event){
-	winform.parent.getUsrerInput(winform.userInput.text)
-	winform.close();
+	var userInpuList = string.split(winform.userInput.text, '');
+	var userInputSaveStr = '';
+	for(index=1;table.len(userInpuList);1){
+		if(userInpuList[index] == ' '){
+			continue;
+		};
+		userInputSaveStr = string.concat(userInputSaveStr,userInpuList[index]);
+	}
+		
+	if(string.len(userInputSaveStr) > 0){
+		winform.parent.getUsrerInput(userInputSaveStr)
+		winform.close();
+	}else {
+		winform.userInput.text = '';
+	    //手动显示提示
+    	var x,y,cx,cy = winform.userInput.getPos(true);
+    	balloonTipCtrl.setText("请输入不全为空格的分类名字").trackPopup(true,x+cx*3/4,y+cy,1500);
+    	thread.delay(1000);
+    	balloonTipCtrl.popup(false);
+	}
 }
+
+
 
 winform.show();
 win.loopMessage();
