@@ -205,7 +205,7 @@ winform.树形展示.onnotify = function(id,code,ptr){
         }
         menu.popup(x,y,true);
     }
-    elseif(code = 0xFFFFFFFD/*_NM_DBLCLK*/){
+    elseif(code == 0xFFFFFFFD/*_NM_DBLCLK*/){
     	var hItem,tvht = winform.树形展示.hitTest();
         winform.树形展示.setSelected(hItem);
         if(winform.checkChild(hItem) == false){
@@ -213,7 +213,6 @@ winform.树形展示.onnotify = function(id,code,ptr){
         }
         
     }
-    
 }
 
 winform.checkChild = function(hItem){
