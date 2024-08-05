@@ -1,6 +1,6 @@
 import win.ui;
 /*DSG{{*/
-var winform = win.form(text="待处理";right=295;bottom=143;border="none";max=false;min=false)
+var winform = win.form(text="待处理";right=295;bottom=143;border="none";max=false;min=1)
 winform.add(
 btnDel={cls="button";text="删除";left=168;top=116;right=264;bottom=140;db=1;z=3};
 btnRe={cls="button";text="重新添加";left=24;top=116;right=120;bottom=140;db=1;z=2};

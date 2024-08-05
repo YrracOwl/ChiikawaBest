@@ -15,6 +15,7 @@ winform.updateContent = function(contentStr,timeStr){
 	timeFormatted = time(timeStr,"%Y年%m月%d日%H时%M分%S秒");
 	winform.plusContent.text = tostring(contentStr);
 	winform.plusTime.text = tostring(timeFormatted);
+	..alarmForm.showTodosAll();
 }
 
 winform.btnD10.oncommand = function(id,event){
@@ -44,6 +45,7 @@ winform.btnD30.oncommand = function(id,event){
 	};
 	winform.close();
 }
+
 
 winform.enableDpiScaling();
 win.ui.fade(winform,960);

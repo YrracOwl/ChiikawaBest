@@ -3,12 +3,11 @@ import fonts.fontAwesome;
 import win.ui;
 import win.ui.atom;
 /*DSG{{*/
-var winform = win.form(text="选择时间线";right=295;bottom=495;border="none";max=false)
+var winform = win.form(text="选择时间线";right=295;bottom=495;border="none";clipch=1;max=false)
 winform.add(
 ["btn创建时间线"]={cls="plus";text="创建时间线(Ctrl+G)";left=72;top=456;right=232;bottom=486;align="left";bgcolor=-5197169;border={radius=16};dl=1;dt=1;font=LOGFONT(h=-13);iconStyle={align="left";font=LOGFONT(h=-16;name='FontAwesome');padding={left=10;bottom=-2}};iconText='\uF02D';notify=1;textPadding={left=30};z=3};
-["txt时间线标题"]={cls="plus";left=16;top=408;right=280;bottom=448;border={bottom=1;color=-6908266};dl=1;dt=1;editable="edit";font=LOGFONT(h=-16);notify=1;tabstop=1;textPadding={top=16};z=1};
-树形展示={cls="treeview";left=16;top=32;right=280;bottom=408;asel=false;bgcolor=16777215;border=1;z=4};
-选择时间线={cls="combobox";left=16;top=32;right=280;bottom=56;border=1;clipch=1;dl=1;dt=1;font=LOGFONT(h=-13);hide=1;items={};mode="dropdown";tabstop=1;z=2}
+["txt时间线标题"]={cls="plus";left=16;top=408;right=280;bottom=448;border={bottom=1;color=-6908266};dl=1;dt=1;editable="edit";font=LOGFONT(h=-16);notify=1;tabstop=1;textPadding={top=16};z=2};
+树形展示={cls="treeview";left=16;top=32;right=280;bottom=408;asel=false;bgcolor=16777215;border=1;z=1}
 )
 /*}}*/
 
@@ -164,7 +163,6 @@ winform.onClose = function(hwnd,message,wParam,lParam){
 }
 
 winform.enableDpiScaling();
-::User32.SendMessage(winform.选择时间线.hwnd,0x142/*_CB_SETEDITSEL*/,-1,0);
 
 winform.doForeground = function(){
 	win.setForeground(winform.hwnd)
@@ -211,8 +209,14 @@ winform.树形展示.onnotify = function(id,code,ptr){
         if(winform.checkChild(hItem) == false){
         	winform.openTimeline(hItem);
         }
-        
     }
+    elseif( code == 0xFFFFFFFE/*_NM_CLICK*/){
+    	winform.saveExpandedState();
+    	var hItem,tvht = winform.树形展示.hitTest();
+        winform.树形展示.setSelected(hItem);
+        winform.restoreExpandedState();
+    }
+    
 }
 
 winform.checkChild = function(hItem){
@@ -360,6 +364,27 @@ winform.loadChangeCat = function(hItemTable,hItem){
 
 winform.getUsrerInput = function(txt){
 	winform.userInput = txt;
+}
+
+winform.expStateSave = {};
+winform.saveExpandedState = function(){
+	winform.expStateSave = {};
+	for(k,v in winform.treeviewParentItems){
+		if(winform.树形展示.isExpanded(v)){
+			winform.expStateSave[v] = true;
+		}
+		else {
+			winform.expStateSave[v] = false;
+		}
+	}
+}
+
+winform.restoreExpandedState = function(){
+	for(k,v in winform.expStateSave){
+		if(v){
+			winform.树形展示.expand(k)
+		}
+	}
 }
 
 
