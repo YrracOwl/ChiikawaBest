@@ -133,7 +133,7 @@ winform.复制.oncommand = function(id,event){
 }
 
 winform.保存.oncommand = function(id,event){
-	var savePath = ..fsys.dlg.saveOp("图像文件|*.bmp;*.png;*.jpg","保存图像",,,"temp.png");
+	var savePath = ..fsys.dlg.saveOp("图像文件|*.bmp;*.png;*.jpg","保存图像",,,"temp.jpg");
 	if(savePath){
 		imgCaptured.save(savePath);
 	}
