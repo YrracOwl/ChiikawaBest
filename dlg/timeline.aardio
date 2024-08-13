@@ -901,6 +901,32 @@ winform.btnRead.oncommand = function(id,event){
 	}
 }
 
+winform.内容plus.editBox.enablePopMenu({
+    
+	{ /*---分隔线---*/ };
+	
+	{ "加粗";
+		function(id){
+			
+		} ; 
+	};
+	{ "无序列表";
+		function(id){
+			
+		} ; 
+	};
+	{ "有序列表";
+		function(id){
+			
+		} ; 
+	};
+	{ "超链接";
+		function(id){
+			
+		} ; 
+	};
+})
+
 winform.timelineThemeSet();
 winform.enableDpiScaling();
 //winform.show();
