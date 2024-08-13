@@ -901,22 +901,22 @@ winform.内容plus.editBox.enablePopMenu({
     
 	{ /*---分隔线---*/ };
 	
-	{ "加粗";
+	{ "加粗(Ctrl+B)";
 		function(id){
 			winform.richeditFuncBold();
 		} ; 
 	};
-	{ "无序列表";
+	{ "无序列表(Ctrl+D)";
 		function(id){
 			winform.richeditFuncNoOrderList();
 		} ; 
 	};
-	{ "有序列表";
+	{ "有序列表(Ctrl+R)";
 		function(id){
 			winform.richeditFuncOrderList();
 		} ; 
 	};
-	{ "超链接";
+	{ "超链接(Ctrl+T)";
 		function(id){
 			winform.richeditFuncHyperlink();
 		} ; 
