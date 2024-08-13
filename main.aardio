@@ -51,7 +51,7 @@ else {
 
 
 win.setTopmost(mainForm.hwnd);
-win.show(mainForm.hwnd,false)
+win.show(mainForm.hwnd,false);
 
 //////////////////////////////////////////////////////////////////////
 //Libray导入

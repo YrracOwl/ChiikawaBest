@@ -725,11 +725,6 @@ winform.listbox.oncommand = function(id,event){
 	}
 }
 
-import win.ui.accelerator;
-win.ui.accelerator({
-	{ ctrl = true; vkey = 'G'#; oncommand = winform.添加plus.oncommand } 
-},winform);
-
 winform.wndproc = function(hwnd,message,wParam,lParam){
 	select( message ) { 
 		case 3/*_WM_MOVE*/{
@@ -746,8 +741,9 @@ winform.wndproc = function(hwnd,message,wParam,lParam){
 }
 
 winform.删除plus.oncommand = function(id,event){
-	var tl_time = winform.datetimepick.text + '-' + winform.时间plus.text; 
-	var confirmed = win.msgboxTest("确认删除"""+tl_time+"""吗？","确认删除");
+	var tl_time = winform.datetimepick.text + '-' + winform.时间plus.text;
+	var confirmed = winform.msgboxTest("确认删除"""+tl_time+"""吗？","确认删除")
+	//var confirmed = win.msgboxTest("确认删除"""+tl_time+"""吗？","确认删除");
 	if(confirmed){
 		try{
 			..dbTimeline.exec("DELETE FROM ?? WHERE time=?;",{ winform.当前主题.text,tl_time} )
@@ -907,25 +903,88 @@ winform.内容plus.editBox.enablePopMenu({
 	
 	{ "加粗";
 		function(id){
-			
+			winform.richeditFuncBold();
 		} ; 
 	};
 	{ "无序列表";
 		function(id){
-			
+			winform.richeditFuncNoOrderList();
 		} ; 
 	};
 	{ "有序列表";
 		function(id){
-			
+			winform.richeditFuncOrderList();
 		} ; 
 	};
 	{ "超链接";
 		function(id){
-			
+			winform.richeditFuncHyperlink();
 		} ; 
 	};
 })
+
+winform.richeditFuncBold = function(){
+	var tempText = winform.内容plus.editBox.selText;
+	if(tempText == null){
+		return ; 
+	}
+	winform.内容plus.editBox.replaceText(tempText,'**' + tempText + '**')
+}
+
+winform.richeditFuncNoOrderList = function(){
+	var tempText = winform.内容plus.editBox.selText;
+	if(tempText == null){
+		return ; 
+	}
+	var tempTextList = string.split(tempText,'\r\n');
+	var destTextList = '';
+	for(i=1;table.len(tempTextList);1){
+		destTextList = string.concat(destTextList,'\r\n - ',tempTextList[i]);
+	}
+	winform.内容plus.editBox.replaceText(tempText,destTextList);
+}
+
+winform.richeditFuncOrderList = function(){
+	var tempText = winform.内容plus.editBox.selText;
+	if(tempText == null){
+		return ; 
+	}
+	var tempTextList = string.split(tempText,'\r\n');
+	var destTextList = '';
+	for(i=1;table.len(tempTextList);1){
+		destTextList = string.concat(destTextList,'\r\n 1. ',tempTextList[i]);
+	}
+	winform.内容plus.editBox.replaceText(tempText,destTextList);
+}
+
+winform.richeditFuncHyperlink = function(){
+	var tempText = winform.内容plus.editBox.selText;
+	if(tempText == null){
+		return ; 
+	}
+	var tempTextList = string.split(tempText,'\r\n');
+	winform.内容plus.editBox.replaceText(tempText,'[' + tempTextList[1] + '](' + tempTextList[1] + ')')
+}
+
+winform.内容plus.editBox.translateAccelerator = function(msg){ 
+    var vk = msg.wParam;
+ 	if( vk == 0x9/*_VK_TAB*/ ){
+		if( msg.message == 0x100/*_WM_KEYDOWN*/) {
+			//owner.tabNext(true); 
+			winform.内容plus.editBox.appendText('    ');
+			return true;
+		}
+	}
+}
+
+import win.ui.accelerator;
+win.ui.accelerator({
+	{ ctrl = true; vkey = 'G'#; oncommand = winform.添加plus.oncommand }
+	{ ctrl = true; vkey = 'B'#; oncommand = winform.richeditFuncBold }
+	{ ctrl = true; vkey = 'D'#; oncommand = winform.richeditFuncNoOrderList }
+	{ ctrl = true; vkey = 'R'#; oncommand = winform.richeditFuncOrderList }
+	{ ctrl = true; vkey = 'T'#; oncommand = winform.richeditFuncHyperlink }
+},winform);
 
 winform.timelineThemeSet();
 winform.enableDpiScaling();
