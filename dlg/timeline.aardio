@@ -588,6 +588,31 @@ winform.添加plus.oncommand = function(id,event){
 	var hour1,hour2 = tonumber(timeFormat[1]);
 	var minute1,minute2 = tonumber(timeFormat[2]);
 	var second1,second2 = tonumber(timeFormat[3]);
+	
+	var userInpuList = string.split(winform.内容plus.text, '');
+	var userInputSaveStr = '';
+	for(index=1;table.len(userInpuList);1){
+		if(userInpuList[index] == ' '){
+			continue;
+		};
+		userInputSaveStr = string.concat(userInputSaveStr,userInpuList[index]);
+		if(string.len(userInputSaveStr) > 0){
+			break;
+		}
+	}
+	
+	var userInpuListB = string.split(winform.标题plus.text, '');
+	var userInputSaveStrB = '';
+	for(index=1;table.len(userInpuListB);1){
+		if(userInpuListB[index] == ' '){
+			continue;
+		};
+		userInputSaveStrB = string.concat(userInputSaveStrB,userInpuListB[index]);
+		if(string.len(userInputSaveStrB) > 0){
+			break;
+		}
+	}
+	
 	if(hour2 < 3 and minute2 < 3 and second2 < 3){
 		if(hour1 < 24 and minute1 < 60 and second1 < 60){
 			var tl_time = winform.datetimepick.text + '-' + winform.时间plus.text; 
@@ -601,10 +626,10 @@ winform.添加plus.oncommand = function(id,event){
   				tl_img = crypt.bin.encodeBase64(stream.readAll(),#stream.readAll());
 				stream.close();
 			}
-			if(winform.标题plus.text != ""){
+			if(string.len(userInputSaveStrB) > 0){
 				tl_title = winform.标题plus.text;
 			}
-			if(winform.内容plus.text != ""){
+			if(string.len(userInputSaveStr) > 0){
 				tl_content = winform.内容plus.text;
 			}
 			
