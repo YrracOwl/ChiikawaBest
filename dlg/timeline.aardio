@@ -906,6 +906,11 @@ winform.内容plus.editBox.enablePopMenu({
 			winform.richeditFuncBold();
 		} ; 
 	};
+	{ "斜体(Ctrl+I)";
+		function(id){
+			winform.richeditFuncItalic();
+		} ; 
+	};
 	{ "无序列表(Ctrl+D)";
 		function(id){
 			winform.richeditFuncNoOrderList();
@@ -921,6 +926,47 @@ winform.内容plus.editBox.enablePopMenu({
 			winform.richeditFuncHyperlink();
 		} ; 
 	};
+	{ "1级标题(Ctrl+1)";
+		function(id){
+			winform.richeditFuncH1();
+		} ; 
+	};
+	{ "2级标题(Ctrl+2)";
+		function(id){
+			winform.richeditFuncH1();
+		} ; 
+	};
+	{ "3级标题(Ctrl+3)";
+		function(id){
+			winform.richeditFuncH1();
+		} ; 
+	};
+	{ "4级标题(Ctrl+4)";
+		function(id){
+			winform.richeditFuncH1();
+		} ; 
+	};
+	{ "5级标题(Ctrl+5)";
+		function(id){
+			winform.richeditFuncH1();
+		} ; 
+	};
+	{ "待办";
+		function(id){
+			winform.richeditFuncToDos();
+		} ; 
+	};
+	{ "块引用";
+		function(id){
+			winform.richeditFuncQuotes();
+		} ; 
+	};
+	{ "代码块";
+		function(id){
+			winform.richeditFuncCodeBlock();
+		} ; 
+	};
+	
 })
 
 winform.richeditFuncBold = function(){
@@ -931,6 +977,14 @@ winform.richeditFuncBold = function(){
 	winform.内容plus.editBox.replaceText(tempText,'**' + tempText + '**')
 }
 
+winform.richeditFuncItalic = function(){
+	var tempText = winform.内容plus.editBox.selText;
+	if(tempText == null){
+		return ; 
+	}
+	winform.内容plus.editBox.replaceText(tempText,'*' + tempText + '*')
+}
+
 winform.richeditFuncNoOrderList = function(){
 	var tempText = winform.内容plus.editBox.selText;
 	if(tempText == null){
@@ -939,7 +993,7 @@ winform.richeditFuncNoOrderList = function(){
 	var tempTextList = string.split(tempText,'\r\n');
 	var destTextList = '';
 	for(i=1;table.len(tempTextList);1){
-		destTextList = string.concat(destTextList,'\r\n - ',tempTextList[i]);
+		destTextList = string.concat(destTextList,'\r\n- ',tempTextList[i]);
 	}
 	winform.内容plus.editBox.replaceText(tempText,destTextList);
 }
@@ -952,7 +1006,7 @@ winform.richeditFuncOrderList = function(){
 	var tempTextList = string.split(tempText,'\r\n');
 	var destTextList = '';
 	for(i=1;table.len(tempTextList);1){
-		destTextList = string.concat(destTextList,'\r\n 1. ',tempTextList[i]);
+		destTextList = string.concat(destTextList,'\r\n1. ',tempTextList[i]);
 	}
 	winform.内容plus.editBox.replaceText(tempText,destTextList);
 }
@@ -965,6 +1019,87 @@ winform.richeditFuncHyperlink = function(){
 	var tempTextList = string.split(tempText,'\r\n');
 	winform.内容plus.editBox.replaceText(tempText,'[' + tempTextList[1] + '](' + tempTextList[1] + ')')
 }
+
+winform.richeditFuncToDos = function(){
+	var tempText = winform.内容plus.editBox.selText;
+	if(tempText == null){
+		return ; 
+	}
+	var tempTextList = string.split(tempText,'\r\n');
+	var destTextList = '';
+	for(i=1;table.len(tempTextList);1){
+		destTextList = string.concat(destTextList,'\r\n- [ ] ',tempTextList[i]);
+	}
+	winform.内容plus.editBox.replaceText(tempText,destTextList);
+}
+
+winform.richeditFuncQuotes = function(){
+	var tempText = winform.内容plus.editBox.selText;
+	if(tempText == null){
+		return ; 
+	}
+	var tempTextList = string.split(tempText,'\r\n');
+	var destTextList = '';
+	for(i=1;table.len(tempTextList);1){
+		destTextList = string.concat(destTextList,'\r\n> ',tempTextList[i]);
+	}
+	winform.内容plus.editBox.replaceText(tempText,destTextList);
+}
+
+winform.richeditFuncCodeBlock = function(){
+	var tempText = winform.内容plus.editBox.selText;
+	if(tempText == null){
+		return ; 
+	}
+	winform.内容plus.editBox.replaceText(tempText,'```' + '\r\n' + tempText + '\r\n' + '```')
+}
+
+winform.richeditFuncH1 = function(){
+	var tempText = winform.内容plus.editBox.lineText();
+	var tempLineCount = winform.内容plus.editBox.selLine;
+	if(tempLineCount == null){
+		return ; 
+	}
+	winform.内容plus.editBox.lineSel(tempLineCount,'# ' + tempText)
+	winform.内容plus.editBox.selLine = tempLineCount;
+}
+winform.richeditFuncH2 = function(){
+	var tempText = winform.内容plus.editBox.lineText();
+	var tempLineCount = winform.内容plus.editBox.selLine;
+	if(tempLineCount == null){
+		return ; 
+	}
+	winform.内容plus.editBox.lineSel(tempLineCount,'## ' + tempText)
+	winform.内容plus.editBox.selLine = tempLineCount;
+}
+winform.richeditFuncH3 = function(){
+	var tempText = winform.内容plus.editBox.lineText();
+	var tempLineCount = winform.内容plus.editBox.selLine;
+	if(tempLineCount == null){
+		return ; 
+	}
+	winform.内容plus.editBox.lineSel(tempLineCount,'### ' + tempText)
+	winform.内容plus.editBox.selLine = tempLineCount;
+}
+winform.richeditFuncH4 = function(){
+	var tempText = winform.内容plus.editBox.lineText();
+	var tempLineCount = winform.内容plus.editBox.selLine;
+	if(tempLineCount == null){
+		return ; 
+	}
+	winform.内容plus.editBox.lineSel(tempLineCount,'#### ' + tempText)
+	winform.内容plus.editBox.selLine = tempLineCount;
+}
+winform.richeditFuncH5 = function(){
+	var tempText = winform.内容plus.editBox.lineText();
+	var tempLineCount = winform.内容plus.editBox.selLine;
+	if(tempLineCount == null){
+		return ; 
+	}
+	winform.内容plus.editBox.lineSel(tempLineCount,'##### ' + tempText)
+	winform.内容plus.editBox.selLine = tempLineCount;
+}
+
 
 winform.内容plus.editBox.translateAccelerator = function(msg){ 
     var vk = msg.wParam;
@@ -984,6 +1119,12 @@ win.ui.accelerator({
 	{ ctrl = true; vkey = 'D'#; oncommand = winform.richeditFuncNoOrderList }
 	{ ctrl = true; vkey = 'R'#; oncommand = winform.richeditFuncOrderList }
 	{ ctrl = true; vkey = 'T'#; oncommand = winform.richeditFuncHyperlink }
+	{ ctrl = true; vkey = 'I'#; oncommand = winform.richeditFuncItalic }
+	{ ctrl = true; vkey = '1'#; oncommand = winform.richeditFuncH1 }
+	{ ctrl = true; vkey = '2'#; oncommand = winform.richeditFuncH2 }
+	{ ctrl = true; vkey = '3'#; oncommand = winform.richeditFuncH3 }
+	{ ctrl = true; vkey = '4'#; oncommand = winform.richeditFuncH4 }
+	{ ctrl = true; vkey = '5'#; oncommand = winform.richeditFuncH5 }
 },winform);
 
 winform.timelineThemeSet();
