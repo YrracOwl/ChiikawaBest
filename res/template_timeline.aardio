@@ -567,7 +567,18 @@ var content_js = /**
 	}
 
 	function downloadImg(){
-		var currentImgBase64 = currentImgEle[0].src;
+		if(currentImgEle.length != 0){
+			currentImgBase64 = currentImgEle[0].src;
+		}
+		else if(currentBigImgEle.length != 0){
+			currentImgBase64 = currentBigImgEle[0].src;
+			console.log(currentBigImgEle);
+		}
+		else {
+			
+			return false;
+		}
+		
 		var date = new Date();
         if (!currentImgBase64) {
             return;
@@ -637,12 +648,12 @@ var content_js = /**
 	
 	var currentImgEle = document.querySelectorAll(".mkd-img:hover");
 	
-	var currentBigImgEle = document.querySelectorAll("#imageOverlay:hover");
+	var currentBigImgEle = document.querySelectorAll("#imageCloned:hover");
 	
 	document.addEventListener("contextmenu", (e) => {
 		currentMouseEle = document.querySelectorAll(":hover");
 		currentImgEle = document.querySelectorAll(".mkd-img:hover");
-		currentBigImgEle = document.querySelectorAll("#imageOverlay:hover");
+		currentBigImgEle = document.querySelectorAll("#imageCloned:hover");
   		e.preventDefault();
   		hideMenu(e);
   		showMenu(e);

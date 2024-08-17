@@ -477,6 +477,7 @@ winform.listboxUpdate = function(winform){
 	var list_items = {}; 
 	
 	..logMsg(">>>更新时间线的listbox");
+	..logMsg(winform.当前主题.text);
 	for rowid, time, title, content in ..dbTimeline.each("SELECT rowid,* FROM ??",{winform.当前主题.text}) {
 		table.push(list_items,time);
 		..logMsg(time,rowid,title)
@@ -778,11 +779,16 @@ winform.删除plus.oncommand = function(id,event){
 			..dbTimeline.exec("DELETE FROM ?? WHERE time=?;",{ winform.当前主题.text,tl_time} )
 			..logWarn(">>>已删除项",winform.当前主题.text,"中的：",tl_time)
 			
-			tl_webview.xcall("removeContent",{tostring(tl_time)});
-			winform.listboxUpdate(winform);
-			winform.timelineWebUpdate(winform);
+			win.delay(200)
 			
+			tl_webview.xcall("removeContent",{tostring(tl_time)});
+			
+			win.delay(200)
 			winform.addUIReset(winform);
+			win.delay(200)
+			winform.listboxUpdate(winform);
+			win.delay(200)
+			winform.timelineWebUpdate(winform);
 		}
 		catch(e){
 			..logErr(">>>删除",winform.当前主题.text,"中的：",tl_time,"失败")
