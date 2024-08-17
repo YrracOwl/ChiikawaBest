@@ -490,9 +490,12 @@ var content_js = /**
 	
 	var currentImgEle = document.querySelectorAll(".mkd-img:hover");
 	
+	var currentBigImgEle = document.querySelectorAll("#imageOverlay:hover");
+	
 	document.addEventListener("contextmenu", (e) => {
 		currentMouseEle = document.querySelectorAll(":hover");
 		currentImgEle = document.querySelectorAll(".mkd-img:hover");
+		currentBigImgEle = document.querySelectorAll("#imageOverlay:hover");
   		e.preventDefault();
   		hideMenu(e);
   		showMenu(e);
@@ -596,7 +599,23 @@ var content_js = /**
   			menus3.style.boxShadow = '6px 6px 3px 3px rgba(' + tempTxtColorRGBA[0] + ',' + tempTxtColorRGBA[1] + ',' + tempTxtColorRGBA[2] + ', .3)';
   			menus3.style.background = shiftColor(tempBgColor,"#101010",'add')
   			menus3.style.color = shiftColor(tempTxtColor,"#060606",'sub');
-  			menus3.style.zIndex = '1100';
+  			menus3.style.zIndex = '10000';
+		}
+		else if(currentBigImgEle.length != 0){
+			const menus3 = menuImg.getInstance();
+		  	menus3.style.top = `${e.clientY-20}px`;
+  			menus3.style.left = `${e.clientX-6}px`;
+  			menus3.style.display = "block";
+  			menus3.style.position = "fixed";
+  			menus3.style.border = '1px solid rgba(' + tempTxtColorRGBA[0] + ',' + tempTxtColorRGBA[1] + ',' + tempTxtColorRGBA[2] + ', .99)';
+  			menus3.style.padding = "6px 3px";
+  			menus3.style.fontSize = "large";
+  			menus3.style.fontWeight = "600";
+  			menus3.style.backdropFilter = "blur(8px)";
+  			menus3.style.boxShadow = '6px 6px 3px 3px rgba(' + tempTxtColorRGBA[0] + ',' + tempTxtColorRGBA[1] + ',' + tempTxtColorRGBA[2] + ', .3)';
+  			menus3.style.background = shiftColor(tempBgColor,"#101010",'add')
+  			menus3.style.color = shiftColor(tempTxtColor,"#060606",'sub');
+  			menus3.style.zIndex = '10000';
 		}
 		else if(currentMouseEle.length>3){
 			const menus1 = menuSinglton.getInstance();
