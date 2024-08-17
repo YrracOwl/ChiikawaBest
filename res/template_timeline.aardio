@@ -32,6 +32,7 @@ body {
   letter-spacing: 0.05em;
   background-color: var(--main-bg-color);
   text : var(--main-normal-color);
+  color : var(--main-normal-color);
 }
 
 /* Layout */
@@ -145,6 +146,7 @@ body {
   display: inline-block;
   margin-bottom: 0.5em;
   padding: 0.25em 1em 0.2em 1em;
+  color: var(--main-bg-color);
 }
 
 #listContent>li::marker {
@@ -192,6 +194,7 @@ body {
   display: inline-block;
   margin-bottom: 0.5em;
   padding: 0.25em 1em 0.2em 1em;
+  color: var(--main-bg-color);
 }
 
 .mkd strong {
@@ -399,7 +402,91 @@ var content_js = /**
   		showMenu(e);
 	});
 	
+	function shiftColor(base, change, direction) {
+  		const colorRegEx = /^\#?[A-Fa-f0-9]{6}$/;
+		
+  		// Missing parameter(s)
+  		if (!base || !change) {
+    		return '000000';
+  		}
+		
+  		// Invalid parameter(s)
+  		if (!base.match(colorRegEx) || !change.match(colorRegEx)) {
+    		return '000000';
+  		}
+		
+  		// Remove any '#'s
+  		base = base.replace(/\#/g, '');
+  		change = change.replace(/\#/g, '');
+		
+  		// Build new color
+  		let newColor = '';
+  		for (let i = 0; i < 3; i++) {
+    		const basePiece = parseInt(base.substring(i * 2, i * 2 + 2), 16);
+    		const changePiece = parseInt(change.substring(i * 2, i * 2 + 2), 16);
+    		let newPiece = '';
+		
+    		if (direction === 'add') {
+      		newPiece = (basePiece + changePiece);
+      		newPiece = newPiece > 255 ? 255 : newPiece;
+    		}
+    		if (direction === 'sub') {
+      		newPiece = (basePiece - changePiece);
+      		newPiece = newPiece < 0 ? 0 : newPiece;
+    		}
+		
+    		newPiece = newPiece.toString(16);
+    		newPiece = newPiece.length < 2 ? '0' + newPiece : newPiece;
+    		newColor += newPiece;
+  		}
+  		
+  		newColor = '#' + newColor;
+		
+  		return newColor;
+	}
+	
+	function isElPropColor(el, prop, color) {
+  		const ctx = document.createElement('canvas').getContext('2d');
+  		ctx.fillStyle = color;
+  		ctx.fillRect( 0, 0, 1, 1 );
+  		ctx.fillStyle = getComputedStyle(el, null).getPropertyValue(prop);
+  		ctx.fillRect( 1, 0, 1, 1 );
+  		const a = JSON.stringify(Array.from(ctx.getImageData(0, 0, 1, 1).data));
+  		const b = JSON.stringify(Array.from(ctx.getImageData(1, 0, 1, 1).data));
+  		ctx.canvas = null;
+  		return a === b;
+	}
+	
+	function alwaysGotColorRGBA(el, prop) {
+  		const ctx = document.createElement('canvas').getContext('2d');
+  		ctx.fillStyle = getComputedStyle(el, null).getPropertyValue(prop);
+  		ctx.fillRect( 1, 0, 1, 1 );
+  		const b = JSON.stringify(Array.from(ctx.getImageData(1, 0, 1, 1).data));
+  		ctx.canvas = null;
+		let textSlice = b.slice(1,-1);
+		const rgbaArray = textSlice.split(",", 3);
+  		console.log(rgbaArray)
+  		return rgbaArray;
+	}
+	
+	function RGB2HEX(rgbList) {
+    	//rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+    	function hex(x) {
+        	return ("0" + parseInt(x).toString(16)).slice(-2);
+    	}
+    	return "#" + hex(rgbList[0]) + hex(rgbList[1]) + hex(rgbList[2]);
+	}
+	
 	function showMenu(e) {
+		var tempBgColorRGBA = alwaysGotColorRGBA(document.body, 'background-color');
+		var tempBgColor = RGB2HEX(tempBgColorRGBA);
+		console.log(tempBgColor);
+		
+		var tempTxtColorRGBA = alwaysGotColorRGBA(document.body, 'color');
+		var tempTxtColor = RGB2HEX(tempTxtColorRGBA);
+		console.log(tempTxtColor);
+		
+		
 		if(currentMouseEle.length>3){
 			const menus1 = menuSinglton.getInstance();
   			menus1.style.top = `${e.clientY-20}px`;
@@ -410,9 +497,12 @@ var content_js = /**
   			menus1.style.padding = "6px 3px";
   			menus1.style.fontSize = "large";
   			menus1.style.fontWeight = "600";
-  			menus1.style.backdropFilter = "blur(3px)";
-  			menus1.style.boxShadow = "6px 6px 3px 3px rgba(122, 123, 120, .3)";
-  			menus1.style.color = "#b93a26";
+  			menus1.style.backdropFilter = "blur(8px)";
+  			menus1.style.boxShadow = '6px 6px 3px 3px rgba(' + tempTxtColorRGBA[0] + ',' + tempTxtColorRGBA[1] + ',' + tempTxtColorRGBA[2] + ', .3)';
+  			//menus1.style.background = shiftColor("#f5f2e9","#101010",'add')
+  			//menus1.style.color = "#ffffff";
+  			menus1.style.background = shiftColor(tempBgColor,"#101010",'add')
+  			menus1.style.color = shiftColor(tempTxtColor,"#060606",'sub')
 		}
   		else {
   			const menus2 = menuLess.getInstance();
@@ -424,9 +514,13 @@ var content_js = /**
   			menus2.style.padding = "6px 3px";
   			menus2.style.fontSize = "large";
   			menus2.style.fontWeight = "600";
-  			menus2.style.backdropFilter = "blur(5px)";
-  			menus2.style.boxShadow = "6px 6px 3px 3px rgba(122, 123, 120, .3)";
-  			menus2.style.color = "#b93a26";
+  			menus2.style.backdropFilter = "blur(8px)";
+  			//menus2.style.boxShadow = "6px 6px 3px 3px rgba(122, 123, 120, .3)";
+  			menus2.style.boxShadow = '6px 6px 3px 3px rgba(' + tempTxtColorRGBA[0] + ',' + tempTxtColorRGBA[1] + ',' + tempTxtColorRGBA[2] + ', .3)';
+  			//menus2.style.background = shiftColor("#f5f2e9","#101010",'add')
+  			//menus2.style.color = "#ffffff";
+  			menus2.style.background = shiftColor(tempBgColor,"#101010",'add')
+  			menus2.style.color = shiftColor(tempTxtColor,"#060606",'sub')
   		}
 	}
 	
