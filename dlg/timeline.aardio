@@ -755,7 +755,6 @@ winform.listbox.oncommand = function(id,event){
 	}
 }
 
-/**
 winform.wndproc = function(hwnd,message,wParam,lParam){
 	select( message ) { 
 		case 3/*_WM_MOVE*/{
@@ -770,7 +769,6 @@ winform.wndproc = function(hwnd,message,wParam,lParam){
 	}
 	//无返回值则继续调用默认回调函数
 }
-**/
 
 winform.删除plus.oncommand = function(id,event){
 	var tl_time = winform.datetimepick.text + '-' + winform.时间plus.text;
@@ -997,15 +995,14 @@ winform.内容plus.editBox.enablePopMenu({
 			winform.richeditFuncCodeBlock();
 		} ; 
 	};
-	
-})
+});
 
 winform.richeditFuncBold = function(){
 	var tempText = winform.内容plus.editBox.selText;
 	if(tempText == null){
 		return ; 
 	}
-	winform.内容plus.editBox.selText = '**'+tempText+'**';
+	winform.内容plus.editBox.selText = '**' + tempText + '**';
 }
 
 winform.richeditFuncItalic = function(){
@@ -1103,7 +1100,7 @@ winform.richeditFuncCodeBlock = function(){
 	if(tempText == null){
 		return ; 
 	}
-	winform.内容plus.editBox.selText = '\r\n' + '```' + '\r\n' + tempText + '\r\n' + '```' + '\r\n');
+	winform.内容plus.editBox.selText = '\r\n' + '```' + '\r\n' + tempText + '\r\n' + '```' + '\r\n';
 }
 
 winform.richeditFuncH1 = function(){
@@ -1194,11 +1191,11 @@ win.ui.accelerator({
 	{ ctrl = true; vkey = 'R'#; oncommand = winform.richeditFuncOrderList }
 	{ ctrl = true; vkey = 'T'#; oncommand = winform.richeditFuncHyperlink }
 	{ ctrl = true; vkey = 'I'#; oncommand = winform.richeditFuncItalic }
-	{ ctrl = true; vkey = '1'#; oncommand = winform.richeditFuncH1}
-	{ ctrl = true; vkey = '2'#; oncommand = winform.richeditFuncH2}
-	{ ctrl = true; vkey = '3'#; oncommand = winform.richeditFuncH3}
-	{ ctrl = true; vkey = '4'#; oncommand = winform.richeditFuncH4}
-	{ ctrl = true; vkey = '5'#; oncommand = winform.richeditFuncH5}
+	{ ctrl = true; vkey = '1'#; oncommand = winform.richeditFuncH1 }
+	{ ctrl = true; vkey = '2'#; oncommand = winform.richeditFuncH2 }
+	{ ctrl = true; vkey = '3'#; oncommand = winform.richeditFuncH3 }
+	{ ctrl = true; vkey = '4'#; oncommand = winform.richeditFuncH4 }
+	{ ctrl = true; vkey = '5'#; oncommand = winform.richeditFuncH5 }
 },winform);
 
 winform.timelineThemeSet();
