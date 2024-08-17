@@ -153,6 +153,7 @@ body {
   content: '';
 }
 
+
 .custom-context-menu>li::marker {
   content: '';
 }
@@ -205,16 +206,68 @@ input[type="checkbox"]:disabled {
     color: var(--main-normal-color);
 }
 
+.mkd-img {
+	transition: all 0.2s linear;
+}
+
+.mkd-img:hover {
+	transform: scale(1.018);
+	transition: all 0.2s linear;
+}
+
+#imageOverlay {
+  animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
 **/; 
 var content_body = /**
 <ul id="listContent" class="timeline">
-</ul>  
+</ul>
 **/;
 
 var content_js = /**
 <script type="text/javascript">
 	var tempTable = document.createElement("ul");
 	tempTable.setAttribute("id","listContentTemp");
+	
+	function showFullImage(fullImageUrl) {
+  		// 创建遮罩层
+  		const overlay = document.createElement('div');
+  		overlay.id = 'imageOverlay';
+  		overlay.style.position = 'fixed';
+  		overlay.style.top = '0';
+  		overlay.style.left = '0';
+  		overlay.style.width = '100%';
+  		overlay.style.height = '100%';
+  		overlay.style.backgroundColor = 'rgba(0,0,0,0.5)';
+  		overlay.style.display = 'flex';
+  		overlay.style.justifyContent = 'center';
+  		overlay.style.alignItems = 'center';
+  		overlay.style.zIndex = '1000';
+	
+  		// 创建原图容器及原图元素
+  		const fullImage = document.createElement('img');
+  		fullImage.src = fullImageUrl;
+  		fullImage.style.maxWidth = '86%';
+  		fullImage.style.maxHeight = '86%';
+  		overlay.appendChild(fullImage);
+	
+  		// 绑定点击遮罩层关闭功能
+  		overlay.addEventListener('click', function() {
+  			document.body.removeChild(this);
+  		});
+  		
+  		overlay.addEventListener('contextmenu', function() {
+  			
+  		});
+	
+  		document.body.appendChild(overlay);
+	}
 	
 	//定义全局函数
 	window.clearList = function(){
@@ -229,6 +282,7 @@ var content_js = /**
 	window.replaceList = function(){
 		var ListEles = document.getElementById("listContent");
 		ListEles.innerHTML = tempTable.innerHTML;
+		window.watchImg();
 	}
 	
 	window.lengthList = function(){
@@ -245,12 +299,22 @@ var content_js = /**
 		var liEle = document.getElementById(datas[0]);
 		var tempEle = window.createLi(datas);
 		liEle.parentNode.replaceChild(tempEle,liEle);
+		window.watchImg();
 	}
 	
 	window.removeContent = function(datas){
 		var liEle = document.getElementById(datas[0]);
 		liEle.remove();
 	}
+	
+	window.watchImg = function(){
+		document.querySelectorAll('.mkd-img').forEach(item => {
+			item.addEventListener('click', function() {
+				showFullImage(this.getAttribute('src'));
+			});
+		});
+	}
+	
 	
 	window.createLi = function(datas){
 		var isAnimated = document.querySelector(".timeline-event");
@@ -299,6 +363,7 @@ var content_js = /**
 		console.log(datas)
 		if(datas[3] != 'null'){
 			var imgEle = document.createElement("img");
+			imgEle.setAttribute("class","mkd-img")
 			imgEle.setAttribute("src",datas[3]);
 			imgEle.setAttribute("width","100%");
 			imgEle.setAttribute("height","auto");
@@ -308,7 +373,7 @@ var content_js = /**
 			
 		liEle.appendChild(labelEle);
 		liEle.appendChild(divEle);
-		return liEle; 
+		return liEle;
 	};
 	
 	 function setTitle(title){
@@ -341,6 +406,34 @@ var content_js = /**
         	window.URL.revokeObjectURL(url);
     	}, 5);
 	};
+
+	function base64ToBlob(code) {
+    	var parts = code.split(";base64,");
+    	var contentType = parts[0].split(":")[1];
+    	var raw = window.atob(parts[1]);
+    	var rawLength = raw.length;
+    	var uint8Array = new Uint8Array(rawLength);
+    	for (var i = 0; i < rawLength; i++) {
+        	uint8Array[i] = raw.charCodeAt(i);
+    	}
+    	return new Blob([uint8Array], {type: contentType});
+	}
+
+	function downloadImg(){
+		var currentImgBase64 = currentImgEle[0].src;
+		var date = new Date();
+        if (!currentImgBase64) {
+            return;
+        }
+        var aLink = document.createElement("a"); // 创建一个a标签
+        var blob = base64ToBlob(currentImgBase64);
+        var event = document.createEvent("HTMLEvents");
+        event.initEvent("click", true, true);
+        aLink.download = date.getTime() + "_ckwb." + blob.type.split("/")[1]; // 使用时间戳给文件命名
+        aLink.href = URL.createObjectURL(blob);
+        aLink.click();
+	}
+	
 	
 	function getHtml(){
 		var content = document.documentElement.outerHTML;
@@ -393,10 +486,13 @@ var content_js = /**
 		root.style.setProperty('--main-normal-color', hexToRgba('#'+themeData[3]));
 	}
 	
-	var currentMouseEle = document.querySelectorAll(":hover"); 
+	var currentMouseEle = document.querySelectorAll(":hover");
+	
+	var currentImgEle = document.querySelectorAll(".mkd-img:hover");
 	
 	document.addEventListener("contextmenu", (e) => {
 		currentMouseEle = document.querySelectorAll(":hover");
+		currentImgEle = document.querySelectorAll(".mkd-img:hover");
   		e.preventDefault();
   		hideMenu(e);
   		showMenu(e);
@@ -480,20 +576,35 @@ var content_js = /**
 	function showMenu(e) {
 		var tempBgColorRGBA = alwaysGotColorRGBA(document.body, 'background-color');
 		var tempBgColor = RGB2HEX(tempBgColorRGBA);
-		console.log(tempBgColor);
 		
 		var tempTxtColorRGBA = alwaysGotColorRGBA(document.body, 'color');
 		var tempTxtColor = RGB2HEX(tempTxtColorRGBA);
-		console.log(tempTxtColor);
 		
+		console.log(currentImgEle);
 		
-		if(currentMouseEle.length>3){
+		if(currentImgEle.length != 0){
+			const menus3 = menuImg.getInstance();
+		  	menus3.style.top = `${e.clientY-20}px`;
+  			menus3.style.left = `${e.clientX-6}px`;
+  			menus3.style.display = "block";
+  			menus3.style.position = "fixed";
+  			menus3.style.border = '1px solid rgba(' + tempTxtColorRGBA[0] + ',' + tempTxtColorRGBA[1] + ',' + tempTxtColorRGBA[2] + ', .99)';
+  			menus3.style.padding = "6px 3px";
+  			menus3.style.fontSize = "large";
+  			menus3.style.fontWeight = "600";
+  			menus3.style.backdropFilter = "blur(8px)";
+  			menus3.style.boxShadow = '6px 6px 3px 3px rgba(' + tempTxtColorRGBA[0] + ',' + tempTxtColorRGBA[1] + ',' + tempTxtColorRGBA[2] + ', .3)';
+  			menus3.style.background = shiftColor(tempBgColor,"#101010",'add')
+  			menus3.style.color = shiftColor(tempTxtColor,"#060606",'sub');
+  			menus3.style.zIndex = '1100';
+		}
+		else if(currentMouseEle.length>3){
 			const menus1 = menuSinglton.getInstance();
   			menus1.style.top = `${e.clientY-20}px`;
   			menus1.style.left = `${e.clientX-6}px`;
   			menus1.style.display = "block";
   			menus1.style.position = "fixed";
-  			menus1.style.border = "1px solid #31322c";
+  			menus1.style.border = '1px solid rgba(' + tempTxtColorRGBA[0] + ',' + tempTxtColorRGBA[1] + ',' + tempTxtColorRGBA[2] + ', .99)';
   			menus1.style.padding = "6px 3px";
   			menus1.style.fontSize = "large";
   			menus1.style.fontWeight = "600";
@@ -510,7 +621,7 @@ var content_js = /**
   			menus2.style.left = `${e.clientX-6}px`;
   			menus2.style.display = "block";
   			menus2.style.position = "fixed";
-  			menus2.style.border = "1px solid #31322c";
+  			menus2.style.border = '1px solid rgba(' + tempTxtColorRGBA[0] + ',' + tempTxtColorRGBA[1] + ',' + tempTxtColorRGBA[2] + ', .99)';
   			menus2.style.padding = "6px 3px";
   			menus2.style.fontSize = "large";
   			menus2.style.fontWeight = "600";
@@ -529,10 +640,13 @@ var content_js = /**
   		menus1.style.display = "none";
   		const menus2 = menuLess.getInstance();
   		menus2.style.display = "none";
+		const menus3 = menuImg.getInstance();
+  		menus3.style.display = "none";
 	}
 	
 	document.addEventListener("click", hideMenu);
-	
+
+
 	const ContextMenuSinglton = function (options) {
   	// 唯一实例
   		let instance;
@@ -567,6 +681,39 @@ var content_js = /**
 	};
 	
 	const ContextMenuLess = function (options) {
+  	// 唯一实例
+  		let instance;
+		
+  		// 创建实例方法
+  		function createMenu() {
+  			const ul = document.createElement("ul");
+  			ul.classList.add("custom-context-menu");
+  			const { menus } = options;
+  			if (menus && menus.length > 0) {
+    			for (let menu of menus) {
+      				const li = document.createElement("li");
+      				li.textContent = menu.name;
+      				li.onclick = menu.onClick;
+      				ul.appendChild(li);
+    			}
+  			}
+  			const body = document.querySelector("body");
+  			body.appendChild(ul);
+  			return ul;
+  		}
+		
+  		return {
+    		// 获取实例的唯一方式
+    		getInstance: function () {
+      			if (!instance) {
+        			instance = createMenu();
+      			}
+      			return instance;
+    		},
+  		};
+	};
+	
+	const ContextMenuImg = function (options) {
   	// 唯一实例
   		let instance;
 		
@@ -675,11 +822,24 @@ var content_js = /**
   		],
 	});
 	
+	const menuImg = ContextMenuImg({
+  		menus: [
+    		{
+      			name: "  下载图片    ",
+      			onClick: function (e) {
+      			    hideMenu(e);
+        			downloadImg();
+      			},
+    		},
+  		],
+	});
+	
 	const menuLess = ContextMenuLess({
   		menus: [
     		{
       			name: "刷新",
       			onClick: function (e) {
+      			    hideMenu(e);
         			aardio.flush();
       			},
     		},
@@ -750,6 +910,7 @@ var content_js = /**
         	return false;
     	}
 	};
+	
 </script>
 **/;
 
