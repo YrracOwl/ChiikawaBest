@@ -234,6 +234,9 @@ var content_js = /**
 <script type="text/javascript">
 	var tempTable = document.createElement("ul");
 	tempTable.setAttribute("id","listContentTemp");
+	document.ondragstart=function(){
+		return false;
+	}
 	
 	function showFullImage(fullImageUrl) {
   		// 创建遮罩层
@@ -244,30 +247,174 @@ var content_js = /**
   		overlay.style.left = '0';
   		overlay.style.width = '100%';
   		overlay.style.height = '100%';
-  		overlay.style.backgroundColor = 'rgba(0,0,0,0.5)';
+  		overlay.style.backgroundColor = 'rgba(0,0,0,0.3)';
+  		overlay.style.backdropFilter = "blur(6px)";
   		overlay.style.display = 'flex';
-  		overlay.style.justifyContent = 'center';
-  		overlay.style.alignItems = 'center';
+  		//overlay.style.justifyContent = 'center';
+  		//overlay.style.alignItems = 'center';
   		overlay.style.zIndex = '1000';
 	
   		// 创建原图容器及原图元素
   		const fullImage = document.createElement('img');
+  		fullImage.id = 'imageCloned';
   		fullImage.src = fullImageUrl;
-  		fullImage.style.maxWidth = '86%';
-  		fullImage.style.maxHeight = '86%';
+  		fullImage.style.maxWidth = '95%';
+  		fullImage.style.maxHeight = '95%';
+  		fullImage.style.position = 'absolute';
+  		fullImage.style.boxShadow = '12px 12px 6px 6px rgba(26,26,26,.5)';
   		overlay.appendChild(fullImage);
-	
-  		// 绑定点击遮罩层关闭功能
-  		overlay.addEventListener('click', function() {
-  			document.body.removeChild(this);
-  		});
+		
+		const closeIcon = document.createElement("button");
+		closeIcon.id = 'closeBtn';
+  		closeIcon.style.position = 'absolute';
+  		closeIcon.style.top = '28px';
+  		closeIcon.style.left = '28px';
+  		closeIcon.innerHTML = "关闭图片";
+  		closeIcon.style.fontSize = '1.3em';
+  		closeIcon.style.fontWeight = 'bolder';
+  		closeIcon.style.color = '#31322c';
+  		closeIcon.style.boxShadow = '6px 6px 3px 3px rgba(26,26,26,.6)';
+  		overlay.appendChild(closeIcon);
   		
-  		overlay.addEventListener('contextmenu', function() {
-  			
+  		// 绑定点击遮罩层关闭功能
+  		closeIcon.addEventListener('click', function() {
+  			document.body.removeChild(overlay);
   		});
+
+    	// ---------------------------------------------------------------------------------------------------
+    	var result,
+    	xx,
+    	yy,
+    	scale = 1,
+    	minScale = 0.5,
+    	maxScale = 4;
+    	
+		result = getImgSize(fullImage.naturalWidth, fullImage.naturalHeight, window.innerWidth, window.innerHeight);
+    	fullImage.style.width = result.width + 'px';
+    	fullImage.style.height = result.height + 'px';
+    	xx = (window.innerWidth - result.width) * 0.5;
+    	yy = (window.innerHeight - result.height) * 0.5;
+    	fullImage.style.transform = 'translate3d(' + xx + 'px, ' + yy + 'px, 0) scale(1)';
+    	
+    	console.log(window.innerWidth,window.innerHeight,result.width,result.height)
+    	console.log(xx,yy)
+
+		function getImgSize(naturalWidth, naturalHeight, maxWidth, maxHeight) {
+    		const imgRatio = naturalWidth / naturalHeight;
+    		const maxRatio = maxWidth / maxHeight;
+    		let width, height;
+    		// 如果图片实际宽高比例 >= 显示宽高比例
+    		if (imgRatio >= maxRatio) {
+        		if (naturalWidth > maxWidth) {
+            		width = maxWidth;
+            		height = maxWidth / naturalWidth * naturalHeight;
+        		} else {
+            		width = naturalWidth;
+            		height = naturalHeight;
+        		}
+    		} else {
+        		if (naturalHeight > maxHeight) {
+            		width = maxHeight / naturalHeight * naturalWidth;
+            		height = maxHeight;
+        		} else {
+            		width = naturalWidth;
+            		height = naturalHeight;
+        		}
+    		}
+    		return { width: width, height: height }
+		}
+
+    	overlay.addEventListener('mousewheel', function (e) {
+    	    e.preventDefault();
+    	    
+			result = getImgSize(fullImage.naturalWidth, fullImage.naturalHeight, window.innerWidth, window.innerHeight);
+    		fullImage.style.width = result.width + 'px';
+    		fullImage.style.height = result.height + 'px';
+    		xx = (window.innerWidth - result.width) * 0.5;
+    		yy = (window.innerHeight - result.height) * 0.5;
+
+			let ratio = 1.05;
+			// 缩小
+			if (e.deltaY > 0) {
+    			ratio = 1 / 1.05;
+			}
+			// 限制缩放倍数
+			const _scale = scale * ratio;
+			if (_scale > maxScale) {
+    			ratio = maxScale / scale;
+    			scale = maxScale;
+			} else if (_scale < minScale) {
+    			ratio = minScale / scale;
+    			scale = minScale;
+			} else {
+    			scale = _scale;
+			}
+			// 目标元素是img说明鼠标在img上，以鼠标位置为缩放中心，否则默认以图片中心点为缩放中心
+			if (e.target.tagName === 'img') {
+    			const origin = { 
+        			xx: (ratio - 1) * result.width * 0.5,
+        			yy: (ratio - 1) * result.height * 0.5
+    			};
+    			// 计算偏移量
+    			xx -= (ratio - 1) * (e.clientX - x) - origin.x;
+    			yy -= (ratio - 1) * (e.clientY - y) - origin.y;
+			}
+			fullImage.style.transform = 'translate3d(' + xx + 'px, ' + yy + 'px, 0) scale(' + scale + ')';
+			console.log(xx,yy,scale)
+    	});
 	
+    	// ---------------------------------------------------------------------------------------------------
+    	// 拖动元素
+	
+    	//获取元素
+    	var x = 0;
+    	var y = 0;
+    	var l = 0;
+    	var t = 0;
+    	var isDown = false;
+	
+    	//鼠标按下事件
+    	fullImage.onmousedown = function(e) {
+        	//获取x坐标和y坐标
+        	x = e.clientX;
+        	y = e.clientY;
+ 	
+        	//获取左部和顶部的偏移量
+        	l = fullImage.offsetLeft;
+        	t = fullImage.offsetTop;
+        	//开关打开
+        	isDown = true;
+        	//设置样式  
+        	fullImage.style.cursor = 'move';
+    	}
+	
+    	//鼠标移动
+    	window.onmousemove = function(e) {
+        	if (isDown == false) {
+            	return;
+        	}
+        	//获取x和y
+        	var nx = e.clientX;
+        	var ny = e.clientY;
+        	//计算移动后的左偏移量和顶部的偏移量
+        	var nl = nx - (x - l);
+        	var nt = ny - (y - t);
+ 	
+        	fullImage.style.left = nl + 'px';
+        	fullImage.style.top = nt + 'px';
+    	}
+	
+    	//鼠标抬起事件
+    	fullImage.onmouseup = function() {
+        	//开关关闭
+        	isDown = false;
+        	fullImage.style.cursor = 'default';
+    	}
   		document.body.appendChild(overlay);
 	}
+////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////
 	
 	//定义全局函数
 	window.clearList = function(){
