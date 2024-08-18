@@ -7,31 +7,34 @@ import win.ui;
 /*DSG{{*/
 var winform = win.form(text="时间线";right=1279;bottom=749;border="none";clipch=1)
 winform.add(
-btnRead={cls="button";text="预览";left=8;top=5;right=84;bottom=29;dl=1;dt=1;flat=1;font=LOGFONT(h=-16);z=22};
-datetimepick={cls="datetimepick";left=64;top=64;right=312;bottom=88;border=1;dl=1;dt=1;font=LOGFONT(h=-13);z=2};
-listbox={cls="listbox";left=320;top=504;right=624;bottom=747;db=1;dl=1;dt=1;edge=1;font=LOGFONT(h=-13);items={};vscroll=1;z=13};
-more={cls="button";text="更多";left=1048;top=32;right=1096;bottom=56;dr=1;dt=1;flat=1;font=LOGFONT(h=-16);z=21};
-plus10={cls="plus";text="内容：";left=8;top=160;right=64;bottom=184;dl=1;dt=1;font=LOGFONT(h=-13);notify=1;z=9};
-plus7={cls="plus";text="标题：";left=8;top=128;right=64;bottom=152;dl=1;dt=1;font=LOGFONT(h=-13);notify=1;z=6};
-plus8={cls="plus";text="时间：";left=8;top=96;right=64;bottom=120;dl=1;dt=1;font=LOGFONT(h=-13);notify=1;z=7};
-plus9={cls="plus";text="日期：";left=8;top=64;right=64;bottom=88;dl=1;dt=1;font=LOGFONT(h=-13);notify=1;z=8};
-winTimelineShow={cls="custom";text="winTimelineShow";left=320;top=64;right=1280;bottom=740;db=1;dl=1;dr=1;dt=1;z=23};
-个性化={cls="plus";text="个性化";left=1104;top=32;right=1191;bottom=58;align="left";bgcolor=10389606;border={radius=10};dr=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF2C0';notify=1;textPadding={left=26};z=20};
-内容plus={cls="plus";left=8;top=184;right=312;bottom=472;align="left";border={color=-6908266;width=1};clipBk=false;db=1;dl=1;dt=1;editable=1;font=LOGFONT(h=-13);forecolor=16777215;multiline=1;notify=1;tabstop=1;textPadding={top=6;bottom=2};vscroll=1;wrap=1;z=1};
-删除plus={cls="plus";text="删除";left=8;top=32;right=84;bottom=58;align="left";bgcolor=-13228317;border={radius=13};dl=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-16;name='FontAwesome');padding={left=10}};iconText='\uF014';notify=1;textPadding={left=28};z=14};
-勾选plus={cls="plus";text="当前时间";left=216;top=96;right=312;bottom=120;align="left";dl=1;dt=1;font=LOGFONT(h=-13);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome')};iconText='\uF111 ';notify=1;textPadding={left=24};z=5};
-升级数据库={cls="button";text="升级数据库";left=320;top=8;right=472;bottom=64;align="left";color=14120960;dl=1;dt=1;flat=1;font=LOGFONT(h=-14);note="以能够添加图像";valign="top";z=16};
-取消plus={cls="plus";text="取消";left=232;top=32;right=308;bottom=58;align="left";bgcolor=10389606;border={radius=13};dl=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-16;name='FontAwesome');padding={left=10}};iconText='\uF00D';notify=1;textPadding={left=28};z=15};
-图片预览={cls="plus";left=8;top=504;right=312;bottom=744;db=1;dl=1;font=LOGFONT(h=-13);foreRepeat="scale";notify=1;z=18};
-当前主题={cls="plus";left=472;top=32;right=1040;bottom=56;autohscroll=false;autovscroll=false;aw=1;dl=1;dt=1;font=LOGFONT(h=-16;underline=1;weight=700);z=10};
-截图={cls="plus";text="截图";left=8;top=474;right=80;bottom=500;align="left";bgcolor=-5197169;border={radius=10};db=1;dl=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF03E';notify=1;textPadding={left=30};z=17};
-时间plus={cls="plus";left=64;top=96;right=168;bottom=120;autohscroll=false;autovscroll=false;border={color=-6908266;width=1};dl=1;dt=1;editable="edit";font=LOGFONT(h=-16);notify=1;textPadding={bottom=1};z=4};
-标题plus={cls="plus";left=64;top=128;right=312;bottom=152;border={bottom=1;color=-6908266};dl=1;dt=1;editable=1;font=LOGFONT(h=-13);forecolor=16777215;notify=1;tabstop=1;textPadding={top=2;bottom=2};z=3};
-添加plus={cls="plus";text="添加(Ctrl+G)";left=184;top=474;right=312;bottom=500;align="left";bgcolor=-5197169;border={radius=10};db=1;dl=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF0C7';notify=1;textPadding={left=30};z=11};
-添加提醒项={cls="plus";text="闹钟";left=1197;top=32;right=1271;bottom=58;align="left";bgcolor=-5197169;border={radius=10};dr=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF0A2';notify=1;textPadding={left=30};z=12};
-载入={cls="plus";text="载入";left=90;top=474;right=162;bottom=500;align="left";bgcolor=-5197169;border={radius=10};db=1;dl=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF07C';notify=1;textPadding={left=30};z=19}
+btnRead={cls="button";text="预览";left=8;top=5;right=84;bottom=29;dl=1;dt=1;flat=1;font=LOGFONT(h=-16);z=23};
+copyImgPlus={cls="plus";left=421;top=163;right=725;bottom=403;db=1;dl=1;font=LOGFONT(h=-13);foreRepeat="scale";notify=1;z=1};
+datetimepick={cls="datetimepick";left=64;top=64;right=312;bottom=88;border=1;dl=1;dt=1;font=LOGFONT(h=-13);z=3};
+listbox={cls="listbox";left=320;top=504;right=624;bottom=747;db=1;dl=1;dt=1;edge=1;font=LOGFONT(h=-13);items={};vscroll=1;z=14};
+more={cls="button";text="更多";left=1048;top=32;right=1096;bottom=56;dr=1;dt=1;flat=1;font=LOGFONT(h=-16);z=22};
+plus10={cls="plus";text="内容：";left=8;top=160;right=64;bottom=184;dl=1;dt=1;font=LOGFONT(h=-13);notify=1;z=10};
+plus7={cls="plus";text="标题：";left=8;top=128;right=64;bottom=152;dl=1;dt=1;font=LOGFONT(h=-13);notify=1;z=7};
+plus8={cls="plus";text="时间：";left=8;top=96;right=64;bottom=120;dl=1;dt=1;font=LOGFONT(h=-13);notify=1;z=8};
+plus9={cls="plus";text="日期：";left=8;top=64;right=64;bottom=88;dl=1;dt=1;font=LOGFONT(h=-13);notify=1;z=9};
+winTimelineShow={cls="custom";text="winTimelineShow";left=320;top=64;right=1280;bottom=740;db=1;dl=1;dr=1;dt=1;z=24};
+个性化={cls="plus";text="个性化";left=1104;top=32;right=1191;bottom=58;align="left";bgcolor=10389606;border={radius=10};dr=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF2C0';notify=1;textPadding={left=26};z=21};
+内容plus={cls="plus";left=8;top=184;right=312;bottom=472;align="left";border={color=-6908266;width=1};clipBk=false;db=1;dl=1;dt=1;editable=1;font=LOGFONT(h=-13);forecolor=16777215;multiline=1;notify=1;tabstop=1;textPadding={top=6;bottom=2};vscroll=1;wrap=1;z=2};
+删除plus={cls="plus";text="删除";left=8;top=32;right=84;bottom=58;align="left";bgcolor=-13228317;border={radius=13};dl=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-16;name='FontAwesome');padding={left=10}};iconText='\uF014';notify=1;textPadding={left=28};z=15};
+勾选plus={cls="plus";text="当前时间";left=216;top=96;right=312;bottom=120;align="left";dl=1;dt=1;font=LOGFONT(h=-13);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome')};iconText='\uF111 ';notify=1;textPadding={left=24};z=6};
+升级数据库={cls="button";text="升级数据库";left=320;top=8;right=472;bottom=64;align="left";color=14120960;dl=1;dt=1;flat=1;font=LOGFONT(h=-14);note="以能够添加图像";valign="top";z=17};
+取消plus={cls="plus";text="取消";left=232;top=32;right=308;bottom=58;align="left";bgcolor=10389606;border={radius=13};dl=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-16;name='FontAwesome');padding={left=10}};iconText='\uF00D';notify=1;textPadding={left=28};z=16};
+图片预览={cls="plus";left=8;top=504;right=312;bottom=744;db=1;dl=1;font=LOGFONT(h=-13);foreRepeat="scale";notify=1;z=19};
+当前主题={cls="plus";left=472;top=32;right=1040;bottom=56;autohscroll=false;autovscroll=false;aw=1;dl=1;dt=1;font=LOGFONT(h=-16;underline=1;weight=700);z=11};
+截图={cls="plus";text="截图";left=8;top=474;right=80;bottom=500;align="left";bgcolor=-5197169;border={radius=10};db=1;dl=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF03E';notify=1;textPadding={left=30};z=18};
+时间plus={cls="plus";left=64;top=96;right=168;bottom=120;autohscroll=false;autovscroll=false;border={color=-6908266;width=1};dl=1;dt=1;editable="edit";font=LOGFONT(h=-16);notify=1;textPadding={bottom=1};z=5};
+标题plus={cls="plus";left=64;top=128;right=312;bottom=152;border={bottom=1;color=-6908266};dl=1;dt=1;editable=1;font=LOGFONT(h=-13);forecolor=16777215;notify=1;tabstop=1;textPadding={top=2;bottom=2};z=4};
+添加plus={cls="plus";text="添加(Ctrl+G)";left=184;top=474;right=312;bottom=500;align="left";bgcolor=-5197169;border={radius=10};db=1;dl=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF0C7';notify=1;textPadding={left=30};z=12};
+添加提醒项={cls="plus";text="闹钟";left=1197;top=32;right=1271;bottom=58;align="left";bgcolor=-5197169;border={radius=10};dr=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF0A2';notify=1;textPadding={left=30};z=13};
+载入={cls="plus";text="载入";left=90;top=474;right=162;bottom=500;align="left";bgcolor=-5197169;border={radius=10};db=1;dl=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF07C';notify=1;textPadding={left=30};z=20}
 )
 /*}}*/
+
+winform.copyImgPlus.hide = true;
 
 winform.个性化.skin({
 	background={
@@ -388,7 +391,19 @@ tl_webview.external = {
 			timeUpdate.stop();
 		};
 	};
-
+	
+	copyImg = function(timeSel){
+		var result = ..dbTimeline.stepQuery("SELECT * FROM ??",{time = timeSel, winform.当前主题.text} );
+    	if(result.image != "null" && result.image != null){
+    		var strRecover = crypt.bin.decodeBase64(result.image,#result.image);
+    		winform.copyImgPlus.setForeground(strRecover);
+    		var tempBmp = winform.copyImgPlus.getForeground();
+    		..win.clip.writeBitmap(tempBmp.copyHandle());
+    		tempBmp.dispose();
+    		winform.copyImgPlus.setForeground(null);
+    	}
+	};
+	
 };
 
 /***

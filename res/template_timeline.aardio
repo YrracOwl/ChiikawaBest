@@ -237,9 +237,11 @@ var content_js = /**
 	document.ondragstart=function(){
 		return false;
 	}
+	var currentImgID = 'needs2got';
 	
 	function showFullImage(fullImageUrl) {
   		// 创建遮罩层
+  		getCurrentImgID();
   		const overlay = document.createElement('div');
   		overlay.id = 'imageOverlay';
   		overlay.style.position = 'fixed';
@@ -269,7 +271,7 @@ var content_js = /**
   		closeIcon.style.position = 'absolute';
   		closeIcon.style.top = '28px';
   		closeIcon.style.left = '28px';
-  		closeIcon.innerHTML = "关闭图片";
+  		closeIcon.innerHTML  = "关闭图片";
   		closeIcon.style.fontSize = '1.3em';
   		closeIcon.style.fontWeight = 'bolder';
   		closeIcon.style.color = '#31322c';
@@ -362,10 +364,10 @@ var content_js = /**
 			fullImage.style.transform = 'translate3d(' + xx + 'px, ' + yy + 'px, 0) scale(' + scale + ')';
 			console.log(xx,yy,scale)
     	});
-	
+  		
     	// ---------------------------------------------------------------------------------------------------
     	// 拖动元素
-	
+
     	//获取元素
     	var x = 0;
     	var y = 0;
@@ -412,43 +414,43 @@ var content_js = /**
     	}
   		document.body.appendChild(overlay);
 	}
+
 ////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////
-	
 	//定义全局函数
 	window.clearList = function(){
 		var ListEles = document.getElementById("listContent");
 		ListEles.innerHTML = "";
 	};
-	
+
 	window.clearListTemp = function(){
 		tempTable.innerHTML = "";
 	}
-	
+
 	window.replaceList = function(){
 		var ListEles = document.getElementById("listContent");
 		ListEles.innerHTML = tempTable.innerHTML;
 		window.watchImg();
 	}
-	
+
 	window.lengthList = function(){
 		var ListEles = document.getElementById("listContent");
 		return ListEles.childElementCount; 
 	}
-	
+
 	window.pushTable = function(datas){	
 		var liEle = window.createLi(datas);
 		tempTable.appendChild(liEle);
 	};
-	
+
 	window.updateContent = function(datas){
 		var liEle = document.getElementById(datas[0]);
 		var tempEle = window.createLi(datas);
 		liEle.parentNode.replaceChild(tempEle,liEle);
 		window.watchImg();
 	}
-	
+
 	window.removeContent = function(datas){
 		var liEle = document.getElementById(datas[0]);
 		liEle.remove();
@@ -460,9 +462,8 @@ var content_js = /**
 				showFullImage(this.getAttribute('src'));
 			});
 		});
-	}
-	
-	
+	};
+
 	window.createLi = function(datas){
 		var isAnimated = document.querySelector(".timeline-event");
 		if(isAnimated){
@@ -522,20 +523,25 @@ var content_js = /**
 		liEle.appendChild(divEle);
 		return liEle;
 	};
-	
+
 	 function setTitle(title){
 		document.title = title;
 	}
-	
-	function dblFunc() {
+
+	function copyImgFunc() {
+		console.log(currentImgID);
+	    aardio.copyImg(currentImgID);
+	    
+	};
+
+	function dblFunc(){
 	    let currentLi = event.currentTarget;//取出当前元素
 	    let timeIndex = currentLi.getAttribute("id");
 	    console.log(timeIndex);
 	    //console.log(event);
 	    aardio.modifyList(timeIndex);
-	};
-	
-	
+	}
+
 	function download() {
 		var content = document.documentElement.outerHTML;
     	var blob = new Blob([content], {type: 'text/html'});
@@ -591,14 +597,12 @@ var content_js = /**
         aLink.href = URL.createObjectURL(blob);
         aLink.click();
 	}
-	
-	
+
 	function getHtml(){
 		var content = document.documentElement.outerHTML;
 		return content; 
 	};
-	
-	
+
 	function Wider(){
 		var timelineEle = document.querySelector(".timeline"); 
 		timelineEle.style.maxWidth = '100em';
@@ -608,12 +612,12 @@ var content_js = /**
 		var timelineEle = document.querySelector(".timeline"); 
 		timelineEle.style.maxWidth = '80em';
 	};
-	
+
 	function Smaller(){
 		var timelineEle = document.querySelector(".timeline"); 
 		timelineEle.style.maxWidth = '60em';
 	};
-	
+
 	function changeClass(className,oldClass,newClass){
 		var objectNodes = document.querySelectorAll(className);
 		if(objectNodes){
@@ -623,19 +627,19 @@ var content_js = /**
 			});			
 		};
 	}
-	
+
 	function animationActivate(){
 		changeClass(".timeline-event-disable","timeline-event-disable","timeline-event");
         changeClass(".timeline-event-icon-disable","timeline-event-icon-disable","timeline-event-icon");
         changeClass(".timeline-event-thumbnail-disable","timeline-event-thumbnail-disable","timeline-event-thumbnail");
 	}
-	
-	
+
 	function hexToRgba(hex) {
 		var rgbaNum = 'rgba(' + parseInt('0x' + hex.slice(3, 5)) + ',' + parseInt('0x' + hex.slice(5, 7)) + ',' + parseInt('0x' + hex.slice(7, 9)) + ',' + parseInt('0x' + hex.slice(1, 3))/255 + ')'
 		console.log(rgbaNum);console.log(hex);
   		return rgbaNum;
 	}
+
 	function themeSet(themeData){
 		const root = document.querySelector(':root');
 		root.style.setProperty('--main-bg-color', hexToRgba('#'+themeData[0]));
@@ -643,22 +647,28 @@ var content_js = /**
 		root.style.setProperty('--main-hl-color', hexToRgba('#'+themeData[2]));
 		root.style.setProperty('--main-normal-color', hexToRgba('#'+themeData[3]));
 	}
-	
+
 	var currentMouseEle = document.querySelectorAll(":hover");
-	
 	var currentImgEle = document.querySelectorAll(".mkd-img:hover");
-	
 	var currentBigImgEle = document.querySelectorAll("#imageCloned:hover");
+	var currentOverlayEle = document.querySelectorAll("#imageOverlay:hover");
 	
 	document.addEventListener("contextmenu", (e) => {
 		currentMouseEle = document.querySelectorAll(":hover");
 		currentImgEle = document.querySelectorAll(".mkd-img:hover");
 		currentBigImgEle = document.querySelectorAll("#imageCloned:hover");
+		currentOverlayEle = document.querySelectorAll("#imageOverlay:hover");
   		e.preventDefault();
   		hideMenu(e);
   		showMenu(e);
 	});
+
+	function getCurrentImgID(){
+		currentMouseEle = document.querySelectorAll(":hover");
+		currentImgID = currentMouseEle[3].getAttribute("id");
+	}
 	
+
 	function shiftColor(base, change, direction) {
   		const colorRegEx = /^\#?[A-Fa-f0-9]{6}$/;
 		
@@ -701,7 +711,7 @@ var content_js = /**
 		
   		return newColor;
 	}
-	
+
 	function isElPropColor(el, prop, color) {
   		const ctx = document.createElement('canvas').getContext('2d');
   		ctx.fillStyle = color;
@@ -713,7 +723,7 @@ var content_js = /**
   		ctx.canvas = null;
   		return a === b;
 	}
-	
+
 	function alwaysGotColorRGBA(el, prop) {
   		const ctx = document.createElement('canvas').getContext('2d');
   		ctx.fillStyle = getComputedStyle(el, null).getPropertyValue(prop);
@@ -725,7 +735,7 @@ var content_js = /**
   		console.log(rgbaArray)
   		return rgbaArray;
 	}
-	
+
 	function RGB2HEX(rgbList) {
     	//rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
     	function hex(x) {
@@ -733,7 +743,7 @@ var content_js = /**
     	}
     	return "#" + hex(rgbList[0]) + hex(rgbList[1]) + hex(rgbList[2]);
 	}
-	
+
 	function showMenu(e) {
 		var tempBgColorRGBA = alwaysGotColorRGBA(document.body, 'background-color');
 		var tempBgColor = RGB2HEX(tempBgColorRGBA);
@@ -775,6 +785,9 @@ var content_js = /**
   			menus3.style.color = shiftColor(tempTxtColor,"#060606",'sub');
   			menus3.style.zIndex = '10000';
 		}
+		else if( currentOverlayEle.length != 0){
+			return ; 
+		}
 		else if(currentMouseEle.length>3){
 			const menus1 = menuSinglton.getInstance();
   			menus1.style.top = `${e.clientY-20}px`;
@@ -811,7 +824,7 @@ var content_js = /**
   			menus2.style.color = shiftColor(tempTxtColor,"#060606",'sub')
   		}
 	}
-	
+
 	function hideMenu(e) {
   		const menus1 = menuSinglton.getInstance();
   		menus1.style.display = "none";
@@ -820,10 +833,9 @@ var content_js = /**
 		const menus3 = menuImg.getInstance();
   		menus3.style.display = "none";
 	}
-	
+
 	document.addEventListener("click", hideMenu);
-
-
+	
 	const ContextMenuSinglton = function (options) {
   	// 唯一实例
   		let instance;
@@ -856,7 +868,7 @@ var content_js = /**
     		},
   		};
 	};
-	
+
 	const ContextMenuLess = function (options) {
   	// 唯一实例
   		let instance;
@@ -889,7 +901,7 @@ var content_js = /**
     		},
   		};
 	};
-	
+
 	const ContextMenuImg = function (options) {
   	// 唯一实例
   		let instance;
@@ -922,7 +934,7 @@ var content_js = /**
     		},
   		};
 	};
-	
+
 	const menuSinglton = ContextMenuSinglton({
   		menus: [
     		{
@@ -998,7 +1010,7 @@ var content_js = /**
     		},
   		],
 	});
-	
+
 	const menuImg = ContextMenuImg({
   		menus: [
     		{
@@ -1008,9 +1020,17 @@ var content_js = /**
         			downloadImg();
       			},
     		},
+    		
+    		{
+      			name: "  复制图片    ",
+      			onClick: function (e) {
+      			    hideMenu(e);
+        			copyImgFunc();
+      			},
+    		},
   		],
 	});
-	
+
 	const menuLess = ContextMenuLess({
   		menus: [
     		{
@@ -1075,7 +1095,7 @@ var content_js = /**
     		},
   		],
 	});
-	
+
 	document.onkeydown = function (e) {
     	var key = e.keyCode;
     	//便于说明，下面代码使用多个if，应用时可使用"||"合并
@@ -1087,7 +1107,7 @@ var content_js = /**
         	return false;
     	}
 	};
-	
+
 </script>
 **/;
 
