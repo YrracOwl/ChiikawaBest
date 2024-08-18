@@ -823,6 +823,7 @@ winform.截图.oncommand = function(id,event){
 	frmChild.caller = winform;
 	
 	frmChild.show();
+	frmChild.rdyMove();
 	winform.show(false);
 }
 

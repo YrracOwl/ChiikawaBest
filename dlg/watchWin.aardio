@@ -4,12 +4,15 @@ import win.ui;
 var winform = win.form(text="截图";right=199;bottom=99;border="none")
 winform.add(
 plusPreview={cls="plus";left=2;top=32;right=198;bottom=98;clipBk=false;db=1;dl=1;dr=1;dt=1;foreRepeat="scale";notify=1;repeat="scale";z=1};
-保存={cls="plus";text="保存";left=175;top=5;right=225;bottom=27;bgcolor=-5197169;dl=1;dt=1;font=LOGFONT(h=-16);notify=1;z=5};
-反色={cls="plus";text="反色";left=64;top=5;right=113;bottom=27;bgcolor=-5197169;dl=1;dt=1;font=LOGFONT(h=-16);notify=1;z=3};
-复制={cls="plus";text="复制";left=119;top=5;right=169;bottom=27;bgcolor=-5197169;dl=1;dt=1;font=LOGFONT(h=-16);notify=1;z=4};
-截图={cls="plus";text="截图";left=7;top=5;right=57;bottom=27;bgcolor=-5197169;dl=1;dt=1;font=LOGFONT(h=-16);notify=1;z=2}
+保存={cls="plus";text='\uF0C7';left=112;top=5;right=140;bottom=27;bgcolor=-5197169;dl=1;dt=1;font=LOGFONT(h=-18;name='FontAwesome');notify=1;z=5};
+反色={cls="plus";text='\uF042';left=42;top=5;right=70;bottom=27;bgcolor=-5197169;dl=1;dt=1;font=LOGFONT(h=-18;name='FontAwesome');notify=1;z=3};
+复制={cls="plus";text='\uF0EA';left=77;top=5;right=105;bottom=27;bgcolor=-5197169;dl=1;dt=1;font=LOGFONT(h=-18;name='FontAwesome');notify=1;z=4};
+截图={cls="plus";text='\uF030';left=7;top=5;right=35;bottom=27;bgcolor=-5197169;dl=1;dt=1;font=LOGFONT(h=-16;name='FontAwesome');notify=1;z=2}
 )
 /*}}*/
+
+import win.ui.tooltip; 
+var balloonTipCtrl = win.ui.tooltip.tracking(winform,false);
 
 winform.截图.skin({
 	background={
@@ -82,18 +85,18 @@ win.ui.simpleWindow(winform,,,,).skin(
 
 winform.uiShow = function(){
 	winform.disableDragFullWindow = true;
-	winform.截图.text = "重截";
+	//winform.截图.text = "重截";
 	winform.反色.show(true);
 	winform.复制.show(true);
 	winform.保存.show(true);
 	watchWin.enable(false);
-	if(winform.width<400){
-		winform.width = 400;
+	if(winform.width<240){
+		winform.width = 240;
 	}
 }
 winform.uiHide = function(){
 	winform.disableDragFullWindow = false;
-	winform.截图.text = "截图";
+	//winform.截图.text = "截图";
 	winform.反色.show(false);
 	winform.复制.show(false);
 	winform.保存.show(false);
@@ -112,6 +115,7 @@ winform.截图.oncommand = function(id,event){
 	}
 	else {
 		winform.uiHide();
+		winform.rdyDrag();
 	}
 	winform.watchWinEn = !winform.watchWinEn;
 }
@@ -123,6 +127,9 @@ winform.getHoleBmp = function(){
 }
 
 winform.复制.oncommand = function(id,event){
+	if(!winform.disableDragFullWindow){
+		return ; 
+	}
 	imgCaptured.toClipBD();
 	if(winform.caller){
 		win.setForeground(winform.caller.hwnd);
@@ -133,6 +140,9 @@ winform.复制.oncommand = function(id,event){
 }
 
 winform.保存.oncommand = function(id,event){
+	if(!winform.disableDragFullWindow){
+		return ; 
+	}
 	var savePath = ..fsys.dlg.saveOp("图像文件|*.bmp;*.png;*.jpg","保存图像",,,"temp.jpg");
 	if(savePath){
 		imgCaptured.save(savePath);
@@ -140,6 +150,9 @@ winform.保存.oncommand = function(id,event){
 }
 
 winform.反色.oncommand = function(id,event){
+	if(!winform.disableDragFullWindow){
+		return ; 
+	}
 	imgCaptured.negative();
 	winform.plusPreview.foreground = imgCaptured.getBytes("*.bmp");
 }
@@ -175,8 +188,8 @@ winform.onClose = function(hwnd,message,wParam,lParam){
 	imgCaptured.delete();
 }
 
-winform.width = 400;
-winform.height = 400;
+winform.width = 240;
+winform.height = 100;
 win.setTopmost(winform.hwnd,true)
 //winform.show();
 
@@ -186,6 +199,68 @@ winform.doTop = function(){
 
 winform.undoTop = function(){
 	win.setTopmost(winform.hwnd,false);
+}
+
+winform.rdyDrag = function(){
+	var x,y,cx,cy = win.getPos(winform.hwnd,true);
+	..mouse.setPos(x+cx, y+cy);
+}
+
+winform.rdyMove = function(){
+	var x,y,cx,cy = win.getPos(winform.hwnd,true);
+	..mouse.setPos(x+cx/2, y+10);
+}
+
+win.ui.accelerator({
+	{ ctrl = true; vkey = 'S'#; oncommand = winform.保存.oncommand } 
+	{ ctrl = true; vkey = 'C'#; oncommand = winform.复制.oncommand }
+	{ ctrl = true; vkey = 'D'#; oncommand = winform.截图.oncommand }
+	{ ctrl = true; vkey = 'F'#; oncommand = winform.反色.oncommand } 
+	{ ctrl = true; vkey = 'R'#; oncommand = winform.rdyMove }
+	{ ctrl = true; vkey = 'G'#; oncommand = winform.rdyDrag } 
+},winform);
+
+winform.截图.onMouseEnter = function(wParam,lParam){ 
+    var x,y,cx,cy = winform.截图.getPos(true);
+    
+    //手动显示提示
+    balloonTipCtrl.setText("截图(Ctrl+D)").trackPopup(true,x+20,y+cy );
+}
+
+winform.截图.onMouseLeave = function(wParam,lParam){ 
+	balloonTipCtrl.trackPopup(false); //手动关闭提示
+}
+
+winform.反色.onMouseEnter = function(wParam,lParam){ 
+    var x,y,cx,cy = winform.反色.getPos(true);
+    
+    //手动显示提示
+    balloonTipCtrl.setText("反色(Ctrl+F)").trackPopup(true,x+20,y+cy );
+}
+
+winform.反色.onMouseLeave = function(wParam,lParam){ 
+	balloonTipCtrl.trackPopup(false); //手动关闭提示
+}
+
+winform.复制.onMouseEnter = function(wParam,lParam){ 
+    var x,y,cx,cy = winform.复制.getPos(true);
+    //手动显示提示
+    balloonTipCtrl.setText("复制(Ctrl+C)").trackPopup(true,x+20,y+cy );
+}
+
+winform.复制.onMouseLeave = function(wParam,lParam){ 
+	balloonTipCtrl.trackPopup(false); //手动关闭提示
+}
+
+winform.保存.onMouseEnter = function(wParam,lParam){ 
+    var x,y,cx,cy = winform.保存.getPos(true);
+    
+    //手动显示提示
+    balloonTipCtrl.setText("保存(Ctrl+S)").trackPopup(true,x+20,y+cy );
+}
+
+winform.保存.onMouseLeave = function(wParam,lParam){ 
+	balloonTipCtrl.trackPopup(false); //手动关闭提示
 }
 
 win.loopMessage();

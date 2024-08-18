@@ -113,6 +113,8 @@ import win.clip;
 
 import sys.run;
 
+import mouse;
+
 //自定义窗口外观
 import win.ui.simpleWindow;
 win.ui.simpleWindow(mainForm,,,18,).skin(
@@ -425,6 +427,7 @@ mainForm.trayCreate = function(){
 	})
 	mainForm.popmenu.add("截图 (Alt+Q)",function(){	
 		var watchWin1 = win.loadForm("\dlg\watchWin.aardio",,win.getDesktop());
+		watchWin1.rdyMove();
 		watchWin1.show();
 	})
 	
@@ -857,7 +860,7 @@ mainForm.haveDBImgField = function(timeline_name){
 	else {
 		logErr("返回值为",tostring(isOk),"无image字段");
 	}
-	return isOk; 
+	return isOk;
 }
 
 mainForm.createDBImgField = function(timeline_name){
@@ -890,6 +893,7 @@ mainForm.loadWatchWin = function(){
 	win.setPos(watchWinHK.hwnd,x,y);
 	watchWinHK.undoTop();
 	watchWinHK.doTop();
+	watchWinHK.rdyDrag();
 	watchWinHK.show(true);
 }
 
