@@ -269,7 +269,8 @@ winform.openTimeline = function(hItem){
 	var rdyOpenTimeline = winform.树形展示.getItemText(hItem);
 	
 	frmMask.show(true);
-	var timelineChild = ..mainForm.loadForm("\dlg\timeline.aardio");
+	var timelineChild = win.loadForm("\dlg\timeline.aardio",,win.getDesktop());
+	//var timelineChild = ..mainForm.loadForm("\dlg\timeline.aardio");
 	
 	timelineChild.childWinUpdate(rdyOpenTimeline);
 	timelineChild.listboxUpdate(timelineChild);

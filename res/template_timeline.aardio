@@ -238,10 +238,17 @@ var content_js = /**
 		return false;
 	}
 	
+	var isInitalClick = 0;
+	
 	var currentImgID = 'needs2got';
 	
 	document.addEventListener("click", (e) => {
 		hideMenu(e);
+		if (isInitalClick == 0){
+			console.log('isInitalClick ++;')
+			isInitalClick = 1;
+			window.watchImg();
+		}
 	});
 	
 	function showFullImage(fullImageUrl) {
@@ -465,12 +472,15 @@ var content_js = /**
 	
 	window.watchImg = function(){
 		document.querySelectorAll('.mkd-img').forEach(item => {
-			item.addEventListener('click', function() {
-				showFullImage(this.getAttribute('src'));
-			});
+			if(item.getAttribute('iniclick') == 0){
+				item.addEventListener('click', function() {
+					showFullImage(this.getAttribute('src'));
+				});
+			}
+			item.setAttribute('iniclick',1)
 		});
 	};
-
+	
 	window.createLi = function(datas){
 		var isAnimated = document.querySelector(".timeline-event");
 		if(isAnimated){
@@ -518,13 +528,14 @@ var content_js = /**
 		console.log(datas)
 		if(datas[3] != 'null'){
 			var imgEle = document.createElement("img");
+			imgEle.setAttribute("iniclick",0)
 			imgEle.setAttribute("title","点我查看大图")
 			imgEle.setAttribute("class","mkd-img")
 			imgEle.setAttribute("src",datas[3]);
 			imgEle.setAttribute("width","100%");
 			imgEle.setAttribute("height","auto");
 			imgEle.setAttribute("style","max-height:450px; object-fit: scale-down;");
-			divEle.appendChild(imgEle)
+			divEle.appendChild(imgEle);
 		}
 			
 		liEle.appendChild(labelEle);
@@ -1114,16 +1125,6 @@ var content_js = /**
         	return false;
     	}
 	};
-	
-	window.onload = function(){
-		console.log("文档加载成功！")
-		document.querySelectorAll('.mkd-img').forEach(item => {
-			item.addEventListener('click', function() {
-				console.log('绑定成功')
-				showFullImage(this.getAttribute('src'));
-			});
-		});
-	}
 	
 </script>
 **/;
