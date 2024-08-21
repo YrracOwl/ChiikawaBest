@@ -1203,6 +1203,58 @@ winform.内容plus.editBox.translateAccelerator = function(msg){
 			return true;
 		}
 	}
+	elseif( vk == 0xD/*_VK_ENTER*/ ){
+		if( msg.message == 0x100/*_WM_KEYDOWN*/) {
+			var tempText = winform.内容plus.editBox.lineText();
+
+			var pattern =  "- "
+			var i,j = string.find( tempText,  pattern );
+ 			var tempFlagNoOrderList = i==1 ? true:false;
+
+			var pattern =  "\d+\.\s"
+			var i,j = string.find( tempText,  pattern );
+ 			var tempFlagOrderList = i==1 ? true:false;
+
+			var pattern =  "- \[ \] "
+			var i,j = string.find( tempText,  pattern );
+ 			var tempFlagToDoU = i==1 ? true:false;
+ 			
+			var pattern =  "- \[x\] "
+			var i,j = string.find( tempText,  pattern );
+ 			var tempFlagToDoD = i==1 ? true:false;
+ 			
+			var pattern =  "> "
+			var i,j = string.find( tempText,  pattern );
+ 			var tempFlagQuote = i==1 ? true:false;
+			
+			if(tempFlagToDoD){
+				winform.内容plus.editBox.appendText('\r\n- [ ] ');
+				return true;
+			}
+			elseif(tempFlagToDoU){
+				winform.内容plus.editBox.appendText('\r\n- [ ] ');
+				return true;
+			}
+			elseif(tempFlagNoOrderList){
+				winform.内容plus.editBox.appendText('\r\n- ');
+				return true;
+			}
+			elseif(tempFlagOrderList){
+				winform.内容plus.editBox.appendText('\r\n1. ');
+				return true;
+			}
+			elseif(tempFlagQuote){
+				winform.内容plus.editBox.appendText('\r\n> ');
+				return true;
+			}
+			else {
+				winform.内容plus.editBox.appendText('\r\n');
+				return true;
+			}
+			
+		}
+	}
+	
 }
 
 import win.ui.accelerator;
