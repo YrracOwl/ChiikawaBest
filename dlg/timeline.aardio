@@ -1193,66 +1193,91 @@ winform.richeditFuncH = function(replaceTxt){
 	winform.内容plus.editBox.setsel(tempCurrentLinePos+tempLineLength-1);
 }
 
+key.delayDown = 1;
+key.delayUp = 1;
+
+winform.SetSelSpace = function(){
+	key.down(key.VK.SPACE)
+	key.down(key.VK.SHIFT);
+	key.down(key.VK.LEFT);
+	key.up(key.VK.LEFT,key.VK.SHIFT);
+	var currentSelText = winform.内容plus.editBox.selText;
+	return currentSelText; 
+}
+
+winform.doingSetSelSpace = false;
+winform.okDetectWndSize = 300;
+winform.lastOKDown = false;
 
 winform.内容plus.editBox.translateAccelerator = function(msg){ 
     var vk = msg.wParam;
  	if( vk == 0x9/*_VK_TAB*/ ){
-		if( msg.message == 0x100/*_WM_KEYDOWN*/) {
-			//owner.tabNext(true); 
-			winform.内容plus.editBox.appendText('    ');
-			return true;
+ 		if(!winform.doingSetSelSpace){
+			if( msg.message == 0x100/*_WM_KEYDOWN*/) {
+				winform.doingSetSelSpace = !winform.doingSetSelSpace;
+				var txtSel = winform.SetSelSpace();
+				if(txtSel){
+					winform.内容plus.editBox.selText = txtSel + '    ';
+				}
+				winform.doingSetSelSpace = !winform.doingSetSelSpace;
+				return true;
+			}
 		}
+		return true;
 	}
 	elseif( vk == 0xD/*_VK_ENTER*/ ){
 		if( msg.message == 0x100/*_WM_KEYDOWN*/) {
-			var tempText = winform.内容plus.editBox.lineText();
-
-			var pattern =  "- "
-			var i,j = string.find( tempText,  pattern );
- 			var tempFlagNoOrderList = i==1 ? true:false;
-
-			var pattern =  "\d+\.\s"
-			var i,j = string.find( tempText,  pattern );
- 			var tempFlagOrderList = i==1 ? true:false;
-
-			var pattern =  "- \[ \] "
-			var i,j = string.find( tempText,  pattern );
- 			var tempFlagToDoU = i==1 ? true:false;
- 			
-			var pattern =  "- \[x\] "
-			var i,j = string.find( tempText,  pattern );
- 			var tempFlagToDoD = i==1 ? true:false;
- 			
-			var pattern =  "> "
-			var i,j = string.find( tempText,  pattern );
- 			var tempFlagQuote = i==1 ? true:false;
-			
-			if(tempFlagToDoD){
-				winform.内容plus.editBox.appendText('\r\n- [ ] ');
-				return true;
+			if(!winform.doingSetSelSpace){
+				winform.doingSetSelSpace = !winform.doingSetSelSpace;
+				var txtSel = winform.SetSelSpace();
+				if(txtSel){
+					var tempText = winform.内容plus.editBox.lineText();
+		
+					var pattern =  "- "
+					var i,j = string.find( tempText,  pattern );
+ 					var tempFlagNoOrderList = i==1 ? true:false;
+		
+					var pattern =  "\d+\.\s"
+					var i,j = string.find( tempText,  pattern );
+ 					var tempFlagOrderList = i==1 ? true:false;
+		
+					var pattern =  "- \[ \] "
+					var i,j = string.find( tempText,  pattern );
+ 					var tempFlagToDoU = i==1 ? true:false;
+ 					
+					var pattern =  "- \[x\] "
+					var i,j = string.find( tempText,  pattern );
+ 					var tempFlagToDoD = i==1 ? true:false;
+ 					
+					var pattern =  "> "
+					var i,j = string.find( tempText,  pattern );
+ 					var tempFlagQuote = i==1 ? true:false;
+					
+					if(tempFlagToDoD){
+						winform.内容plus.editBox.selText = txtSel + '\r\n- [ ] ';
+					}
+					elseif(tempFlagToDoU){
+						winform.内容plus.editBox.selText = txtSel + '\r\n- [ ] ';
+					}
+					elseif(tempFlagNoOrderList){
+						winform.内容plus.editBox.selText = txtSel + '\r\n- ';
+					}
+					elseif(tempFlagOrderList){
+						winform.内容plus.editBox.selText = txtSel + '\r\n1. ';
+					}
+					elseif(tempFlagQuote){
+						winform.内容plus.editBox.selText = txtSel + '\r\n> ';
+					}
+					else {
+						winform.内容plus.editBox.selText = txtSel + '\r\n';
+					}
+					winform.doingSetSelSpace = !winform.doingSetSelSpace;
+					return true; 
+				}
 			}
-			elseif(tempFlagToDoU){
-				winform.内容plus.editBox.appendText('\r\n- [ ] ');
-				return true;
-			}
-			elseif(tempFlagNoOrderList){
-				winform.内容plus.editBox.appendText('\r\n- ');
-				return true;
-			}
-			elseif(tempFlagOrderList){
-				winform.内容plus.editBox.appendText('\r\n1. ');
-				return true;
-			}
-			elseif(tempFlagQuote){
-				winform.内容plus.editBox.appendText('\r\n> ');
-				return true;
-			}
-			else {
-				winform.内容plus.editBox.appendText('\r\n');
-				return true;
-			}
-			
+			return true;
 		}
+		
 	}
 	
 }
