@@ -1197,7 +1197,7 @@ key.delayDown = 1;
 key.delayUp = 1;
 
 winform.SetSelSpace = function(){
-	key.down(key.VK.SPACE)
+	key.sendString('​ ')
 	key.down(key.VK.SHIFT);
 	key.down(key.VK.LEFT);
 	key.up(key.VK.LEFT,key.VK.SHIFT);
@@ -1208,6 +1208,7 @@ winform.SetSelSpace = function(){
 winform.doingSetSelSpace = false;
 winform.okDetectWndSize = 300;
 winform.lastOKDown = false;
+
 
 winform.内容plus.editBox.translateAccelerator = function(msg){ 
     var vk = msg.wParam;
@@ -1229,30 +1230,36 @@ winform.内容plus.editBox.translateAccelerator = function(msg){
 		if( msg.message == 0x100/*_WM_KEYDOWN*/) {
 			if(!winform.doingSetSelSpace){
 				winform.doingSetSelSpace = !winform.doingSetSelSpace;
+				
+				var tempText = winform.内容plus.editBox.lineText();
+	
+				var pattern =  "- "
+				var i,j = string.find( tempText,  pattern );
+ 				var tempFlagNoOrderList = i==1 ? true:false;
+	
+				var pattern =  "\d+\.\s"
+				var i,j = string.find( tempText,  pattern );
+ 				var tempFlagOrderList = i==1 ? true:false;
+	
+				var pattern =  "- \[ \] "
+				var i,j = string.find( tempText,  pattern );
+ 				var tempFlagToDoU = i==1 ? true:false;
+ 				
+				var pattern =  "- \[x\] "
+				var i,j = string.find( tempText,  pattern );
+ 				var tempFlagToDoD = i==1 ? true:false;
+ 				
+				var pattern =  "> "
+				var i,j = string.find( tempText,  pattern );
+ 				var tempFlagQuote = i==1 ? true:false;
+				
+				if ( !(tempFlagNoOrderList or tempFlagOrderList or tempFlagToDoU or tempFlagToDoD or tempFlagQuote) ) {
+					winform.doingSetSelSpace = !winform.doingSetSelSpace;
+					return ; 
+				}
+
 				var txtSel = winform.SetSelSpace();
 				if(txtSel){
-					var tempText = winform.内容plus.editBox.lineText();
-		
-					var pattern =  "- "
-					var i,j = string.find( tempText,  pattern );
- 					var tempFlagNoOrderList = i==1 ? true:false;
-		
-					var pattern =  "\d+\.\s"
-					var i,j = string.find( tempText,  pattern );
- 					var tempFlagOrderList = i==1 ? true:false;
-		
-					var pattern =  "- \[ \] "
-					var i,j = string.find( tempText,  pattern );
- 					var tempFlagToDoU = i==1 ? true:false;
- 					
-					var pattern =  "- \[x\] "
-					var i,j = string.find( tempText,  pattern );
- 					var tempFlagToDoD = i==1 ? true:false;
- 					
-					var pattern =  "> "
-					var i,j = string.find( tempText,  pattern );
- 					var tempFlagQuote = i==1 ? true:false;
-					
 					if(tempFlagToDoD){
 						winform.内容plus.editBox.selText = txtSel + '\r\n- [ ] ';
 					}
@@ -1272,7 +1279,6 @@ winform.内容plus.editBox.translateAccelerator = function(msg){
 						winform.内容plus.editBox.selText = txtSel + '\r\n';
 					}
 					winform.doingSetSelSpace = !winform.doingSetSelSpace;
-					return true; 
 				}
 			}
 			return true;
