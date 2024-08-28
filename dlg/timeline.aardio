@@ -512,7 +512,7 @@ winform.gfmarkCheckList = function(strPrepared){
 	strGfmarkReplaceResultMid = string.replace( strGfmark,pattern,replaceText,replacecount);
 
 	var pattern = //<\<li\>\[x\]>
-	var replaceText = `<li><input type="checkbox" checked disabled />`;
+	var replaceText = `<li style="text-decoration-line: line-through; text-decoration-color: #FF502F; text-decoration-style: solid; text-decoration-thickness: 0.2rem;"><input type="checkbox" checked disabled />`;
 	strGfmarkReplaceResult = string.replace( strGfmarkReplaceResultMid,pattern,replaceText,replacecount);	
 
 	return strGfmarkReplaceResult;
