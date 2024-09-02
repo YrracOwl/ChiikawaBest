@@ -42,6 +42,19 @@ body {
   box-sizing: border-box;
 }
 
+/* TOC */
+.fixed-top {
+	position: fixed;
+	top: 10hw;
+	right: 0;
+	width: 19%;
+	height: 80%;
+	overflow: auto;
+	backdrop-filter: blur(2px);
+	font-size: 0.9em;
+	z-index: 1000;
+}
+
 /* Styling */
 .timeline {
   margin: 4em auto;
@@ -446,6 +459,7 @@ var content_js = /**
 		var ListEles = document.getElementById("listContent");
 		ListEles.innerHTML = tempTable.innerHTML;
 		window.watchImg();
+		window.updateTOC();
 	}
 
 	window.lengthList = function(){
@@ -463,6 +477,7 @@ var content_js = /**
 		var tempEle = window.createLi(datas);
 		liEle.parentNode.replaceChild(tempEle,liEle);
 		window.watchImg();
+		window.updateTOC();
 	}
 
 	window.removeContent = function(datas){
@@ -557,7 +572,6 @@ var content_js = /**
 	    let currentLi = event.currentTarget;//取出当前元素
 	    let timeIndex = currentLi.getAttribute("id");
 	    console.log(timeIndex);
-	    //console.log(event);
 	    aardio.modifyList(timeIndex);
 	}
 
@@ -1126,6 +1140,122 @@ var content_js = /**
     	}
 	};
 	
+////////////////////////////////////////////////////////////////////
+//TOC
+////////////////////////////////////////////////////////////////////
+  class TOC {
+    /**
+     * @param {[HTMLHeadingElement]} headingSet
+     * */
+    static parse(headingSet) {
+      const tocData = []
+      let curLevel = 0
+      let preTocItem = undefined
+      let idFlag = 1
+
+      headingSet.forEach(heading => {
+        const hLevel = heading.outerHTML.match(/<h([\d]).*>/)[1]
+        console.log(hLevel)
+        const titleText = heading.innerText
+
+        switch (hLevel >= curLevel) {
+          case true:
+            if (preTocItem === undefined) {
+              preTocItem = new TocItem(titleText, hLevel)
+              tocData.push(preTocItem)
+            } else {
+              const curTocItem = new TocItem(titleText, hLevel)
+              const parent = curTocItem.level > preTocItem.level ? preTocItem : preTocItem.parent
+              curTocItem.parent = parent
+              parent.children.push(curTocItem)
+              preTocItem = curTocItem
+            }
+            break
+          case false:
+            // We need to find the appropriate parent node from the preTocItem
+            const curTocItem = new TocItem(titleText, hLevel)
+            while (1) {
+              if (preTocItem.level < curTocItem.level) {
+                preTocItem.children.push(curTocItem)
+                preTocItem = curTocItem
+                break
+              }
+              preTocItem = preTocItem.parent
+
+              if (preTocItem === undefined) {
+                tocData.push(curTocItem)
+                preTocItem = curTocItem
+                break
+              }
+            }
+            break
+        }
+
+        curLevel = hLevel
+
+        if (heading.id === "") {
+          let tmpId = titleText.replace(/\s+/g,"_").toLowerCase() + "-toc-" + idFlag.toString();
+          heading.id = tmpId;
+        }
+        preTocItem.id = heading.id;
+        idFlag += idFlag;
+        console.log(preTocItem.id)
+      })
+
+      return tocData
+    }
+
+    /**
+     * @param {[TocItem]} tocData
+     * @return {string}
+     * */
+    static build(tocData) {
+      let result = "<ul>"
+      tocData.forEach(toc => {
+        result += `<li><a href=#${toc.id}>${toc.text}</a></li>`
+        if (toc.children.length) {
+          result += `${TOC.build(toc.children)}`
+        }
+      })
+      return result + "</ul>"
+    }
+  }
+
+  /**
+   * @param {string} text
+   * @param {int} level
+   * @param {TocItem} parent
+   * */
+  function TocItem(text, level, parent = undefined) {
+    this.text = text
+    this.level = level
+    this.id = undefined
+    this.parent = parent
+    this.children = []
+  }
+  
+	window.updateTOC = () => {
+		const oldTOC = document.querySelector(".fixed-top");
+		if(oldTOC){
+			console.log("delete old TOC")
+			oldTOC.remove();
+		}
+		
+		console.log('Hs Querying...')
+    	const headingSet = document.querySelectorAll("h1, h2, h3, h4, h5, h6") // You can also select only the titles you are interested in.
+    	console.log(headingSet)
+    	
+    	console.log('Rdy to Parse Datas...')
+    	const tocData = TOC.parse(headingSet)
+    	
+    	console.log('TOC Data: ')
+    	console.log(tocData)
+	
+    	const tocHTMLContent = TOC.build(tocData)
+    	const frag = document.createRange().createContextualFragment(`<fieldset class="fixed-top"><legend>TOC</legend>${tocHTMLContent}</fieldset>`)
+    	document.querySelector(`body`).insertBefore(frag, document.querySelector(`body`).firstChild)
+	}
+  
 </script>
 **/;
 

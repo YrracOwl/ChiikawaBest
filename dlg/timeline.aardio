@@ -245,7 +245,6 @@ document.addEventListener('mousedown', function (event) {
   	target = target.parentNode; 
   } 
 }, true);
-
 //禁止弹窗函数
 //window.open =  function(url){ window.location.href = url; }
 `);
@@ -262,15 +261,20 @@ window.addEventListener('load',function(){
 document.addEventListener('mousedown', function (event) {
   var target = event.target;
   for(var i=1;target && i<=5;i++){
-  	if ( target.tagName == 'A')  {
-  		target.setAttribute('target',"_blank");
-  		return;
+  	if(target.href == null){
+  		break;
   	}
-  	
-  	target = target.parentNode; 
+  	let hrefStr = target.href;
+  	console.log(hrefStr);
+  	if(hrefStr.indexOf('http://') == 0 || hrefStr.indexOf('https://') == 0){
+  		if ( target.tagName == 'A')  {
+  			target.setAttribute('target',"_blank");
+  			return;
+  		}
+  		target = target.parentNode;
+  	}
   } 
 }, true);
-
 //禁止弹窗函数
 //window.open =  function(url){ window.location.href = url; }
 `);
@@ -795,11 +799,9 @@ winform.删除plus.oncommand = function(id,event){
 			..logWarn(">>>已删除项",winform.当前主题.text,"中的：",tl_time)
 			
 			win.delay(200)
-			
-			tl_webview.xcall("removeContent",{tostring(tl_time)});
-			
-			win.delay(200)
 			winform.addUIReset(winform);
+			win.delay(200)
+			tl_webview.xcall("removeContent",{tostring(tl_time)});
 			win.delay(200)
 			winform.listboxUpdate(winform);
 			win.delay(200)
