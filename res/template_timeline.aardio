@@ -55,6 +55,12 @@ body {
 	z-index: 1000;
 }
 
+.fixed-top > ul {
+	margin-left: 1.5em;
+	padding-left: 0em;
+	list-style-type: decimal-leading-zero;
+}
+
 /* Styling */
 .timeline {
   margin: 4em auto;
@@ -483,6 +489,7 @@ var content_js = /**
 	window.removeContent = function(datas){
 		var liEle = document.getElementById(datas[0]);
 		liEle.remove();
+		console.log('Removed',datas[0])
 	}
 	
 	window.watchImg = function(){
@@ -1154,17 +1161,21 @@ var content_js = /**
       let idFlag = 1
 
       headingSet.forEach(heading => {
+        console.log('forEach Starting...', idFlag);
         const hLevel = heading.outerHTML.match(/<h([\d]).*>/)[1]
-        console.log(hLevel)
         const titleText = heading.innerText
-
-        switch (hLevel >= curLevel) {
+        switch (hLevel > curLevel) {
           case true:
+          	console.log('>>>switch true')
             if (preTocItem === undefined) {
+              console.log('>>>switch true->if true')
               preTocItem = new TocItem(titleText, hLevel)
+              console.log(preTocItem)
               tocData.push(preTocItem)
             } else {
+              console.log('>>>switch true->if false')
               const curTocItem = new TocItem(titleText, hLevel)
+              console.log(curTocItem)
               const parent = curTocItem.level > preTocItem.level ? preTocItem : preTocItem.parent
               curTocItem.parent = parent
               parent.children.push(curTocItem)
@@ -1172,10 +1183,12 @@ var content_js = /**
             }
             break
           case false:
+          console.log('>>>switch false')
             // We need to find the appropriate parent node from the preTocItem
             const curTocItem = new TocItem(titleText, hLevel)
             while (1) {
               if (preTocItem.level < curTocItem.level) {
+                console.log('>>>switch false->if < is true')
                 preTocItem.children.push(curTocItem)
                 preTocItem = curTocItem
                 break
@@ -1183,6 +1196,7 @@ var content_js = /**
               preTocItem = preTocItem.parent
 
               if (preTocItem === undefined) {
+                console.log('>>>switch false->if === is true')
                 tocData.push(curTocItem)
                 preTocItem = curTocItem
                 break
@@ -1190,16 +1204,16 @@ var content_js = /**
             }
             break
         }
-
         curLevel = hLevel
 
         if (heading.id === "") {
-          let tmpId = titleText.replace(/\s+/g,"_").toLowerCase() + "-toc-" + idFlag.toString();
+          console.log('>>>if no heading id')
+          let tmpId = "toc-" + idFlag.toString() + "-" + titleText.replace(/\s+/g,"_").toLowerCase();
           heading.id = tmpId;
         }
         preTocItem.id = heading.id;
-        idFlag += idFlag;
-        console.log(preTocItem.id)
+        idFlag += 1;
+        console.log('forEach Ending...');
       })
 
       return tocData

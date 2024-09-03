@@ -795,16 +795,19 @@ winform.删除plus.oncommand = function(id,event){
 	var confirmed = winform.msgboxTest("确认删除"""+tl_time+"""吗？","确认删除");
 	if(confirmed){
 		try{
-			..dbTimeline.exec("DELETE FROM ?? WHERE time=?;",{ winform.当前主题.text,tl_time} )
+			var hasErr = ..dbTimeline.exec("DELETE FROM ?? WHERE time=?;",{ winform.当前主题.text,tl_time} )
 			..logWarn(">>>已删除项",winform.当前主题.text,"中的：",tl_time)
+			if(hasErr){
+				return ; 
+			}
+			win.delay(200)
+			tl_webview.xcall("removeContent",{tostring(tl_time)});
 			
 			win.delay(200)
 			winform.addUIReset(winform);
-			win.delay(200)
-			tl_webview.xcall("removeContent",{tostring(tl_time)});
+			
 			win.delay(200)
 			winform.listboxUpdate(winform);
-			win.delay(200)
 			winform.timelineWebUpdate(winform);
 		}
 		catch(e){
