@@ -93,6 +93,7 @@ winform.内容plus.setCueBannerText("请输入内容，默认为还没想好");
 winform.时间plus.focusOnClick = false;
 
 winform.lastTime = "";
+winform.currentTitle = "";
 
 winform.添加提醒项.skin({
 	background={
@@ -299,38 +300,6 @@ var task  = timeUpdate.create("每秒执行",function(){
 task.interval = {
    second = 1;
 }
-/*
-var thrdListboxUpdate = function(winform,database){
-	var list_items = {}; 
-	for rowid, time, title, content in database.each("SELECT rowid,* FROM ??",{winform.当前主题.text}) {
-		table.push(list_items,time);
-	}
-	table.sort(list_items);
-	winform.listbox.clear();
-	for(k,v in list_items){
-		winform.listbox.add(v)
-	}
-};
-
-var thrdTimelineUpdate = function(winform,database,tl_webview){
-	tl_webview.xcall("clearListTemp");
-	if(winform.listbox.count<1){
-		tl_webview.xcall("pushTable",{"当前无内容";"无内容";"请在左侧添加"});
-	}
-	else {
-		for(i=1;winform.listbox.count;1){
-			var result = database.stepQuery("SELECT * FROM ??",{time = winform.listbox.items[i], winform.当前主题.text} )
-			tl_webview.xcall("pushTable",{tostring(result.time);tostring(result.title);tostring(result.content)});
-		}
-	}
-	tl_webview.xcall("replaceList");
-};
-*/
-
-/*
-thread.set("thrdListboxUpdate", thrdListboxUpdate);
-thread.set("thrdTimelineUpdate", thrdTimelineUpdate);
-*/
 
 import win.ui.mask;
 var frmMask = win.ui.mask(winform.winTimelineShow,true)
@@ -480,10 +449,11 @@ winform.chkDbField = function(tlTitle){
 winform.childWinUpdate = function(tlTitle){
 	currentTimeLine = tlTitle;
 	winform.当前主题.text = currentTimeLine;
+	winform.currentTitle = currentTimeLine;
 	winform.text = "时间线 - " + winform.当前主题.text;
-	tl_webview.xcall("setTitle",winform.当前主题.text);
+	tl_webview.invoke("setTitle",winform.当前主题.text);
 	if(_WIN10_LATER){
-		tl_webview.xcall("animationActivate");
+		tl_webview.invoke("animationActivate");
 	}
 	thread.invoke( 
 		function(winform,tlTitle){
@@ -494,10 +464,9 @@ winform.childWinUpdate = function(tlTitle){
 
 winform.listboxUpdate = function(winform){
 	var list_items = {}; 
-	
 	..logMsg(">>>更新时间线的listbox");
-	..logMsg(winform.当前主题.text);
-	for rowid, time, title, content in ..dbTimeline.each("SELECT rowid,* FROM ??",{winform.当前主题.text}) {
+	..logMsg("当前时间线：",winform.currentTitle);
+	for rowid, time, title, content in ..dbTimeline.each("SELECT rowid,* FROM ??",{winform.currentTitle}) {
 		table.push(list_items,time);
 		..logMsg(time,rowid,title)
 	}
@@ -506,6 +475,7 @@ winform.listboxUpdate = function(winform){
 	for(k,v in list_items){
 		winform.listbox.add(v)
 	}
+	..logMsg("listbox更新完毕")
 }
 
 winform.gfmarkCheckList = function(strPrepared){
@@ -524,9 +494,9 @@ winform.gfmarkCheckList = function(strPrepared){
 
 
 winform.timelineWebUpdate = function(winform){
-	tl_webview.xcall("clearListTemp");
+	tl_webview.invoke("clearListTemp");
 	if(winform.listbox.count<1){
-		tl_webview.xcall("pushTable",{"当前无内容";"无内容";"请在左侧添加";"null"});
+		tl_webview.invoke("pushTable",{"当前无内容";"无内容";"请在左侧添加";"null"});
 	}
 	else {
 		for(i=1;winform.listbox.count;1){
@@ -540,11 +510,11 @@ winform.timelineWebUpdate = function(winform){
 			if(imgUrl == null){
 				imgUrl = "null";
 			}
-			//tl_webview.xcall("pushTable",{tostring(result.time);tostring(result.title);tostring(result.content);imgUrl});
-			tl_webview.xcall("pushTable",{tostring(result.time);tostring(result.title);winform.gfmarkCheckList(result.content);imgUrl});
+			//tl_webview.invoke("pushTable",{tostring(result.time);tostring(result.title);tostring(result.content);imgUrl});
+			tl_webview.invoke("pushTable",{tostring(result.time);tostring(result.title);winform.gfmarkCheckList(result.content);imgUrl});
 		}
 	}
-	tl_webview.xcall("replaceList");
+	tl_webview.invoke("replaceList");
 }
 
 
@@ -720,8 +690,8 @@ winform.添加plus.oncommand = function(id,event){
 					imgUrl = "null";
 				}
 				
-				//tl_webview.xcall("updateContent",{tostring(tl_time);tostring(tl_title);tostring(tl_content);imgUrl});
-				tl_webview.xcall("updateContent",{tostring(tl_time);tostring(tl_title);winform.gfmarkCheckList(tl_content);imgUrl});
+				//tl_webview.invoke("updateContent",{tostring(tl_time);tostring(tl_title);tostring(tl_content);imgUrl});
+				tl_webview.invoke("updateContent",{tostring(tl_time);tostring(tl_title);winform.gfmarkCheckList(tl_content);imgUrl});
 			}
 			//修改了时间，或者纯粹新增，均不会触发
 			else {
@@ -794,25 +764,22 @@ winform.删除plus.oncommand = function(id,event){
 	var tl_time = winform.datetimepick.text + '-' + winform.时间plus.text;
 	var confirmed = winform.msgboxTest("确认删除"""+tl_time+"""吗？","确认删除");
 	if(confirmed){
-		try{
-			var hasErr = ..dbTimeline.exec("DELETE FROM ?? WHERE time=?;",{ winform.当前主题.text,tl_time} )
+		var hasErr = ..dbTimeline.exec("DELETE FROM ?? WHERE time=?;",{ winform.当前主题.text,tl_time} )
+		if(hasErr){
+			..logErr(">>>无法删除",winform.当前主题.text,"中的：",tl_time);
+			return false; 
+		}
+		else {
 			..logWarn(">>>已删除项",winform.当前主题.text,"中的：",tl_time)
-			if(hasErr){
-				return ; 
-			}
-			win.delay(200)
-			tl_webview.xcall("removeContent",{tostring(tl_time)});
-			
-			win.delay(200)
 			winform.addUIReset(winform);
-			
-			win.delay(200)
+			..logMsg('Rdy to del web content...')
+			tl_webview.invoke("removeContent",{tostring(tl_time)})
+			//frmMask.show(true);
+			win.delay(20)
+			..logMsg('Rdy to update...')
 			winform.listboxUpdate(winform);
 			winform.timelineWebUpdate(winform);
-		}
-		catch(e){
-			..logErr(">>>删除",winform.当前主题.text,"中的：",tl_time,"失败")
-			..logErr(e)
+			//frmMask.show(false);
 		}
 	}
 	else {
@@ -891,7 +858,7 @@ winform.图片预览.wndproc = function(hwnd,message,wParam,lParam){
 }
 
 winform.timelineThemeSet = function(){
-	tl_webview.xcall("themeSet",{tostring(..timeline_skin.bg);tostring(..timeline_skin.txt);tostring(..timeline_skin.hl);tostring(..timeline_skin.normal)});
+	tl_webview.invoke("themeSet",{tostring(..timeline_skin.bg);tostring(..timeline_skin.txt);tostring(..timeline_skin.hl);tostring(..timeline_skin.normal)});
 }
 
 

@@ -488,8 +488,9 @@ var content_js = /**
 
 	window.removeContent = function(datas){
 		var liEle = document.getElementById(datas[0]);
-		liEle.remove();
-		console.log('Removed',datas[0])
+		var liEleParent = liEle.parentElement;
+		liEleParent.removeChild(liEle)
+		console.log('Removed...');
 	}
 	
 	window.watchImg = function(){
@@ -1254,7 +1255,6 @@ var content_js = /**
 			console.log("delete old TOC")
 			oldTOC.remove();
 		}
-		
 		console.log('Hs Querying...')
     	const headingSet = document.querySelectorAll("h1, h2, h3, h4, h5, h6") // You can also select only the titles you are interested in.
     	console.log(headingSet)

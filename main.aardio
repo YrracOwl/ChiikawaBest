@@ -1072,7 +1072,7 @@ if(cfg.apps_setting.启动到托盘){
 		cfg.apps_setting.启动次数 = cfg.apps_setting.启动次数 + 1;
 	}
 	else {
-		mainForm.tray.pop("应用"+mainForm.appVersion+"已启动","ChiikawaBest");
+		//mainForm.tray.pop("应用"+mainForm.appVersion+"已启动","ChiikawaBest");
 	}
 }
 else {
