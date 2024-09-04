@@ -457,6 +457,7 @@ mainForm.trayCreate = function(){
 		process("explorer.exe","https://github.com/YrracOwl/ChiikawaBest")
 		process.exploreSelect(io._exepath);
 	})
+/*
 	if(mainForm.updateStatus){//检查更新
 		mainForm.popmenu.add("检测更新",function(){
 			mainForm.checkUpdate();
@@ -465,6 +466,7 @@ mainForm.trayCreate = function(){
 	else {
 		mainForm.popmenu.add("检测更新中...",function(){});
 	};
+*/
 
 	mainForm.popmenu.add();//分隔线
 	mainForm.popmenu.add('退出',function(id){

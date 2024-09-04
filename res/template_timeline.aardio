@@ -466,6 +466,7 @@ var content_js = /**
 		ListEles.innerHTML = tempTable.innerHTML;
 		window.watchImg();
 		window.updateTOC();
+		window.scrollTo(0, document.body.scrollHeight);
 	}
 
 	window.lengthList = function(){
