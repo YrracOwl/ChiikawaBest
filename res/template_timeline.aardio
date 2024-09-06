@@ -486,6 +486,12 @@ var content_js = /**
 		window.watchImg();
 		window.updateTOC();
 	}
+	
+	window.updatedScroll = function(datas){
+		var liEle = document.getElementById(datas);
+		liEle.scrollIntoView();
+	}
+	
 
 	window.removeContent = function(datas){
 		var liEle = document.getElementById(datas[0]);
@@ -556,6 +562,7 @@ var content_js = /**
 			imgEle.setAttribute("title","点我查看大图")
 			imgEle.setAttribute("class","mkd-img")
 			imgEle.setAttribute("src",datas[3]);
+			imgEle.setAttribute("imgid",datas[0]);
 			imgEle.setAttribute("width","100%");
 			imgEle.setAttribute("height","auto");
 			imgEle.setAttribute("style","max-height:450px; object-fit: scale-down;");
@@ -797,6 +804,7 @@ var content_js = /**
 		console.log(currentImgEle);
 		
 		if(currentImgEle.length != 0){
+			currentImgID = currentImgEle[0].getAttribute("imgid");
 			const menus3 = menuImg.getInstance();
 		  	menus3.style.top = `${e.clientY-20}px`;
   			menus3.style.left = `${e.clientX-6}px`;
@@ -1209,8 +1217,9 @@ var content_js = /**
         curLevel = hLevel
 
         if (heading.id === "") {
-          console.log('>>>if no heading id')
-          let tmpId = "toc-" + idFlag.toString() + "-" + titleText.replace(/\s+/g,"_").toLowerCase();
+          console.log('>>>if no heading id');
+          let tempTitle1 = titleText.replace(/\s+/g,"_").toLowerCase();
+          let tmpId = "toc-" + idFlag.toString() + "-" + tempTitle1.replace(/:+/g,"_");
           heading.id = tmpId;
         }
         preTocItem.id = heading.id;
