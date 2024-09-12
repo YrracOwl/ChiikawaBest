@@ -185,6 +185,10 @@ winform.onClose = function(hwnd,message,wParam,lParam){
 		winform.caller.图片预览.foreground = imgCaptured.getBytes("*.bmp");
 		winform.caller.show();
 	};
+	if(!winform.watchWinEn){
+		var savePath = ..scrSnapFilesDir + tostring(tonumber(time.now())) + "-" + string.random(8) + ".jpg";
+		imgCaptured.save(savePath);
+	}
 	imgCaptured.delete();
 }
 

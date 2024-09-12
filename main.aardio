@@ -228,6 +228,12 @@ import console;
 console.log(updateFilePath)
 */
 
+//设置：截图临时文件保存
+scrSnapFilesDir = io.appData(appName+"scrSnapTempDir/");
+if(not io.exist(scrSnapFilesDir)){
+	io.createDir(scrSnapFilesDir);
+}
+
 //设置：webview2用户数据位置
 wbUserDataDir = io.appData(appName+"userDataDir");
 wbHistoryDir = wbUserDataDir+"\EBWebView\Default\";
