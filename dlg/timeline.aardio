@@ -419,7 +419,7 @@ tl_webview.html = /**
     
     <?= content_js?>
 </head>
-<body>
+<body id="truebody">
 	<?= content_body?>
 </body>
 </html>
@@ -692,7 +692,7 @@ winform.添加plus.oncommand = function(id,event){
 				
 				//tl_webview.invoke("updateContent",{tostring(tl_time);tostring(tl_title);tostring(tl_content);imgUrl});
 				tl_webview.invoke("updateContent",{tostring(tl_time);tostring(tl_title);winform.gfmarkCheckList(tl_content);imgUrl});
-				tl_webview.invoke("updatedScroll",{tostring(tl_time)});
+				//tl_webview.invoke("updatedScroll",{tostring(tl_time)});
 				
 			}
 			//修改了时间，或者纯粹新增，均不会触发

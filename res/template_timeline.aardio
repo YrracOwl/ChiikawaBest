@@ -61,6 +61,10 @@ body {
 	list-style-type: decimal-leading-zero;
 }
 
+.hide-toc {
+	display: none;
+}
+
 /* Styling */
 .timeline {
   margin: 4em auto;
@@ -269,6 +273,44 @@ var content_js = /**
 			window.watchImg();
 		}
 	});
+	
+	const toggleTOC = document.createElement("button");
+	toggleTOC.setAttribute("id","toggleTOC");
+	toggleTOC.setAttribute("tocstatus","show");
+  	toggleTOC.style.position = 'fixed';
+  	toggleTOC.style.top = '28px';
+  	toggleTOC.style.right = '28px';
+  	toggleTOC.innerHTML  = "目录";
+  	toggleTOC.style.fontSize = '1em';
+  	toggleTOC.style.fontWeight = 'bolder';
+  	toggleTOC.style.color = '#31322c';
+  	toggleTOC.style.boxShadow = '6px 6px 3px 3px rgba(26,26,26,.33)';
+  	toggleTOC.style.borderRadius =  '6px';
+  	//toggleTOC.style.zIndex = '999';
+ 	
+  	// 绑定点击切换目录显示功能
+  	toggleTOC.addEventListener('click', function() {
+  		toggleShowTOC();
+  	});
+  	
+  	var addedToggleBtn = 0;
+  	
+  	function toggleShowTOC() {
+ 		var TOC = document.querySelector(".fixed-top");
+ 		
+ 		if (toggleTOC.getAttribute("tocstatus") == "hide") {
+    		TOC.classList.remove('hide-toc');
+    		toggleTOC.setAttribute("tocstatus","show");
+    		console.log("show TOC!")
+ 		}
+ 		else
+ 		{
+    		TOC.classList.add('hide-toc');
+    		toggleTOC.setAttribute("tocstatus","hide");
+    		console.log("hide TOC!")
+ 		}
+  	}
+  	
 	
 	function showFullImage(fullImageUrl) {
 		console.log('进入showFullImage函数了')
@@ -1260,6 +1302,7 @@ var content_js = /**
   }
   
 	window.updateTOC = () => {
+
 		const oldTOC = document.querySelector(".fixed-top");
 		if(oldTOC){
 			console.log("delete old TOC")
@@ -1276,8 +1319,14 @@ var content_js = /**
     	console.log(tocData)
 	
     	const tocHTMLContent = TOC.build(tocData)
-    	const frag = document.createRange().createContextualFragment(`<fieldset class="fixed-top"><legend>TOC</legend>${tocHTMLContent}</fieldset>`)
-    	document.querySelector(`body`).insertBefore(frag, document.querySelector(`body`).firstChild)
+    	const frag = document.createRange().createContextualFragment(`<fieldset class="fixed-top"><legend>目录</legend>${tocHTMLContent}</fieldset>`)
+    	document.querySelector(`body`).insertBefore(frag, document.querySelector(`body`).firstChild);
+    	if(addedToggleBtn == 0){
+  			var TempTLOverlay = document.getElementById("truebody");
+  			TempTLOverlay.appendChild(toggleTOC);
+  			addedToggleBtn = 1;
+  			toggleShowTOC();
+  		}
 	}
   
 </script>
