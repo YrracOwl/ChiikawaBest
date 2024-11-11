@@ -273,7 +273,7 @@ var content_js = /**
 			window.watchImg();
 		}
 	});
-	
+
 	const toggleTOC = document.createElement("button");
 	toggleTOC.setAttribute("id","toggleTOC");
 	toggleTOC.setAttribute("tocstatus","show");
@@ -534,7 +534,6 @@ var content_js = /**
 		liEle.scrollIntoView();
 	}
 	
-
 	window.removeContent = function(datas){
 		var liEle = document.getElementById(datas[0]);
 		var liEleParent = liEle.parentElement;

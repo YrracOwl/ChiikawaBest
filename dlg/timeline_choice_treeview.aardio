@@ -181,7 +181,11 @@ winform.树形展示.onnotify = function(id,code,ptr){
 			menu.add("新建分类",function(){
 				winform.newCat();
 			})
-			
+			menu.add();
+			menu.add("导入新文件至未分类",function(){
+				winform.importTimeline();
+			})
+			menu.add();
 			if( winform.树形展示.getItemPath(hItem) != "未分类" ){
 				menu.add("删除此分类",function(){
 					winform.deleteCat(winform.树形展示.getItemText(hItem))
@@ -189,14 +193,22 @@ winform.树形展示.onnotify = function(id,code,ptr){
 			}
         }
         elseif( winform.checkChild(hItem) == false ){
-            menu.add("打开文件",function(){
+            var currentTimeline = winform.树形展示.getItemText(hItem);
+            menu.add("打开文件: "+currentTimeline,function(){
             	winform.openTimeline(hItem);
             })
             
+            menu.add("导出此文件",function(){
+            	winform.exportTimeline(hItem);
+            })
 			menu.add("更改分类",function(){
 				winform.loadChangeCat(winform.treeviewParentItems,hItem)
 			});
-			
+            menu.add();
+            menu.add("导入新文件至未分类",function(){
+				winform.importTimeline();
+			})
+			menu.add();
 			menu.add("删除此时间线",function(){
             	winform.deleteTimeline(hItem);
             })
@@ -266,6 +278,9 @@ winform.deleteTimeline = function(hItem){
 }
 
 winform.openTimeline = function(hItem){
+	if(hItem == null){
+		return ; 
+	}
 	var rdyOpenTimeline = winform.树形展示.getItemText(hItem);
 	
 	frmMask.show(true);
@@ -282,6 +297,87 @@ winform.openTimeline = function(hItem){
 	
 	timelineChild.show(true);
 }
+
+winform.exportTimeline = function(hItem){
+	if(hItem == null){
+		return ; 
+	}
+	var rdyExportedTimeline = winform.树形展示.getItemText(hItem);
+	var newName = rdyExportedTimeline + "_exp";
+	var fileName = newName + ".tldb";
+
+	if(io.exist(fileName)){
+		io.remove(fileName)
+	}
+	
+	var dbTarget = ..sqlite(fileName);
+	dbTarget.exec( "CREATE TABLE ?? (time PRIMARY KEY, title, content, image);",{newName});
+
+	for rowid, time0, title0, content0, image0 in ..dbTimeline.each("SELECT rowid,* FROM ??",{rdyExportedTimeline}) {
+		var cmd = dbTarget.prepare("REPLACE INTO ?? VALUES ( @time,@title,@content,@image);",{newName});
+		cmd.step(
+			time = time0;
+			title = title0;
+			content = content0;
+			image = image0;
+		);
+	}
+	
+	dbTarget.close();
+	updateTreeview(winform);
+}
+
+winform.importTimeline = function(){
+	//未选中文件的处理
+	var filePath = ..fsys.dlg.open("时间线文件|*.tldb","选择要导入的时间线文件","\",,,"*.tldb");
+	if(filePath == null){
+		return ; 
+	}
+	
+	var fileStruct = ..io.splitpath(filePath);
+	var rdyImportTimeline = fileStruct["name"];
+	
+	//导入同名时的处理
+	if(..dbTimeline.existsTable(rdyImportTimeline)){
+		winform.msgboxErr("已存在同名时间线: "+rdyImportTimeline)
+		return ; 
+	}
+	
+	//在dbTimeline和dbBase中分别增加对应的表和未分类文件
+	if( not ..dbTimeline.existsTable(rdyImportTimeline) ){ 
+		..dbTimeline.exec( "CREATE TABLE ?? (time PRIMARY KEY, title, content, image);",{rdyImportTimeline}); 
+		..logWrite(">>>Timeline数据库新增表：",rdyImportTimeline)
+	}
+	
+	var dbTarget = ..sqlite(rdyImportTimeline+".tldb");
+	for rowid, time0, title0, content0, image0 in dbTarget.each("SELECT rowid,* FROM ??",{rdyImportTimeline}) {
+		var cmd = ..dbTimeline.prepare("REPLACE INTO ?? VALUES ( @time,@title,@content,@image);",{rdyImportTimeline});
+		cmd.step(
+			time = time0;
+			title = title0;
+			content = content0;
+			image = image0;
+		);
+	}
+	dbTarget.close();
+	
+	var cmd2 = ..dbBase.prepare("REPLACE INTO [timeline] VALUES ( @name,@time,@category);");
+	cmd2.step(
+		name = rdyImportTimeline;
+		time = time.now();
+		category = "未分类"
+	)
+	..logWrite(">>>Base数据库新增Timeline：",winform.txt时间线标题.text)
+	
+	var cmd3 = ..dbBase.prepare("REPLACE INTO [timelinecategory未分类] VALUES ( @name,@time);");
+	cmd3.step(
+		name = rdyImportTimeline;
+		time = time.now();
+	)
+	updateTreeview(winform);
+}
+
+
 
 winform.newCat = function(){
 	winform.userInput = null;

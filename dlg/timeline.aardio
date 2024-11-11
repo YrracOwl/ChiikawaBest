@@ -224,7 +224,7 @@ winform.添加提醒项.oncommand = function(id,event){
 }
 
 //import web.view;
-var tl_webview = ..web.view(winform.winTimelineShow,..wbUserDataDir,..launch_params);
+var tl_webview = ..web.view(winform.winTimelineShow,..wbUserDataDir,..d_launch_params);
 
 /***
 tl_webview.preloadScript(`

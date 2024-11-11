@@ -228,7 +228,12 @@ winform.截图.onMouseEnter = function(wParam,lParam){
     var x,y,cx,cy = winform.截图.getPos(true);
     
     //手动显示提示
-    balloonTipCtrl.setText("截图(Ctrl+D)").trackPopup(true,x+20,y+cy );
+    balloonTipCtrl.setText("截图(Ctrl+D)").trackPopup(true,x+20,y+cy);
+}
+
+winform.截图.onMouseDown = function(wParam,lParam){
+   balloonTipCtrl.show(false);
+   balloonTipCtrl.trackPopup(false);
 }
 
 winform.截图.onMouseLeave = function(wParam,lParam){ 

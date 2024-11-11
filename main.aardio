@@ -269,7 +269,7 @@ dbLANChatPath = dbDir+"/LANChat.db";
 dbLANChat = sqlite(dbLANChatPath);
 
 if( not dbTimeline.existsTable("default") ){ 
-	dbTimeline.exec( "CREATE TABLE [default] (time PRIMARY KEY, title, content, image);"); 
+	dbTimeline.exec( "CREATE TABLE [default] (time PRIMARY KEY, title, content, image);");
 }
 
 if( not dbBase.existsTable("timeline") ){ 
