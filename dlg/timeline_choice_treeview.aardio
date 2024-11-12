@@ -173,6 +173,9 @@ winform.树形展示.onnotify = function(id,code,ptr){
     }
     elseif(code = 0xFFFFFFFB/*_NM_RCLICK*/){ //鼠标右键单击
         var hItem,tvht = winform.树形展示.hitTest();
+        if(hItem == null){
+        	return ; 
+        }
         winform.树形展示.setSelected(hItem);
         
         var menu = win.ui.popmenu(winform);
