@@ -311,10 +311,10 @@ winform.exportTimeline = function(hItem){
 	}
 	
 	var dbTarget = ..sqlite(fileName);
-	dbTarget.exec( "CREATE TABLE ?? (time PRIMARY KEY, title, content, image);",{newName});
+	dbTarget.exec( "CREATE TABLE ?? (time PRIMARY KEY, title, content, image);",{"exported"});
 
 	for rowid, time0, title0, content0, image0 in ..dbTimeline.each("SELECT rowid,* FROM ??",{rdyExportedTimeline}) {
-		var cmd = dbTarget.prepare("REPLACE INTO ?? VALUES ( @time,@title,@content,@image);",{newName});
+		var cmd = dbTarget.prepare("REPLACE INTO ?? VALUES ( @time,@title,@content,@image);",{"exported"});
 		cmd.step(
 			time = time0;
 			title = title0;
@@ -350,7 +350,7 @@ winform.importTimeline = function(){
 	}
 	
 	var dbTarget = ..sqlite(rdyImportTimeline+".tldb");
-	for rowid, time0, title0, content0, image0 in dbTarget.each("SELECT rowid,* FROM ??",{rdyImportTimeline}) {
+	for rowid, time0, title0, content0, image0 in dbTarget.each("SELECT rowid,* FROM ??",{"exported"}) {
 		var cmd = ..dbTimeline.prepare("REPLACE INTO ?? VALUES ( @time,@title,@content,@image);",{rdyImportTimeline});
 		cmd.step(
 			time = time0;
