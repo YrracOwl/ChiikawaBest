@@ -452,9 +452,12 @@ mainForm.trayCreate = function(){
 		win.setForeground(webwatcher.hwnd);
 		webwatcher.show();
 	})
-	mainForm.popmenu.add("时间线 (Alt+X)",function(){
+	mainForm.popmenu.add("选择时间线 (Alt+X)",function(){
 		win.setForeground(timeline_choice.hwnd);
 		timeline_choice.show();
+	})
+	mainForm.popmenu.add("新建时间线 (Alt+D)",function(){
+		mainForm.OSTFcn_NewTL();
 	})
 	mainForm.popmenu.add("闹钟 (Alt+1)",function(){
 		win.setForeground(alarmForm.hwnd);
@@ -1046,6 +1049,10 @@ hkid4 = mainForm.reghotkey(function(id,mod,vk){
 	mainForm.loadWebWatcher();
 },1,0x43);//ALT+C
 
+hkid5 = mainForm.reghotkey(function(id,mod,vk){
+	mainForm.OSTFcn_NewTL();
+},1,'D'#);//ALT+C
+
 //加载第三方程序文件
 mainForm.varAddOns = {};
 mainForm.loadAddOns = function(dirPath){
@@ -1118,12 +1125,6 @@ if(cfg.apps_setting.启动时监控应用){
 	webwatcher = mainForm.loadForm("\dlg\webwatcher.aardio");
 }
 
-if(io.exist("\ckwLibs")){
-	mainForm.loadAddOns("\ckwLibs");
-}
-
-StartUpMan = sys.run("ChiikawaBest-StartUp");
-
 mainForm.OSTFcn = function(){
 	var filePath = io.appData(appName+"lastOpened.txt");
     var file = io.file(filePath,"r");//io.file用于打开一个文件(写模式，更多模式参考上面)
@@ -1138,6 +1139,19 @@ mainForm.OSTFcn = function(){
 
 	timelineChild.show(true);
 }
+
+mainForm.OSTFcn_NewTL = function(){
+	var file_path = ..fsys.dlg.saveOp("时间线文件|*.tldb","新建时间线",,,"新建时间线.tldb");
+	if(file_path){
+		if(io.exist(file_path)){
+			io.remove(file_path)
+		}
+		var dbTarget = ..sqlite(file_path);
+		dbTarget.exec( "CREATE TABLE ?? (time PRIMARY KEY, title, content, image);",{"exported"});
+		dbTarget.close();
+	}
+}
+
 
 mainForm.OST.oncommand = function(id,event){
 	mainForm.OSTFcn();
@@ -1154,5 +1168,12 @@ if(_ARGV[1]){
 		mainForm.OSTFcn();
 	}
 }
+
+
+if(io.exist("\ckwLibs")){
+	mainForm.loadAddOns("\ckwLibs");
+}
+
+StartUpMan = sys.run("ChiikawaBest-StartUp");
 
 return win.loopMessage();
