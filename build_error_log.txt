@@ -1,0 +1,12 @@
+﻿错误发生在文件---------------:
+F:\01Apps\aardio\project\ChiikawaBest\dlg\timeline_choice.aardio
+错误信息---------------:
+
+{Error}:
+{Line}:#8
+{File}:F:\01Apps\aardio\project\ChiikawaBest\dlg\timeline_choice.aardio
+{Error}:
+{Expected}:')'
+{Match for}:'('
+{Match line}:7 
+{Near}:';'

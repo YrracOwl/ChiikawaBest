@@ -1,0 +1,1287 @@
+import fonts.fontAwesome;
+
+import fsys.stream;
+import crypt.bin;
+
+import win.ui;
+/*DSG{{*/
+var winform = win.form(text="时间线";right=1279;bottom=749;border="none";clipch=1)
+winform.add(
+btnRead={cls="button";text="预览";left=8;top=5;right=84;bottom=29;dl=1;dt=1;flat=1;font=LOGFONT(h=-16);z=23};
+copyImgPlus={cls="plus";left=421;top=163;right=725;bottom=403;db=1;dl=1;font=LOGFONT(h=-13);foreRepeat="scale";notify=1;z=1};
+datetimepick={cls="datetimepick";left=64;top=64;right=312;bottom=88;border=1;dl=1;dt=1;font=LOGFONT(h=-13);z=3};
+listbox={cls="listbox";left=320;top=504;right=624;bottom=747;db=1;dl=1;dt=1;edge=1;font=LOGFONT(h=-13);items={};vscroll=1;z=14};
+more={cls="button";text="更多";left=1048;top=32;right=1096;bottom=56;dr=1;dt=1;flat=1;font=LOGFONT(h=-16);z=22};
+plus10={cls="plus";text="内容：";left=8;top=160;right=64;bottom=184;dl=1;dt=1;font=LOGFONT(h=-13);notify=1;z=10};
+plus7={cls="plus";text="标题：";left=8;top=128;right=64;bottom=152;dl=1;dt=1;font=LOGFONT(h=-13);notify=1;z=7};
+plus8={cls="plus";text="时间：";left=8;top=96;right=64;bottom=120;dl=1;dt=1;font=LOGFONT(h=-13);notify=1;z=8};
+plus9={cls="plus";text="日期：";left=8;top=64;right=64;bottom=88;dl=1;dt=1;font=LOGFONT(h=-13);notify=1;z=9};
+winTimelineShow={cls="custom";text="winTimelineShow";left=320;top=64;right=1280;bottom=740;db=1;dl=1;dr=1;dt=1;z=24};
+个性化={cls="plus";text="个性化";left=1104;top=32;right=1191;bottom=58;align="left";bgcolor=0x9E8866;border={radius=10};dr=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF2C0';notify=1;textPadding={left=26};z=21};
+内容plus={cls="plus";left=8;top=184;right=312;bottom=472;align="left";border={color=0xFF969696;width=1};clipBk=false;db=1;dl=1;dt=1;editable=1;font=LOGFONT(h=-13);forecolor=0xFFFFFF;multiline=1;notify=1;tabstop=1;textPadding={top=6;bottom=2};vscroll=1;wrap=1;z=2};
+删除plus={cls="plus";text="删除";left=8;top=32;right=84;bottom=58;align="left";bgcolor=0xFF3626E3;border={radius=13};dl=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-16;name='FontAwesome');padding={left=10}};iconText='\uF014';notify=1;textPadding={left=28};z=15};
+勾选plus={cls="plus";text="当前时间";left=216;top=96;right=312;bottom=120;align="left";dl=1;dt=1;font=LOGFONT(h=-13);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome')};iconText='\uF111 ';notify=1;textPadding={left=24};z=6};
+升级数据库={cls="button";text="升级数据库";left=320;top=8;right=472;bottom=64;align="left";color=0xD77800;dl=1;dt=1;flat=1;font=LOGFONT(h=-14);note="以能够添加图像";valign="top";z=17};
+取消plus={cls="plus";text="取消";left=232;top=32;right=308;bottom=58;align="left";bgcolor=0x9E8866;border={radius=13};dl=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-16;name='FontAwesome');padding={left=10}};iconText='\uF00D';notify=1;textPadding={left=28};z=16};
+图片预览={cls="plus";left=8;top=504;right=312;bottom=744;db=1;dl=1;font=LOGFONT(h=-13);foreRepeat="scale";notify=1;z=19};
+当前主题={cls="plus";left=472;top=32;right=1040;bottom=56;autohscroll=false;autovscroll=false;aw=1;dl=1;dt=1;font=LOGFONT(h=-16;underline=1;weight=700);z=11};
+截图={cls="plus";text="截图";left=8;top=474;right=80;bottom=500;align="left";bgcolor=0xFFB0B28F;border={radius=10};db=1;dl=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF03E';notify=1;textPadding={left=30};z=18};
+时间plus={cls="plus";left=64;top=96;right=168;bottom=120;autohscroll=false;autovscroll=false;border={color=0xFF969696;width=1};dl=1;dt=1;editable="edit";font=LOGFONT(h=-16);notify=1;textPadding={bottom=1};z=5};
+标题plus={cls="plus";left=64;top=128;right=312;bottom=152;border={bottom=1;color=0xFF969696};dl=1;dt=1;editable=1;font=LOGFONT(h=-13);forecolor=0xFFFFFF;notify=1;tabstop=1;textPadding={top=2;bottom=2};z=4};
+添加plus={cls="plus";text="添加(Ctrl+G)";left=184;top=474;right=312;bottom=500;align="left";bgcolor=0xFFB0B28F;border={radius=10};db=1;dl=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF0C7';notify=1;textPadding={left=30};z=12};
+添加提醒项={cls="plus";text="闹钟";left=1197;top=32;right=1271;bottom=58;align="left";bgcolor=0xFFB0B28F;border={radius=10};dr=1;dt=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF0A2';notify=1;textPadding={left=30};z=13};
+载入={cls="plus";text="载入";left=90;top=474;right=162;bottom=500;align="left";bgcolor=0xFFB0B28F;border={radius=10};db=1;dl=1;font=LOGFONT(h=-16);iconStyle={align="left";font=LOGFONT(h=-15;name='FontAwesome');padding={left=10;top=2}};iconText='\uF07C';notify=1;textPadding={left=30};z=20}
+)
+/*}}*/
+
+winform.copyImgPlus.hide = true;
+
+winform.个性化.skin({
+	background={
+		default=0xFF8FB2B0;
+		disabled=0xFFCCCCCC;
+		hover=0xFF928BB3
+	};
+	color={
+		default=0xFF000000;
+		disabled=0xFF6D6D6D
+	}
+})
+
+winform.载入.skin({
+	background={
+		default=0x668FB2B0;
+		disabled=0xFFCCCCCC;
+		hover=0xFF928BB3
+	};
+	color={
+		default=0xFF000000;
+		disabled=0xFF6D6D6D
+	}
+})
+
+winform.截图.skin({
+	background={
+		default=0x668FB2B0;
+		disabled=0xFFCCCCCC;
+		hover=0xFF928BB3
+	};
+	color={
+		default=0xFF000000;
+		disabled=0xFF6D6D6D
+	}
+})
+
+winform.升级数据库.show(false);
+winform.截图.show(false);
+winform.载入.show(false);
+winform.listbox.show(false);
+
+import win.ui.tooltip;
+
+//下面创建一个手动跟踪模式的提示控件
+var balloonTipCtrl = win.ui.tooltip.tracking(winform,false);
+
+//初始化
+var currentTimeLine = "default"; 
+winform.标题plus.text = "";
+winform.内容plus.text = "";
+
+winform.标题plus.setCueBannerText("请输入标题，默认当前时间");
+winform.内容plus.setCueBannerText("请输入内容，默认为还没想好");
+
+winform.时间plus.focusOnClick = false;
+
+winform.lastTime = "";
+winform.currentTitle = "";
+
+winform.添加提醒项.skin({
+	background={
+		active=0xFFD3E0BC;
+		default=0x668FB2B0;
+		disabled=0xFFCCCCCC;
+		focus=0xFFE3E3E3;
+		hover=0xFF928BB3
+	};
+	color={
+		default=0xFF000000;
+		disabled=0xFF6D6D6D
+	}
+})
+winform.添加plus.skin({
+	background={
+		active=0xFFD3E0BC;
+		default=0x668FB2B0;
+		disabled=0xFFCCCCCC;
+		focus=0xFFE3E3E3;
+		hover=0xFF928BB3
+	};
+	color={
+		default=0xFF000000;
+		disabled=0xFF6D6D6D
+	}
+})
+winform.勾选plus.skin({
+	color={
+		active=0xFF00FF00;
+		default=0xFF000000;
+		disabled=0xFF6D6D6D;
+		hover=0xFFFF0000
+	};
+	checked={
+		iconText='\uF058'
+	}
+})
+winform.标题plus.skin(
+	background = { 
+		hover = "/res/images/btn-hover.png";
+		focus = "/res/images/btn-focus.jpg";
+		active = "/res/images/btn-active.png";
+		disabled = "/res/images/btn-disabled.png"; 
+	}
+)
+
+winform.内容plus.skin(
+	background = { 
+		hover = "/res/images/btn-hover.png";
+		focus = "/res/images/btn-focus.jpg";
+		active = "/res/images/btn-active.png";
+		disabled = "/res/images/btn-disabled.png"; 
+	}
+)
+
+winform.删除plus.skin(
+	background = { 
+		hover = "/res/images/btn-hover.png";
+		focus = "/res/images/btn-focus.jpg";
+		active = "/res/images/btn-active.png";
+		disabled = "/res/images/btn-disabled.png"; 
+	}
+)
+
+winform.取消plus.skin(
+	background = { 
+		hover = "/res/images/btn-hover.png";
+		focus = "/res/images/btn-focus.jpg";
+		active = "/res/images/btn-active.png";
+		disabled = "/res/images/btn-disabled.png"; 
+	}
+)
+
+winform.listbox.onMeasureItem = function(measureItem,dpiScaleX,dpiScaleY){
+    //注意listbox的实际高度受行高的影响,只有自绘时才能设置行高
+	measureItem.itemHeight = 32 * dpiScaleY;  
+}
+
+import gdip;
+winform.listbox.onDrawItem = function(drawItem,dpiScaleX,dpiScaleY){
+    var rc = drawItem.rcItem;
+    
+    //创建画板
+	var graphics = gdip.graphics(drawItem.hDC);
+	
+	//创建背景刷子
+	var brush = gdip.solidBrush(0xFFFFFFFF);
+	graphics.fillRectangle(brush,rc.left,rc.top,rc.width(),rc.height())
+	brush.delete(); 
+	
+	//画选区渐变背景
+	if( drawItem.itemState & 0x1/*_ODS_SELECTED*/){
+		var p1 = ::POINTF(rc.left,rc.top)
+		var p2 = ::POINTF(rc.left,rc.bottom)  
+		//var lineBrush = gdip.lineBrush(p1/*渐变起始坐标*/, p2 /*渐变终止坐标*/ , 0x2FFFFFFF/*起始颜色*/, 0xFFebe1a9/*结束颜色*/, 2/*_GdipWrapModeTileFlipY*/ )
+		var lineBrush = gdip.lineBrush(p1/*渐变起始坐标*/, p2 /*渐变终止坐标*/ , 0xFFebe1a9/*起始颜色*/, 0xFFebe1a9/*结束颜色*/, 2/*_GdipWrapModeTileFlipY*/ )
+		graphics.fillRectangle(lineBrush,rc.left,rc.top,rc.width(),rc.height());
+		lineBrush.delete()
+	}
+	
+	//第二个项目开始顶部画线	
+	if( drawItem.itemID > 0 ){
+		var pen = gdip.pen(0xFFDCDCCC,1);
+		graphics.drawLine(pen, rc.left,rc.top,rc.right,rc.top);
+		pen.delete()
+	}
+	
+	//获取字体
+	var font = gdip.font(drawItem.hDC);
+	var strformat = gdip.stringformat (); 
+  
+	var str = winform.listbox.getItemText(drawItem.itemID + 1);
+	//var brush = gdip.solidBrush(0xFF222222);
+	var brush = gdip.solidBrush(0xFF000000);
+	graphics.drawString( str , font , rc.inflate(-12,-4).float(), strformat,brush);
+ 
+ 	//释放对象
+ 	font.delete();
+ 	strformat.delete();
+ 	brush.delete();
+    graphics.delete();
+}
+
+//界面设置
+winform.添加提醒项.oncommand = function(id,event){
+	..alarmForm.show(true);
+}
+
+//import web.view;
+var tl_webview = ..web.view(winform.winTimelineShow,..wbUserDataDir,..d_launch_params);
+
+/***
+tl_webview.preloadScript(`
+//禁止超链接默认开新窗口
+window.addEventListener('load',function(){ 
+	let base = document.querySelector('base'); 
+	if (base) base.removeAttribute('target');	
+})
+
+//禁止超链接开新窗口
+document.addEventListener('mousedown', function (event) {
+  var target = event.target;
+  for(var i=1;target && i<=5;i++){
+  	if ( target.tagName == 'A')  {
+  		target.removeAttribute('target');
+  		return;
+  	}
+  	
+  	target = target.parentNode; 
+  } 
+}, true);
+//禁止弹窗函数
+//window.open =  function(url){ window.location.href = url; }
+`);
+***/
+
+tl_webview.preloadScript(`
+//超链接默认打开新窗口
+window.addEventListener('load',function(){ 
+	let base = document.querySelector('base'); 
+	if (base) base.setAttribute('target',"_blank");	
+})
+
+//超链接默认开新窗口
+document.addEventListener('mousedown', function (event) {
+  var target = event.target;
+  for(var i=1;target && i<=5;i++){
+  	if(target.href == null){
+  		break;
+  	}
+  	let hrefStr = target.href;
+  	console.log(hrefStr);
+  	if(hrefStr.indexOf('http://') == 0 || hrefStr.indexOf('https://') == 0){
+  		if ( target.tagName == 'A')  {
+  			target.setAttribute('target',"_blank");
+  			return;
+  		}
+  		target = target.parentNode;
+  	}
+  } 
+}, true);
+//禁止弹窗函数
+//window.open =  function(url){ window.location.href = url; }
+`);
+
+var template_func = loadcode("\res\template_timeline.aardio");
+
+content_css,content_body,content_js = template_func();
+
+//winform.datetimepick.setFormat("''HH':'mm':'ss, dddd, MMMdd日', 'yyyy")
+winform.datetimepick.setFormat("yyyy年MM月dd日dddd")
+
+import win.taskScheduler;
+var timeUpdate = win.taskScheduler(winform); 
+
+var task  = timeUpdate.create("每秒执行",function(){
+	winform.datetimepick.time = time();
+	winform.时间plus.text = tostring(time(__,'%H:%M:%S'));
+	
+} )
+
+//每秒更新时间plus中的内容
+task.interval = {
+   second = 1;
+}
+
+import win.ui.mask;
+var frmMask = win.ui.mask(winform.winTimelineShow,true)
+winform.modalMask = win.ui.mask(winform);
+
+tl_webview.external = {
+	modifyList = function(timeSel){
+		
+		if(winform.listbox.count<1){
+			return ; 
+		}
+		else {
+			if(winform.btnReadStatus){
+				winform.btnRead.oncommand();
+			}
+			frmMask.show(true);
+			winform.勾选plus.checked = false;
+    		winform.删除plus.disabled = false;
+    		winform.取消plus.disabled = false;
+    		winform.tiktokChecker(winform);
+    		winform.勾选plus.disabled = true;
+    		var result = winform.dbTarget.stepQuery("SELECT * FROM ??",{time = timeSel, "exported"} );
+    		winform.datetimepick.time = time(result.time);
+    		winform.lastTime = result.time;
+    		winform.时间plus.text = string.split(result.time,'-')[2];
+    		winform.标题plus.text = result.title;
+    		winform.内容plus.text = result.content;
+    		if(result.image != "null" && result.image != null){
+    			var strRecover = crypt.bin.decodeBase64(result.image,#result.image);
+    			winform.图片预览.setForeground(strRecover);
+    		}
+    		//手动显示提示
+    		var x,y,cx,cy = winform.添加plus.getPos(true);
+    		balloonTipCtrl.setText("点击<添加>保存，否则不修改").trackPopup(true,x+cx*3/4,y+cy );
+    		win.delay(333)
+    		frmMask.show(false);
+    		win.delay(667)
+    		balloonTipCtrl.trackPopup(false);
+		}
+	};
+
+	flush = function(){
+		winform.lastTime = "";
+		winform.标题plus.text = "";
+		winform.内容plus.text = "";
+		winform.时间plus.text = tostring(time(__,'%H:%M:%S'));
+		balloonTipCtrl.trackPopup(false);
+		winform.勾选plus.checked = true;
+		winform.删除plus.disabled = true;
+		winform.取消plus.disabled = true;
+		winform.勾选plus.disabled = false;
+		if(winform.勾选plus.checked){
+			winform.datetimepick.disabled = true;
+			winform.时间plus.editable = false;
+			winform.时间plus.background = null;
+			timeUpdate.start();
+		}
+		else {
+			winform.datetimepick.disabled = false;
+			winform.时间plus.editable = true;
+			winform.时间plus.background = 0xFFFFFFFF;
+			timeUpdate.stop();
+		};
+	};
+	
+	copyImg = function(timeSel){
+		var result = winform.dbTarget.stepQuery("SELECT * FROM ??",{time = timeSel, "exported"} );
+    	if(result.image != "null" && result.image != null){
+    		var strRecover = crypt.bin.decodeBase64(result.image,#result.image);
+    		winform.copyImgPlus.setForeground(strRecover);
+    		var tempBmp = winform.copyImgPlus.getForeground();
+    		..win.clip.writeBitmap(tempBmp.copyHandle());
+    		tempBmp.dispose();
+    		winform.copyImgPlus.setForeground(null);
+    	}
+	};
+	
+};
+
+/***
+	<?= string.load("\res\chiikawabest-indigo.css") ?>
+	
+	<?= string.load("\res\chiikawabest-ayu.css") ?>
+	
+	<?= string.load("\res\chiikawabest-d-boring.css") ?>
+	
+	<?= string.load("\res\chiikawabest-contrast.css") ?>
+	
+	<?= string.load("\res\chiikawabest-duotone-heat.css") ?>
+	<?= string.load("\res\chiikawabest-duotone-light.css") ?>
+	
+	<?= string.load("\res\chiikawabest-gandalf.css") ?>
+	
+	<?= string.load("\res\chiikawabest-lark.css") ?>
+	<?= string.load("\res\chiikawabest-lark-bold-color.css") ?>
+	
+	<?= string.load("\res\chiikawabest-red-graphite.css") ?>
+	
+	<?= string.load("\res\chiikawabest-olive-dunk.css") ?>
+	
+	<?= string.load("\res\chiikawabest-solarized-light.css") ?>
+	
+***/
+
+
+tl_webview.html = /**
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>待定</title>
+    
+    <style type="text/css">
+    <?= content_css?>
+    <?= string.load("\res\chiikawabest-indigo.css") ?>
+    </style>
+    
+    <?= content_js?>
+</head>
+<body id="truebody">
+	<?= content_body?>
+</body>
+</html>
+**/;
+
+
+winform.勾选plus.oncommand = function(id,event){
+	winform.tiktokChecker(winform);
+}
+
+/*
+子窗口函数
+*/
+winform.isHave = true;
+winform.chkDbField = function(tlTitle){
+	winform.isHave = ..mainForm.haveDBImgField(tlTitle);
+	if(winform.isHave){
+		winform.截图.show(true);
+		winform.载入.show(true);
+	}
+	else {
+		winform.升级数据库.show(true);
+	}
+}
+
+
+winform.childWinUpdate = function(tlPath){
+	winform.dbTarget = ..sqlite(tlPath);
+	var tmpTLPath = ..io.splitpath(tlPath);
+	currentTimeLine = tmpTLPath.name;
+	
+	winform.当前主题.text = currentTimeLine;
+	winform.currentTitle = currentTimeLine;
+	winform.text = "时间线 - " + winform.当前主题.text;
+	tl_webview.invoke("setTitle",winform.当前主题.text);
+	if(_WIN10_LATER){
+		tl_webview.invoke("animationActivate");
+	}
+	
+	winform.isHave = true;
+	winform.截图.show(true);
+	winform.载入.show(true);
+}
+
+winform.listboxUpdate = function(winform){
+	var list_items = {}; 
+	..logMsg(">>>更新时间线的listbox");
+	..logMsg("当前时间线：",winform.currentTitle);
+	for rowid, time, title, content in winform.dbTarget.each("SELECT rowid,* FROM ??",{"exported"}) {
+		table.push(list_items,time);
+		..logMsg(time,rowid,title)
+	}
+	table.sort(list_items);
+	winform.listbox.clear();
+	for(k,v in list_items){
+		winform.listbox.add(v)
+	}
+	..logMsg("listbox更新完毕")
+}
+
+winform.gfmarkCheckList = function(strPrepared){
+	var strGfmark = ..string.gfmark.render(strPrepared);
+	var pattern = //<\<li\>\[ \]>
+	var replaceText = `<li><input type="checkbox" disabled />`;
+	var replacecount = "99";
+	strGfmarkReplaceResultMid = string.replace( strGfmark,pattern,replaceText,replacecount);
+
+	var pattern = //<\<li\>\[x\]>
+	var replaceText = `<li style="text-decoration-line: line-through; text-decoration-color: #FF502F; text-decoration-style: solid; text-decoration-thickness: 0.2rem;"><input type="checkbox" checked disabled />`;
+	strGfmarkReplaceResult = string.replace( strGfmarkReplaceResultMid,pattern,replaceText,replacecount);	
+
+	return strGfmarkReplaceResult;
+}
+
+
+winform.timelineWebUpdate = function(winform){
+	tl_webview.invoke("clearListTemp");
+	if(winform.listbox.count<1){
+		tl_webview.invoke("pushTable",{"当前无内容";"无内容";"请在左侧添加";"null"});
+	}
+	else {
+		for(i=1;winform.listbox.count;1){
+			var result = winform.dbTarget.stepQuery("SELECT * FROM ??",{time = winform.listbox.items[i], "exported"} )
+			var imgUrl = null;
+			if(result.image != null){
+				//imgUrl = string.format('data:image/jpg;base64,%s',crypt.encodeBin( result.image,,0x40000001/*_CRYPT_STRING_BASE64*/) );
+				var strRecover = crypt.bin.decodeBase64(result.image,#result.image);
+				imgUrl = crypt.bin.base64DataUrl(strRecover,'image/jpg');
+			}
+			if(imgUrl == null){
+				imgUrl = "null";
+			}
+			//tl_webview.invoke("pushTable",{tostring(result.time);tostring(result.title);tostring(result.content);imgUrl});
+			tl_webview.invoke("pushTable",{tostring(result.time);tostring(result.title);winform.gfmarkCheckList(result.content);imgUrl});
+		}
+	}
+	tl_webview.invoke("replaceList");
+}
+
+
+winform.tiktokChecker = function(winform){
+	winform.勾选plus.disabled = false;
+	if(winform.勾选plus.checked){
+		winform.datetimepick.disabled = true;
+		winform.时间plus.editable = false;
+		winform.时间plus.background = null;
+		timeUpdate.start();
+	}
+	else {
+		winform.datetimepick.disabled = false;
+		winform.时间plus.editable = true;
+		winform.时间plus.background = 0xFFFFFFFF;
+		timeUpdate.stop();
+	}
+}
+
+winform.addUIReset = function(winform){
+	winform.lastTime = "";
+	winform.标题plus.text = "";
+	winform.内容plus.text = "";
+	winform.图片预览.setForeground(null);
+	winform.时间plus.text = tostring(time(__,'%H:%M:%S'));
+	balloonTipCtrl.trackPopup(false);
+	winform.勾选plus.checked = true;
+	winform.删除plus.disabled = true;
+	winform.取消plus.disabled = true;
+	winform.tiktokChecker(winform);
+}
+
+
+
+//addUI复位
+winform.勾选plus.checked = true;
+winform.删除plus.disabled = true;
+winform.取消plus.disabled = true;
+winform.tiktokChecker(winform);
+
+timeUpdate.start();
+winform.时间plus.text = tostring(time(__,'%H:%M:%S'));
+
+import win.ui.simpleWindow;
+win.ui.simpleWindow(winform,,,,).skin(
+	background = { 
+		hover = 0xff99ffcc;
+		active = 0xffff6666; 
+		default = 0x00000000; 
+	}
+	color = { 
+		hover = 0xff666666;
+		active = 0xffffffff; 
+		default = 0xFF7BA5BF;
+	}
+)
+
+
+winform.添加plus.oncommand = function(id,event){
+	winform.添加plus.disabled = true;
+	
+	var timeFormat = string.split(winform.时间plus.text,':');
+	var hour1,hour2 = tonumber(timeFormat[1]);
+	var minute1,minute2 = tonumber(timeFormat[2]);
+	var second1,second2 = tonumber(timeFormat[3]);
+	
+	var userInpuList = string.split(winform.内容plus.text, '');
+	var userInputSaveStr = '';
+	for(index=1;table.len(userInpuList);1){
+		if(userInpuList[index] == ' '){
+			continue;
+		};
+		userInputSaveStr = string.concat(userInputSaveStr,userInpuList[index]);
+		if(string.len(userInputSaveStr) > 0){
+			break;
+		}
+	}
+	
+	var userInpuListB = string.split(winform.标题plus.text, '');
+	var userInputSaveStrB = '';
+	for(index=1;table.len(userInpuListB);1){
+		if(userInpuListB[index] == ' '){
+			continue;
+		};
+		userInputSaveStrB = string.concat(userInputSaveStrB,userInpuListB[index]);
+		if(string.len(userInputSaveStrB) > 0){
+			break;
+		}
+	}
+	
+	if(hour2 < 3 and minute2 < 3 and second2 < 3){
+		if(hour1 < 24 and minute1 < 60 and second1 < 60){
+			var tl_time = winform.datetimepick.text + '-' + winform.时间plus.text; 
+			var tl_title = winform.时间plus.text; 
+			var tl_content = "还没想好";
+			var tl_img = null;
+			if(winform.图片预览.getForeground()){
+				var tempBmp = winform.图片预览.getForeground();
+				var stream = fsys.stream(); 
+				tempBmp.saveToStream(stream,"*.jpg",100);
+  				tl_img = crypt.bin.encodeBase64(stream.readAll(),#stream.readAll());
+				stream.close();
+			}
+			if(string.len(userInputSaveStrB) > 0){
+				tl_title = winform.标题plus.text;
+			}
+			if(string.len(userInputSaveStr) > 0){
+				tl_content = winform.内容plus.text;
+			}
+			
+			//如果在新增或修改的时候出现了时间相同的，确认是否想要退出
+			var resultCheck = winform.dbTarget.stepQuery("SELECT * FROM ??",{time = tl_time, "exported"} );
+			if(resultCheck){
+				if(winform.lastTime == ""){
+					var confirmed = win.msgboxTest("确认是否覆盖"+ '\n    ' + tl_time + '\n        ' + resultCheck.title,"确认覆盖");
+					if(!confirmed){
+						win.delay(1000);
+						winform.添加plus.disabled = false;
+						return;
+					}
+				}
+				elseif(winform.lastTime != tl_time){
+					var resultLastTime = winform.dbTarget.stepQuery("SELECT * FROM ??",{time = winform.lastTime, "exported"} );
+					var confirmed = win.msgboxTest("确认是否删除"+ '\n    '+ winform.lastTime + '\n        ' + resultLastTime.title + '\n并覆盖' + '\n    ' + tl_time + '\n        ' + resultCheck.title,"确认删除并覆盖");
+					if(!confirmed){
+						win.delay(1000);
+						winform.添加plus.disabled = false;
+						return;
+					}
+				}
+			}
+			
+			//覆盖或者更新time代表的内容
+			if(winform.isHave){
+				var cmd = winform.dbTarget.prepare("REPLACE INTO ?? VALUES ( @time,@title,@content,@image);",{"exported"});
+				cmd.step(
+					time = tl_time;
+					title = tl_title;
+					content = tl_content;
+					image = tl_img;
+				)
+				..logMsg(">>>写入成功：",winform.当前主题.text,tl_time);
+			}
+			else {
+				var cmd = winform.dbTarget.prepare("REPLACE INTO ?? VALUES ( @time,@title,@content);",{"exported"});
+				cmd.step(
+					time = tl_time;
+					title = tl_title;
+					content = tl_content;
+				)
+				..logMsg(">>>写入成功：",winform.当前主题.text,tl_time);
+			}
+			
+	
+			
+			//修改了时间，需要删除
+			if(winform.lastTime != "" && winform.lastTime != tl_time){
+				winform.dbTarget.exec("DELETE FROM ?? WHERE time=?;",{ "exported", winform.lastTime} )
+				..logWarn(">>>已删除项",winform.当前主题.text,"中的：",winform.lastTime)
+				winform.lastTime = "";
+				win.delay(100);
+			}
+			
+			//winform.lastTime且相等存在代表 没修改时间，仅进行了编辑操作，所以针对web存在的内容进行更新
+			if(winform.lastTime == tl_time){
+				var imgUrl = null;
+				if(tl_img != null){
+					var strRecover = crypt.bin.decodeBase64(tl_img,#tl_img);
+					imgUrl = crypt.bin.base64DataUrl(strRecover,'image/jpg');
+				}
+				
+				if(imgUrl == null){
+					imgUrl = "null";
+				}
+				
+				//tl_webview.invoke("updateContent",{tostring(tl_time);tostring(tl_title);tostring(tl_content);imgUrl});
+				tl_webview.invoke("updateContent",{tostring(tl_time);tostring(tl_title);winform.gfmarkCheckList(tl_content);imgUrl});
+				//tl_webview.invoke("updatedScroll",{tostring(tl_time)});
+				
+			}
+			//修改了时间，或者纯粹新增，均不会触发
+			else {
+				winform.listboxUpdate(winform);
+				winform.timelineWebUpdate(winform);
+			}
+			winform.addUIReset(winform);
+		}
+		else {
+			var x,y,cx,cy = winform.时间plus.getPos(true);
+    		balloonTipCtrl.setText("时间格式不合法，请输入24小时制时间").trackPopup(true,x+cx*3/4,y+cy );
+		}
+	}
+	else {
+		var x,y,cx,cy = winform.时间plus.getPos(true);
+    	balloonTipCtrl.setText("时间格式不合法，请输入24小时制时间").trackPopup(true,x+cx*3/4,y+cy );
+	}
+
+	win.delay(1000);
+	winform.添加plus.disabled = false;
+	balloonTipCtrl.trackPopup(false);
+}
+
+winform.listbox.oncommand = function(id,event){
+    if( event ==  0x2/*_LBN_DBLCLK*/ ){
+        frmMask.show(true);
+    	winform.勾选plus.checked = false;
+    	winform.删除plus.disabled = false;
+    	winform.取消plus.disabled = false;
+    	winform.tiktokChecker(winform);
+    	winform.勾选plus.disabled = true;
+/*
+    	winform.datetimepick.disabled = true;
+    	winform.时间plus.editable = false;
+		winform.时间plus.background = null;
+*/
+
+    	var result = winform.dbTarget.stepQuery("SELECT * FROM ??",{time = winform.listbox.selText, "exported"} );
+    	winform.datetimepick.time = time(result.time);
+    	winform.lastTime = result.time;
+    	winform.时间plus.text = string.split(result.time,'-')[2];
+    	winform.标题plus.text = result.title;
+    	winform.内容plus.text = result.content;
+    	//手动显示提示
+    	var x,y,cx,cy = winform.添加plus.getPos(true);
+    	balloonTipCtrl.setText("点击<添加>保存，否则不修改").trackPopup(true,x+cx*3/4,y+cy );
+    	win.delay(333);
+    	frmMask.show(false);
+    	win.delay(667);
+    	balloonTipCtrl.trackPopup(false);
+	}
+}
+
+winform.wndproc = function(hwnd,message,wParam,lParam){
+	select( message ) { 
+		case 3/*_WM_MOVE*/{
+			if(winform.勾选plus.disabled){
+			    var x,y,cx,cy = winform.添加plus.getPos(true);
+    			balloonTipCtrl.setText("点击<添加>保存，否则不修改").trackPopup(true,x+cx*3/4,y+cy );
+			}
+		}
+		else{
+			
+		}
+	}
+	//无返回值则继续调用默认回调函数
+}
+
+winform.删除plus.oncommand = function(id,event){
+	var tl_time = winform.datetimepick.text + '-' + winform.时间plus.text;
+	var confirmed = winform.msgboxTest("确认删除"""+tl_time+"""吗？","确认删除");
+	if(confirmed){
+		var hasErr = winform.dbTarget.exec("DELETE FROM ?? WHERE time=?;",{ "exported",tl_time} )
+		if(hasErr){
+			..logErr(">>>无法删除",winform.当前主题.text,"中的：",tl_time);
+			return false; 
+		}
+		else {
+			..logWarn(">>>已删除项",winform.当前主题.text,"中的：",tl_time)
+			winform.addUIReset(winform);
+			..logMsg('Rdy to del web content...')
+			tl_webview.invoke("removeContent",{tostring(tl_time)})
+			//frmMask.show(true);
+			win.delay(20)
+			..logMsg('Rdy to update...')
+			winform.listboxUpdate(winform);
+			winform.timelineWebUpdate(winform);
+			//frmMask.show(false);
+		}
+	}
+	else {
+		..logWarn(">>>取消删除")
+	}
+}
+
+winform.取消plus.oncommand = function(id,event){
+	winform.addUIReset(winform);
+}
+
+winform.当前主题.skin(
+	background = { 
+		hover = "/res/images/btn-hover.png";
+		focus = "/res/images/btn-focus.jpg";
+		active = "/res/images/btn-active.png";
+		disabled = "/res/images/btn-disabled.png"; 
+	}
+)
+
+winform.升级数据库.oncommand = function(id,event){
+	..mainForm.createDBImgField(winform.当前主题.text)
+	winform.close();
+}
+
+winform.截图.oncommand = function(id,event){
+	var frmChild = win.loadForm("\dlg\watchWin.aardio",,win.getDesktop());
+	frmChild.caller = winform;
+	
+	frmChild.show();
+	frmChild.rdyMove();
+	winform.show(false);
+}
+
+winform.载入.oncommand = function(id,event){
+	var imgPath = ..fsys.dlg.open("图像文件|*.bmp;*.png;*.jpg","加载图像"); 
+	if(imgPath){
+		winform.图片预览.foreground = imgPath;
+	}
+}
+
+winform.图片预览.skin(
+	background = { 
+		hover = "/res/images/btn-hover.png";
+		focus = "/res/images/btn-focus.jpg";
+		active = "/res/images/btn-active.png";
+		disabled = "/res/images/btn-disabled.png"; 
+	}
+)
+
+winform.contextMenuCreate = function(){
+	import win.ui.menu;
+	winform.popmenu = win.ui.popmenu(winform);//创建弹出菜单
+	winform.popmenu.add("清空图像",function(){
+		var old = winform.图片预览.setForeground(null);
+		if(old){
+			old.dispose();
+		}
+	});
+	winform.popmenu.popup();
+	winform.popmenu.close();
+}
+
+
+winform.图片预览.wndproc = function(hwnd,message,wParam,lParam){
+	select(message) {
+		case 0x205/*_WM_RBUTTONUP*/ {
+			if(winform.图片预览.getForeground()){
+				winform.contextMenuCreate();
+			}
+		}
+		else {
+		}
+	}
+	//无返回值则继续调用默认回调函数
+}
+
+winform.timelineThemeSet = function(){
+	tl_webview.invoke("themeSet",{tostring(..timeline_skin.bg);tostring(..timeline_skin.txt);tostring(..timeline_skin.hl);tostring(..timeline_skin.normal)});
+}
+
+
+winform.个性化.oncommand = function(id,event){
+	var timelineSkinWin = winform.loadForm("\dlg\timeline_skin.aardio");
+	timelineSkinWin.show();
+}
+
+winform.more.oncommand = function(id,event){
+	var frmChild = winform.loadForm("\dlg\publish.aardio");
+	frmChild.doModal();
+}
+
+winform.saveToPublish = function(){
+	var htmlPath = ..siteBaseDir + winform.当前主题.text + ".html"; 
+	string.save(htmlPath, tl_webview.xcall("getHtml"));
+	return htmlPath;
+}
+
+winform.pathGen = function(){
+	var htmlPath = ..siteBaseDir + winform.当前主题.text + ".html";
+	return htmlPath; 
+}
+
+winform.btnReadStatus = false;
+winform.btnRead.text = "预览";
+
+winform.btnSwitchShow = function(trueOrFalse){
+	winform.plus10.show(trueOrFalse);
+	winform.plus9.show(trueOrFalse);
+	winform.plus8.show(trueOrFalse);
+	winform.plus7.show(trueOrFalse);
+	winform.时间plus.show(trueOrFalse);
+	winform.勾选plus.show(trueOrFalse);
+	winform.标题plus.show(trueOrFalse);
+	winform.内容plus.show(trueOrFalse);
+	winform.添加plus.show(trueOrFalse);
+	winform.datetimepick.show(trueOrFalse);
+	winform.截图.show(trueOrFalse);
+	winform.载入.show(trueOrFalse);
+	winform.图片预览.show(trueOrFalse);
+}
+
+
+winform.btnRead.oncommand = function(id,event){
+	winform.btnReadStatus = !winform.btnReadStatus;
+	if(!winform.取消plus.disabled){
+		winform.取消plus.oncommand();
+	}
+	if(winform.btnReadStatus){
+		winform.btnSwitchShow(false);
+		winform.winTimelineShow.left = 8;
+		winform.btnRead.text = "退出";
+	}
+	else {
+		winform.btnSwitchShow(true);
+		winform.winTimelineShow.left = 320;
+		winform.btnRead.text = "预览";
+	}
+}
+
+winform.内容plus.editBox.enablePopMenu({
+    
+	{ /*---分隔线---*/ };
+	
+	{ "加粗(Ctrl+B)";
+		function(id){
+			winform.richeditFuncBold();
+		} ; 
+	};
+	{ "斜体(Ctrl+I)";
+		function(id){
+			winform.richeditFuncItalic();
+		} ; 
+	};
+	{ "无序列表(Ctrl+D)";
+		function(id){
+			winform.richeditFuncNoOrderList();
+		} ; 
+	};
+	{ "有序列表(Ctrl+R)";
+		function(id){
+			winform.richeditFuncOrderList();
+		} ; 
+	};
+	{ "超链接(Ctrl+T)";
+		function(id){
+			winform.richeditFuncHyperlink();
+		} ; 
+	};
+	{ "1级标题(Ctrl+1)";
+		function(id){
+			winform.richeditFuncH('#');
+		} ; 
+	};
+	{ "2级标题(Ctrl+2)";
+		function(id){
+			winform.richeditFuncH('##');
+		} ; 
+	};
+	{ "3级标题(Ctrl+3)";
+		function(id){
+			winform.richeditFuncH('###');
+		} ; 
+	};
+	{ "4级标题(Ctrl+4)";
+		function(id){
+			winform.richeditFuncH('####');
+		} ; 
+	};
+	{ "5级标题(Ctrl+5)";
+		function(id){
+			winform.richeditFuncH('#####');
+		} ; 
+	};
+	{ "待办";
+		function(id){
+			winform.richeditFuncToDos();
+		} ; 
+	};
+	{ "块引用";
+		function(id){
+			winform.richeditFuncQuotes();
+		} ; 
+	};
+	{ "代码块";
+		function(id){
+			winform.richeditFuncCodeBlock();
+		} ; 
+	};
+});
+
+winform.richeditFuncBold = function(){
+	var tempText = winform.内容plus.editBox.selText;
+	if(tempText == null){
+		return ; 
+	}
+	winform.内容plus.editBox.selText = '**' + tempText + '**';
+}
+
+winform.richeditFuncItalic = function(){
+	var tempText = winform.内容plus.editBox.selText;
+	if(tempText == null){
+		return ; 
+	}
+	winform.内容plus.editBox.selText = '*' + tempText + '*'
+}
+
+winform.richeditFuncNoOrderList = function(){
+	var tempText = winform.内容plus.editBox.selText;
+	if(tempText == null){
+		return ; 
+	}
+	var tempTextList = string.split(tempText,'\r\n');
+	var destTextList = '';
+	for(i=1;table.len(tempTextList);1){
+		if(i == 1){
+			destTextList = string.concat(destTextList,'- ',tempTextList[i]);
+		}
+		else {
+			destTextList = string.concat(destTextList,'\r\n- ',tempTextList[i]);
+		}
+	}
+	winform.内容plus.editBox.selText = destTextList;
+}
+
+winform.richeditFuncOrderList = function(){
+	var tempText = winform.内容plus.editBox.selText;
+	if(tempText == null){
+		return ; 
+	}
+	var tempTextList = string.split(tempText,'\r\n');
+	var destTextList = '';
+	for(i=1;table.len(tempTextList);1){
+		if(i == 1){
+			destTextList = string.concat(destTextList,'1. ',tempTextList[i]);
+		}
+		else {
+			destTextList = string.concat(destTextList,'\r\n1. ',tempTextList[i]);
+		}
+	}
+	winform.内容plus.editBox.selText = destTextList;
+}
+
+winform.richeditFuncHyperlink = function(){
+	var tempText = winform.内容plus.editBox.selText;
+	if(tempText == null){
+		return ; 
+	}
+	var tempTextList = string.split(tempText,'\r\n');
+	winform.内容plus.editBox.selText = '[' + tempTextList[1] + '](' + tempTextList[1] + ')'
+}
+
+
+winform.richeditFuncToDos = function(){
+	var tempText = winform.内容plus.editBox.selText;
+	if(tempText == null){
+		return ; 
+	}
+	var tempTextList = string.split(tempText,'\r\n');
+	var destTextList = '';
+	for(i=1;table.len(tempTextList);1){
+		if(i == 1){
+			destTextList = string.concat(destTextList,'- [ ] ',tempTextList[i]);
+		}
+		else {
+			destTextList = string.concat(destTextList,'\r\n- [ ] ',tempTextList[i]);
+		}
+	}
+	winform.内容plus.editBox.selText = destTextList;
+}
+
+winform.richeditFuncQuotes = function(){
+	var tempText = winform.内容plus.editBox.selText;
+	if(tempText == null){
+		return ; 
+	}
+	var tempTextList = string.split(tempText,'\r\n');
+	var destTextList = '';
+	for(i=1;table.len(tempTextList);1){
+		if(i == 1){
+			destTextList = string.concat(destTextList,'> ',tempTextList[i]);
+		}
+		else {
+			destTextList = string.concat(destTextList,'\r\n> ',tempTextList[i]);
+		}
+	}
+	winform.内容plus.editBox.selText = destTextList;
+}
+
+winform.richeditFuncCodeBlock = function(){
+	var tempText = winform.内容plus.editBox.selText;
+	if(tempText == null){
+		return ; 
+	}
+	winform.内容plus.editBox.selText = '\r\n' + '```' + '\r\n' + tempText + '\r\n' + '```' + '\r\n';
+}
+
+winform.richeditFuncH1 = function(){
+	var tempText = winform.内容plus.editBox.lineText() + '\r\n';
+	var tempLineCount = winform.内容plus.editBox.selLine;
+	if(tempLineCount == null){
+		return ; 
+	}
+	winform.内容plus.editBox.lineSel(tempLineCount,'# ' + tempText)
+	var tempLineLength = winform.内容plus.editBox.lineLength(tempLineCount);
+	var tempCurrentLinePos = winform.内容plus.editBox.lineToChar(tempLineCount);
+	winform.内容plus.editBox.setsel(tempCurrentLinePos+tempLineLength-1);
+}
+winform.richeditFuncH2 = function(){
+	var tempText = winform.内容plus.editBox.lineText() + '\r\n';
+	var tempLineCount = winform.内容plus.editBox.selLine;
+	if(tempLineCount == null){
+		return ; 
+	}
+	winform.内容plus.editBox.lineSel(tempLineCount,'## ' + tempText)
+	var tempLineLength = winform.内容plus.editBox.lineLength(tempLineCount);
+	var tempCurrentLinePos = winform.内容plus.editBox.lineToChar(tempLineCount);
+	winform.内容plus.editBox.setsel(tempCurrentLinePos+tempLineLength-1);
+}
+winform.richeditFuncH3 = function(){
+	var tempText = winform.内容plus.editBox.lineText() + '\r\n';
+	var tempLineCount = winform.内容plus.editBox.selLine;
+	if(tempLineCount == null){
+		return ; 
+	}
+	winform.内容plus.editBox.lineSel(tempLineCount,'### ' + tempText)
+	var tempLineLength = winform.内容plus.editBox.lineLength(tempLineCount);
+	var tempCurrentLinePos = winform.内容plus.editBox.lineToChar(tempLineCount);
+	winform.内容plus.editBox.setsel(tempCurrentLinePos+tempLineLength-1);
+}
+winform.richeditFuncH4 = function(){
+	var tempText = winform.内容plus.editBox.lineText() + '\r\n';
+	var tempLineCount = winform.内容plus.editBox.selLine;
+	if(tempLineCount == null){
+		return ; 
+	}
+	winform.内容plus.editBox.lineSel(tempLineCount,'#### ' + tempText)
+	var tempLineLength = winform.内容plus.editBox.lineLength(tempLineCount);
+	var tempCurrentLinePos = winform.内容plus.editBox.lineToChar(tempLineCount);
+	winform.内容plus.editBox.setsel(tempCurrentLinePos+tempLineLength-1);
+}
+winform.richeditFuncH5 = function(){
+	var tempText = winform.内容plus.editBox.lineText() + '\r\n';
+	var tempLineCount = winform.内容plus.editBox.selLine;
+	if(tempLineCount == null){
+		return ; 
+	}
+	winform.内容plus.editBox.lineSel(tempLineCount,'##### ' + tempText)
+	var tempLineLength = winform.内容plus.editBox.lineLength(tempLineCount);
+	var tempCurrentLinePos = winform.内容plus.editBox.lineToChar(tempLineCount);
+	winform.内容plus.editBox.setsel(tempCurrentLinePos+tempLineLength-1);
+}
+
+winform.richeditFuncH = function(replaceTxt){
+	var tempText = winform.内容plus.editBox.lineText() + '\r\n';
+	var tempLineCount = winform.内容plus.editBox.selLine;
+	if(tempLineCount == null){
+		return ; 
+	}
+	winform.内容plus.editBox.lineSel(tempLineCount, replaceTxt + ' ' + tempText)
+	var tempLineLength = winform.内容plus.editBox.lineLength(tempLineCount);
+	var tempCurrentLinePos = winform.内容plus.editBox.lineToChar(tempLineCount);
+	winform.内容plus.editBox.setsel(tempCurrentLinePos+tempLineLength-1);
+}
+
+key.delayDown = 1;
+key.delayUp = 1;
+
+winform.SetSelSpace = function(){
+	key.sendString('​ ')
+	key.down(key.VK.SHIFT);
+	key.down(key.VK.LEFT);
+	key.up(key.VK.LEFT,key.VK.SHIFT);
+	var currentSelText = winform.内容plus.editBox.selText;
+	return currentSelText; 
+}
+
+winform.doingSetSelSpace = false;
+winform.okDetectWndSize = 300;
+winform.lastOKDown = false;
+
+
+winform.内容plus.editBox.translateAccelerator = function(msg){ 
+    var vk = msg.wParam;
+ 	if( vk == 0x9/*_VK_TAB*/ ){
+ 		if(!winform.doingSetSelSpace){
+			if( msg.message == 0x100/*_WM_KEYDOWN*/) {
+				winform.doingSetSelSpace = !winform.doingSetSelSpace;
+				var txtSel = winform.SetSelSpace();
+				if(txtSel){
+					winform.内容plus.editBox.selText = txtSel + '    ';
+				}
+				winform.doingSetSelSpace = !winform.doingSetSelSpace;
+				return true;
+			}
+		}
+		return true;
+	}
+	elseif( vk == 0xD/*_VK_ENTER*/ ){
+		if( msg.message == 0x100/*_WM_KEYDOWN*/) {
+			if(!winform.doingSetSelSpace){
+				winform.doingSetSelSpace = !winform.doingSetSelSpace;
+				
+				var tempText = winform.内容plus.editBox.lineText();
+	
+				var pattern =  "- "
+				var i,j = string.find( tempText,  pattern );
+ 				var tempFlagNoOrderList = i==1 ? true:false;
+	
+				var pattern =  "\d+\.\s"
+				var i,j = string.find( tempText,  pattern );
+ 				var tempFlagOrderList = i==1 ? true:false;
+	
+				var pattern =  "- \[ \] "
+				var i,j = string.find( tempText,  pattern );
+ 				var tempFlagToDoU = i==1 ? true:false;
+ 				
+				var pattern =  "- \[x\] "
+				var i,j = string.find( tempText,  pattern );
+ 				var tempFlagToDoD = i==1 ? true:false;
+ 				
+				var pattern =  "> "
+				var i,j = string.find( tempText,  pattern );
+ 				var tempFlagQuote = i==1 ? true:false;
+				
+				if ( !(tempFlagNoOrderList or tempFlagOrderList or tempFlagToDoU or tempFlagToDoD or tempFlagQuote) ) {
+					winform.doingSetSelSpace = !winform.doingSetSelSpace;
+					return ; 
+				}
+
+				var txtSel = winform.SetSelSpace();
+				if(txtSel){
+					if(tempFlagToDoD){
+						winform.内容plus.editBox.selText = txtSel + '\r\n- [ ] ';
+					}
+					elseif(tempFlagToDoU){
+						winform.内容plus.editBox.selText = txtSel + '\r\n- [ ] ';
+					}
+					elseif(tempFlagNoOrderList){
+						winform.内容plus.editBox.selText = txtSel + '\r\n- ';
+					}
+					elseif(tempFlagOrderList){
+						winform.内容plus.editBox.selText = txtSel + '\r\n1. ';
+					}
+					elseif(tempFlagQuote){
+						winform.内容plus.editBox.selText = txtSel + '\r\n> ';
+					}
+					else {
+						winform.内容plus.editBox.selText = txtSel + '\r\n';
+					}
+					winform.doingSetSelSpace = !winform.doingSetSelSpace;
+				}
+			}
+			return true;
+		}
+		
+	}
+	
+}
+
+import win.ui.accelerator;
+win.ui.accelerator({
+	{ ctrl = true; vkey = 'G'#; oncommand = winform.添加plus.oncommand }
+	{ ctrl = true; vkey = 'B'#; oncommand = winform.richeditFuncBold }
+	{ ctrl = true; vkey = 'D'#; oncommand = winform.richeditFuncNoOrderList }
+	{ ctrl = true; vkey = 'R'#; oncommand = winform.richeditFuncOrderList }
+	{ ctrl = true; vkey = 'T'#; oncommand = winform.richeditFuncHyperlink }
+	{ ctrl = true; vkey = 'I'#; oncommand = winform.richeditFuncItalic }
+	{ ctrl = true; vkey = '1'#; oncommand = winform.richeditFuncH1 }
+	{ ctrl = true; vkey = '2'#; oncommand = winform.richeditFuncH2 }
+	{ ctrl = true; vkey = '3'#; oncommand = winform.richeditFuncH3 }
+	{ ctrl = true; vkey = '4'#; oncommand = winform.richeditFuncH4 }
+	{ ctrl = true; vkey = '5'#; oncommand = winform.richeditFuncH5 }
+},winform);
+
+winform.timelineThemeSet();
+winform.enableDpiScaling();
+//winform.show();
+winform.winTimelineShow.setFocus();
+win.loopMessage();
+return winform;

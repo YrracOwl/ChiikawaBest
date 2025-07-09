@@ -3,6 +3,7 @@ import win.ui.atom;
 /*DSG{{*/
 mainForm = win.form(text="ChiikawaBest";right=220;bottom=118;border="none";max=false;min=false)
 mainForm.add(
+OST={cls="button";text="OST";left=0;top=125;right=55;bottom=144;z=2};
 bk={cls="bk";left=0;top=0;right=224;bottom=120;ah=1;aw=1;background="\res\keai.jpg";z=1}
 )
 /*}}*/
@@ -28,6 +29,7 @@ if(#_CMDLINE){
 
 //process库导入
 import process;
+import winex;
 
 //创建原子窗体
 var atomId,hwnd = win.ui.atom.find("3C6F3EEC-7B25-44F1-B612-FBAA2319827D.ChiikawaBest")
@@ -37,8 +39,23 @@ if( atomId ){
 		process.execute(io._exepath,'operation=slowStart');
 	}
 	else {
-		win.show(hwnd, true);
-    	win.setForeground(hwnd);
+		if(#_ARGV[1]){
+			if(_ARGV[1] != "operation=slowStart" and _ARGV[1] != "operation=update"){
+    			var appName = "/ChiikawaBest/";
+				var filePath = io.appData(appName+"lastOpened.txt");
+    			var file = io.file(filePath,"w+");//io.file用于打开一个文件(写模式，更多模式参考上面)
+    			file.write(_ARGV[1]);
+    			file.close();
+    			
+    			btnHwnd = winex.findEx(hwnd,,,"OST");
+    			win.delay(333);
+    			winex.click(btnHwnd);
+			}
+		}
+		else{
+			win.show(hwnd, true);
+    		win.setForeground(hwnd);
+		}
 	}
 	
 	win.quitMessage();
@@ -95,6 +112,7 @@ import fsys.dlg;
 
 import fsys.dlg.dir;
 
+
 //右下角提示库
 //import win.util.popup;
 
@@ -115,6 +133,8 @@ import sys.run;
 
 import mouse;
 
+import fsys.shellType;
+
 //自定义窗口外观
 import win.ui.simpleWindow;
 win.ui.simpleWindow(mainForm,,,18,).skin(
@@ -129,6 +149,15 @@ win.ui.simpleWindow(mainForm,,,18,).skin(
 		default = 0xFF7BA5BF; 
 	}
 )
+
+//关联文件格式 .tldb
+ckwb_tldb = fsys.shellType();
+ckwb_tldb.command = io._exepath;
+ckwb_tldb.contentType = "application/octet-stream";
+ckwb_tldb.extension = "tldb";
+ckwb_tldb.icon = io._exepath;
+ckwb_tldb.perceivedType = "compressed";
+ckwb_tldb.reg();
 
 //配置设置
 
@@ -497,6 +526,12 @@ mainForm.trayCreate = function(){
 	mainForm.popmenu.close();
 }
 
+mainForm.releaseAddOns = function(){
+	for(k,v in mainForm.varAddOns){
+		mainForm.varAddOns[k] = null;
+	}
+	mainForm.varAddOns = {};
+}
 
 mainForm.onTrayMessage = {
 	[0x205/*_WM_RBUTTONUP*/] = function(wParam){
@@ -1040,14 +1075,6 @@ mainForm.loadAddOns = function(dirPath){
 	
 }
 
-mainForm.releaseAddOns = function(){
-	for(k,v in mainForm.varAddOns){
-		mainForm.varAddOns[k] = null;
-	}
-	mainForm.varAddOns = {};
-}
-
-
 logWarn("服务器地址：", mainForm.serverPath);
 logWarn("服务器ID：",serverMain.serverId);
 
@@ -1097,6 +1124,35 @@ if(io.exist("\ckwLibs")){
 
 StartUpMan = sys.run("ChiikawaBest-StartUp");
 
+mainForm.OSTFcn = function(){
+	var filePath = io.appData(appName+"lastOpened.txt");
+    var file = io.file(filePath,"r");//io.file用于打开一个文件(写模式，更多模式参考上面)
+	rdyOpenTimelinePath = file.read();
+	file.close();
+		
+	var timelineChild = win.loadForm("\dlg\timeline_standalone.aardio",,win.getDesktop());
 
+	timelineChild.childWinUpdate(rdyOpenTimelinePath);
+	timelineChild.listboxUpdate(timelineChild);
+	timelineChild.timelineWebUpdate(timelineChild);
+
+	timelineChild.show(true);
+}
+
+mainForm.OST.oncommand = function(id,event){
+	mainForm.OSTFcn();
+}
+
+if(_ARGV[1]){
+	if(_ARGV[1] != "operation=slowStart" and _ARGV[1] != "operation=update"){
+		var filePath = io.appData(appName+"lastOpened.txt");
+		var fileTmp = io.file(filePath,"w+");//io.file用于打开一个文件(写模式，更多模式参考上面)
+		fileTmp.write(_ARGV[1]);
+		fileTmp.close();
+		
+		win.delay(30);
+		mainForm.OSTFcn();
+	}
+}
 
 return win.loopMessage();

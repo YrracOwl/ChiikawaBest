@@ -5,9 +5,9 @@ import win.ui.atom;
 /*DSG{{*/
 var winform = win.form(text="选择时间线";right=295;bottom=495;border="none";clipch=1;max=false)
 winform.add(
-["btn创建时间线"]={cls="plus";text="创建时间线(Ctrl+G)";left=72;top=456;right=232;bottom=486;align="left";bgcolor=-5197169;border={radius=16};dl=1;dt=1;font=LOGFONT(h=-13);iconStyle={align="left";font=LOGFONT(h=-16;name='FontAwesome');padding={left=10;bottom=-2}};iconText='\uF02D';notify=1;textPadding={left=30};z=3};
-["txt时间线标题"]={cls="plus";left=16;top=408;right=280;bottom=448;border={bottom=1;color=-6908266};dl=1;dt=1;editable="edit";font=LOGFONT(h=-16);notify=1;tabstop=1;textPadding={top=16};z=2};
-树形展示={cls="treeview";left=16;top=32;right=280;bottom=408;asel=false;bgcolor=16777215;border=1;z=1}
+btn创建时间线={cls="plus";text="创建时间线(Ctrl+G)";left=72;top=456;right=232;bottom=486;align="left";bgcolor=0xFFB0B28F;border={radius=16};dl=1;dt=1;font=LOGFONT(h=-13);iconStyle={align="left";font=LOGFONT(h=-16;name='FontAwesome');padding={left=10;bottom=-2}};iconText='\uF02D';notify=1;textPadding={left=30};z=3};
+txt时间线标题={cls="plus";left=16;top=408;right=280;bottom=448;border={bottom=1;color=0xFF969696};dl=1;dt=1;editable="edit";font=LOGFONT(h=-16);notify=1;tabstop=1;textPadding={top=16};z=2};
+树形展示={cls="treeview";left=16;top=32;right=280;bottom=408;asel=false;bgcolor=0xFFFFFF;border=1;z=1}
 )
 /*}}*/
 
@@ -306,28 +306,32 @@ winform.exportTimeline = function(hItem){
 		return ; 
 	}
 	var rdyExportedTimeline = winform.树形展示.getItemText(hItem);
-	var newName = rdyExportedTimeline + "_exp";
+	var newName = rdyExportedTimeline + "";
 	var fileName = newName + ".tldb";
 
-	if(io.exist(fileName)){
-		io.remove(fileName)
-	}
-	
-	var dbTarget = ..sqlite(fileName);
-	dbTarget.exec( "CREATE TABLE ?? (time PRIMARY KEY, title, content, image);",{"exported"});
 
-	for rowid, time0, title0, content0, image0 in ..dbTimeline.each("SELECT rowid,* FROM ??",{rdyExportedTimeline}) {
-		var cmd = dbTarget.prepare("REPLACE INTO ?? VALUES ( @time,@title,@content,@image);",{"exported"});
-		cmd.step(
-			time = time0;
-			title = title0;
-			content = content0;
-			image = image0;
-		);
-	}
 	
-	dbTarget.close();
-	updateTreeview(winform);
+	var file_path = ..fsys.dlg.saveOp("时间线文件|*.tldb","保存时间线",,,fileName);
+	if(file_path){
+		if(io.exist(file_path)){
+			io.remove(file_path)
+		}
+		var dbTarget = ..sqlite(file_path);
+		dbTarget.exec( "CREATE TABLE ?? (time PRIMARY KEY, title, content, image);",{"exported"});
+	
+		for rowid, time0, title0, content0, image0 in ..dbTimeline.each("SELECT rowid,* FROM ??",{rdyExportedTimeline}) {
+			var cmd = dbTarget.prepare("REPLACE INTO ?? VALUES ( @time,@title,@content,@image);",{"exported"});
+			cmd.step(
+				time = time0;
+				title = title0;
+				content = content0;
+				image = image0;
+			);
+		}
+		
+		dbTarget.close();
+		updateTreeview(winform);
+	}
 }
 
 winform.importTimeline = function(){
