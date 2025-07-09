@@ -1079,7 +1079,6 @@ mainForm.loadAddOns = function(dirPath){
 	else {
 		logErr(dirPath + "不存在！")
 	}
-	
 }
 
 logWarn("服务器地址：", mainForm.serverPath);
@@ -1149,6 +1148,14 @@ mainForm.OSTFcn_NewTL = function(){
 		var dbTarget = ..sqlite(file_path);
 		dbTarget.exec( "CREATE TABLE ?? (time PRIMARY KEY, title, content, image);",{"exported"});
 		dbTarget.close();
+		
+		var timelineChild = win.loadForm("\dlg\timeline_standalone.aardio",,win.getDesktop());
+		
+		timelineChild.childWinUpdate(file_path);
+		timelineChild.listboxUpdate(timelineChild);
+		timelineChild.timelineWebUpdate(timelineChild);
+		
+		timelineChild.show(true);
 	}
 }
 

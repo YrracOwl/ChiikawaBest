@@ -1283,5 +1283,10 @@ winform.timelineThemeSet();
 winform.enableDpiScaling();
 //winform.show();
 winform.winTimelineShow.setFocus();
+
+winform.onClose = function(hwnd,message,wParam,lParam){
+    winform.dbTarget.close();
+}
+
 win.loopMessage();
 return winform;
