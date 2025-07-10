@@ -1124,12 +1124,19 @@ if(cfg.apps_setting.启动时监控应用){
 	webwatcher = mainForm.loadForm("\dlg\webwatcher.aardio");
 }
 
+
 mainForm.OSTFcn = function(){
+	
 	var filePath = io.appData(appName+"lastOpened.txt");
     var file = io.file(filePath,"r");//io.file用于打开一个文件(写模式，更多模式参考上面)
 	rdyOpenTimelinePath = file.read();
 	file.close();
-		
+	
+	if(mainForm.openedStandaloneTimeline[rdyOpenTimelinePath]){
+		win.showForeground(mainForm.openedStandaloneTimeline[rdyOpenTimelinePath]);
+		return ; 
+	}
+	
 	var timelineChild = win.loadForm("\dlg\timeline_standalone.aardio",,win.getDesktop());
 
 	timelineChild.childWinUpdate(rdyOpenTimelinePath);
@@ -1176,6 +1183,8 @@ if(_ARGV[1]){
 	}
 }
 
+// 记录已打开的单独的时间线路径
+mainForm.openedStandaloneTimeline = {};
 
 if(io.exist("\ckwLibs")){
 	mainForm.loadAddOns("\ckwLibs");
